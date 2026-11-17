@@ -141,32 +141,51 @@ const Header: React.FC = () => {
               Projects
             </NavLink>
 
-            {/* Insights Dropdown (Blogs & Insights) */}
-            <div className="relative flex items-center">
+            {/* Insights Dropdown (Blogs & Insights) with Small Triangle on the RIGHT and Hover Support */}
+            <div
+              className="relative flex items-center h-full"
+              onMouseEnter={() => setOpenDropdown('insights')}
+              onMouseLeave={() => setOpenDropdown(null)}
+            >
               <button
                 type="button"
                 onClick={() =>
                   setOpenDropdown((prev) => (prev === 'insights' ? null : 'insights'))
                 }
                 aria-expanded={openDropdown === 'insights'}
-                className={`relative py-2 inline-flex items-center text-[15px] font-semibold text-sudabelt-navy cursor-pointer after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.75 after:bg-sudabelt-green after:transition-transform after:duration-200 ${
+                className={`relative py-2 inline-flex items-center gap-1.5 text-[15px] font-semibold text-sudabelt-navy cursor-pointer after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.75 after:bg-sudabelt-green after:transition-transform after:duration-200 ${
                   openDropdown === 'insights'
                     ? 'after:scale-x-100'
                     : 'after:scale-x-0 hover:after:scale-x-100'
                 }`}
               >
-                Insights
+                <span>Insights</span>
+                {/* Small Triangle Indicator on the Right Side */}
+                <svg
+                  className={`w-2 h-2 text-sudabelt-navy transition-transform duration-200 ${
+                    openDropdown === 'insights' ? 'rotate-180 text-sudabelt-green' : ''
+                  }`}
+                  viewBox="0 0 10 6"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M0 0l5 6 5-6z" />
+                </svg>
               </button>
 
               {openDropdown === 'insights' && (
-                <div className="absolute top-[calc(100%+8px)] left-0 w-52.5 rounded-tray bg-white border border-sudabelt-border shadow-dropdown overflow-hidden z-50">
-                  <div className="py-2">
+                <div
+                  className="absolute top-full left-0 w-44 rounded-tray bg-white border border-sudabelt-border shadow-dropdown overflow-hidden z-50 animate-in fade-in duration-100"
+                  onMouseEnter={() => setOpenDropdown('insights')}
+                  onMouseLeave={() => setOpenDropdown(null)}
+                >
+                  <div className="py-1.5">
                     {INSIGHTS_DROPDOWN_LINKS.map((item) => (
                       <Link
                         key={item.path}
                         to={item.path}
                         onClick={closeAllMenus}
-                        className="block px-5 py-3 text-[15px] font-semibold text-sudabelt-navy hover:bg-sudabelt-surface border-b-2 border-transparent hover:border-sudabelt-green transition-all"
+                        className="block px-4 py-2 text-[13px] font-semibold text-sudabelt-navy hover:bg-sudabelt-surface hover:text-sudabelt-green border-l-2 border-transparent hover:border-sudabelt-green transition-all"
                       >
                         {item.label}
                       </Link>
@@ -175,7 +194,7 @@ const Header: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setOpenDropdown(null)}
-                    className="w-full text-left px-5 py-3.5 bg-sudabelt-surface hover:bg-sudabelt-header-border border-t border-sudabelt-header-border text-[15px] font-semibold text-sudabelt-navy transition-colors cursor-pointer"
+                    className="w-full text-left px-4 py-2 bg-sudabelt-surface hover:bg-sudabelt-header-border border-t border-sudabelt-header-border text-[12px] font-semibold text-sudabelt-muted hover:text-sudabelt-navy transition-colors cursor-pointer"
                   >
                     Close menu
                   </button>
@@ -183,30 +202,49 @@ const Header: React.FC = () => {
               )}
             </div>
 
-            {/* More Dropdown */}
-            <div className="relative flex items-center">
+            {/* More Dropdown with Small Triangle on the RIGHT and Hover Support */}
+            <div
+              className="relative flex items-center h-full"
+              onMouseEnter={() => setOpenDropdown('more')}
+              onMouseLeave={() => setOpenDropdown(null)}
+            >
               <button
                 type="button"
                 onClick={() => setOpenDropdown((prev) => (prev === 'more' ? null : 'more'))}
                 aria-expanded={openDropdown === 'more'}
-                className={`relative py-2 inline-flex items-center text-[15px] font-semibold text-sudabelt-navy cursor-pointer after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.75 after:bg-sudabelt-green after:transition-transform after:duration-200 ${
+                className={`relative py-2 inline-flex items-center gap-1.5 text-[15px] font-semibold text-sudabelt-navy cursor-pointer after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.75 after:bg-sudabelt-green after:transition-transform after:duration-200 ${
                   openDropdown === 'more'
                     ? 'after:scale-x-100'
                     : 'after:scale-x-0 hover:after:scale-x-100'
                 }`}
               >
-                More
+                <span>More</span>
+                {/* Small Triangle Indicator on the Right Side */}
+                <svg
+                  className={`w-2 h-2 text-sudabelt-navy transition-transform duration-200 ${
+                    openDropdown === 'more' ? 'rotate-180 text-sudabelt-green' : ''
+                  }`}
+                  viewBox="0 0 10 6"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M0 0l5 6 5-6z" />
+                </svg>
               </button>
 
               {openDropdown === 'more' && (
-                <div className="absolute top-[calc(100%+8px)] right-0 w-53.75 rounded-tray bg-white border border-sudabelt-border shadow-dropdown overflow-hidden z-50">
-                  <div className="py-2">
+                <div
+                  className="absolute top-full right-0 w-44 rounded-tray bg-white border border-sudabelt-border shadow-dropdown overflow-hidden z-50 animate-in fade-in duration-100"
+                  onMouseEnter={() => setOpenDropdown('more')}
+                  onMouseLeave={() => setOpenDropdown(null)}
+                >
+                  <div className="py-1.5">
                     {MORE_DROPDOWN_LINKS.map((item) => (
                       <Link
                         key={item.path}
                         to={item.path}
                         onClick={closeAllMenus}
-                        className="block px-5 py-3 text-[15px] font-semibold text-sudabelt-navy hover:bg-sudabelt-surface border-b-2 border-transparent hover:border-sudabelt-green transition-all"
+                        className="block px-4 py-2 text-[13px] font-semibold text-sudabelt-navy hover:bg-sudabelt-surface hover:text-sudabelt-green border-l-2 border-transparent hover:border-sudabelt-green transition-all"
                       >
                         {item.label}
                       </Link>
@@ -215,7 +253,7 @@ const Header: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setOpenDropdown(null)}
-                    className="w-full text-left px-5 py-3.5 bg-sudabelt-surface hover:bg-sudabelt-header-border border-t border-sudabelt-header-border text-[15px] font-semibold text-sudabelt-navy transition-colors cursor-pointer"
+                    className="w-full text-left px-4 py-2 bg-sudabelt-surface hover:bg-sudabelt-header-border border-t border-sudabelt-header-border text-[12px] font-semibold text-sudabelt-muted hover:text-sudabelt-navy transition-colors cursor-pointer"
                   >
                     Close menu
                   </button>
