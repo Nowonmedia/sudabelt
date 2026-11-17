@@ -1,235 +1,249 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, NavLink } from 'react-router'
-import {
-  MapPin,
-  PhoneCall,
-  Menu,
-  X,
-  ChevronDown,
-  ShieldAlert,
-  ArrowUpRight,
-} from 'lucide-react'
+import { Menu, X, PhoneCall, Mail } from 'lucide-react'
+import { FaLinkedinIn, FaFacebookF, FaInstagram } from 'react-icons/fa6'
 import SudabeltLogo from '../components/common/SudabeltLogo'
 import { useQuote } from '../context/QuoteContext'
 
-interface NavItem {
-  label: string
-  path: string
-  children?: { label: string; path: string; description: string }[]
-}
+const INSIGHTS_DROPDOWN_LINKS = [
+  { label: 'Blogs', path: '/blog' },
+  { label: 'Insights', path: '/resources/newsletters' },
+]
 
-const PRIMARY_NAV_ITEMS: NavItem[] = [
-  { label: 'About', path: '/about' },
-  {
-    label: 'Portfolio',
-    path: '/products',
-    children: [
-      {
-        label: 'All OEM Partners & Products',
-        path: '/products',
-        description: 'Equipment & consumables grouped by global OEM partners',
-      },
-      {
-        label: 'Renal Care & Hemodialysis',
-        path: '/products?category=renal-care',
-        description: 'Baxter hemodialysis systems, RO water & CleanCart consumables',
-      },
-      {
-        label: 'Blood Banking & Apheresis',
-        path: '/products?category=blood-banking-apheresis',
-        description: 'Terumo BCT Spectra Optia, Mirasol PRT & blood component processing',
-      },
-    ],
-  },
-  { label: 'Turnkey Solutions', path: '/services/turnkey' },
-  {
-    label: 'Training Hub',
-    path: '/training-hub',
-    children: [
-      {
-        label: 'Clinical & Biomedical Academy',
-        path: '/training-hub',
-        description: 'Hands-on nurse, physician, and biomedical engineer curricula',
-      },
-      {
-        label: 'Register Institutional Cohort',
-        path: '/training-hub/register',
-        description: 'Book on-site hospital staff certification sessions',
-      },
-    ],
-  },
+const MORE_DROPDOWN_LINKS = [
+  { label: 'Training', path: '/training-hub' },
   { label: 'Why Sudabelt', path: '/why-sudabelt/compare' },
-  {
-    label: 'Insights',
-    path: '/resources/newsletters',
-    children: [
-      {
-        label: 'Clinical Newsletter Archive',
-        path: '/resources/newsletters',
-        description: 'Unlimited archive of Sudabelt clinical & biomedical publications',
-      },
-      {
-        label: 'Industry Articles & Blog',
-        path: '/blog',
-        description: 'Healthcare infrastructure engineering insights across Africa',
-      },
-    ],
-  },
-  {
-    label: 'Support',
-    path: '/support',
-    children: [
-      {
-        label: 'Biomedical SLA & Support Hub',
-        path: '/support',
-        description: 'Overview of nationwide preventive maintenance & spare parts coverage',
-      },
-      {
-        label: 'Emergency Breakdown Dispatch',
-        path: '/support/emergency-breakdown',
-        description: '<24hr critical patient impact biomedical intervention',
-      },
-      {
-        label: 'Preventive Maintenance & Calibration',
-        path: '/support/maintenance-calibration',
-        description: 'Schedule routine OEM calibration and water quality audits',
-      },
-    ],
-  },
+  { label: 'Support', path: '/support' },
+  { label: 'Careers', path: '/careers' },
   { label: 'Contact', path: '/contact' },
 ]
 
+const SOCIAL_LINKS = [
+  { label: 'Instagram', href: 'https://www.instagram.com/sudabeltmedical', icon: FaInstagram },
+  { label: 'Facebook', href: 'https://www.facebook.com/sudabeltmedical', icon: FaFacebookF },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/sudabelt-medical', icon: FaLinkedinIn },
+]
+
+const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
+  `relative py-2 inline-flex items-center text-[15px] font-semibold text-sudabelt-navy after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.75 after:bg-sudabelt-green after:transition-transform after:duration-200 ${
+    isActive ? 'after:scale-x-100' : 'after:scale-x-0 hover:after:scale-x-100'
+  }`
+
 const Header: React.FC = () => {
   const { itemCount } = useQuote()
+  const [openDropdown, setOpenDropdown] = useState<'insights' | 'more' | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const navRef = useRef<HTMLDivElement | null>(null)
 
-  const closeMobileMenu = () => setMobileMenuOpen(false)
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null)
+      }
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpenDropdown(null)
+        setMobileMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
+  const closeAllMenus = () => {
+    setOpenDropdown(null)
+    setMobileMenuOpen(false)
+  }
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b border-[#E3E7EF]">
-      {/* Top Institutional Utility Bar (#001142 Primary Navy) */}
-      <div className="bg-[#001142] text-white border-b border-white/15">
-        <div className="sudabelt-container py-2 flex flex-wrap items-center justify-between gap-3 text-[12px]">
-          <div className="flex items-center gap-2 text-white/80">
-            <MapPin className="w-3.5 h-3.5 text-[#3FA9F5] shrink-0" strokeWidth={1.75} />
-            <span className="font-semibold text-white">Pan-African Regional Hubs:</span>
-            <span className="hidden sm:inline font-mono text-[11.5px] text-white/80">
-              Lagos (HQ) • Abuja • Kano • Port Harcourt
-            </span>
-          </div>
+    <header ref={navRef} className="sticky top-0 z-50 w-full bg-white border-b border-sudabelt-header-border">
+      {/* Pre-Navbar: Tagline + Official Contacts (tel:+2349011235400 & info@sudabelt.com) + Instagram, Facebook, LinkedIn */}
+      <div className="bg-sudabelt-navy text-white">
+        <div className="sudabelt-container h-9.5 flex items-center justify-between gap-3 text-[11.5px] font-medium">
+          <span className="text-white/85 truncate">
+            Advancing Healthcare Excellence in Africa
+          </span>
 
-          <div className="flex items-center gap-4 ml-auto">
-            <Link
-              to="/support/emergency-breakdown"
-              className="inline-flex items-center gap-1.5 text-white hover:text-[#3FA9F5] transition-colors font-semibold"
-            >
-              <span className="inline-block w-2 h-2 bg-[#E30000] rounded-[2px]" />
-              <span>24/7 Biomedical SLA Desk</span>
-            </Link>
-            <span className="text-white/25 hidden md:inline">|</span>
+          <div className="flex items-center gap-3.5 shrink-0">
             <a
-              href="tel:+23480078322358"
-              className="hidden md:inline-flex items-center gap-1.5 font-mono text-[12px] text-[#3FA9F5] hover:underline"
+              href="mailto:info@sudabelt.com"
+              className="hidden sm:inline-flex items-center gap-1.5 font-mono text-[11.5px] text-white/90 hover:text-sudabelt-blue transition-colors"
             >
-              <PhoneCall className="w-3.5 h-3.5" strokeWidth={1.75} />
-              <span>+234 (0) 800-SUDABELT</span>
+              <Mail className="w-3 h-3 text-sudabelt-blue" strokeWidth={1.75} />
+              <span>info@sudabelt.com</span>
             </a>
+
+            <span className="hidden sm:inline text-white/25">|</span>
+
+            <a
+              href="tel:+2349011235400"
+              className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-white/90 hover:text-sudabelt-blue transition-colors"
+            >
+              <PhoneCall className="w-3 h-3 text-sudabelt-blue" strokeWidth={1.75} />
+              <span>+234 901 123 5400</span>
+            </a>
+
+            <span className="text-white/25">|</span>
+
+            {/* Pre-Navbar Social Icons: Instagram, Facebook, LinkedIn */}
+            <div className="flex items-center gap-2" aria-label="Sudabelt Social Media">
+              {SOCIAL_LINKS.map((social) => {
+                const IconComp = social.icon
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    className="w-6 h-6 rounded-sm bg-white/10 hover:bg-sudabelt-blue text-white hover:text-sudabelt-navy inline-flex items-center justify-center transition-colors"
+                  >
+                    <IconComp className="w-3 h-3" />
+                  </a>
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main Navigation Bar */}
-      <div className="sudabelt-container h-[84px] lg:h-[92px] flex items-center justify-between gap-4">
-        {/* Brand Logo */}
-        <Link to="/" className="shrink-0 focus:outline-none" onClick={closeMobileMenu}>
-          <SudabeltLogo variant="primary" />
+      <div className="sudabelt-container h-21.5 lg:h-24 flex items-center justify-between gap-4">
+        {/* Left: Larger Brand Logo Aligned Flush to Beginning of Container Padding */}
+        <Link to="/" onClick={closeAllMenus} className="shrink-0 focus:outline-none">
+          <SudabeltLogo variant="primary" size="header" />
         </Link>
 
-        {/* Desktop Navigation Links */}
-        <nav
-          aria-label="Primary Navigation"
-          className="hidden xl:flex items-center gap-[24px] 2xl:gap-[32px] h-full"
-        >
-          {PRIMARY_NAV_ITEMS.map((item) => (
-            <div
-              key={item.path}
-              className="relative h-full flex items-center"
-              onMouseEnter={() => item.children && setActiveDropdown(item.label)}
-              onMouseLeave={() => item.children && setActiveDropdown(null)}
-            >
-              <NavLink
-                to={item.path}
-                className={({ isActive }) =>
-                  `relative h-full inline-flex items-center gap-1 text-[15px] font-semibold transition-colors ${
-                    isActive
-                      ? 'text-[#001142] after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-[#006837]'
-                      : 'text-[#3B4468] hover:text-[#001142]'
-                  }`
-                }
-              >
-                <span>{item.label}</span>
-                {item.children && (
-                  <ChevronDown className="w-3.5 h-3.5 text-[#5A6385]" strokeWidth={1.75} />
-                )}
-              </NavLink>
+        {/* Right/Center Desktop Navigation + RFQ Tray */}
+        <div className="flex items-center gap-4 lg:gap-9 h-full">
+          <nav
+            aria-label="Primary Navigation"
+            className="hidden lg:flex items-center gap-7 xl:gap-9 h-full"
+          >
+            <NavLink to="/about" onClick={closeAllMenus} className={navLinkClassName}>
+              About
+            </NavLink>
 
-              {/* Dropdown Panel */}
-              {item.children && activeDropdown === item.label && (
-                <div className="absolute top-full left-0 w-[340px] bg-white border border-[#DCE1EB] rounded-tl-[22px] rounded-br-[22px] shadow-lg p-3 z-50">
-                  <div className="flex flex-col gap-1">
-                    {item.children.map((sub) => (
+            <NavLink to="/products" onClick={closeAllMenus} className={navLinkClassName}>
+              Portfolio
+            </NavLink>
+
+            <NavLink to="/services/turnkey" onClick={closeAllMenus} className={navLinkClassName}>
+              Services
+            </NavLink>
+
+            <NavLink to="/projects" onClick={closeAllMenus} className={navLinkClassName}>
+              Projects
+            </NavLink>
+
+            {/* Insights Dropdown (Blogs & Insights) */}
+            <div className="relative flex items-center">
+              <button
+                type="button"
+                onClick={() =>
+                  setOpenDropdown((prev) => (prev === 'insights' ? null : 'insights'))
+                }
+                aria-expanded={openDropdown === 'insights'}
+                className={`relative py-2 inline-flex items-center text-[15px] font-semibold text-sudabelt-navy cursor-pointer after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.75 after:bg-sudabelt-green after:transition-transform after:duration-200 ${
+                  openDropdown === 'insights'
+                    ? 'after:scale-x-100'
+                    : 'after:scale-x-0 hover:after:scale-x-100'
+                }`}
+              >
+                Insights
+              </button>
+
+              {openDropdown === 'insights' && (
+                <div className="absolute top-[calc(100%+8px)] left-0 w-52.5 rounded-tray bg-white border border-sudabelt-border shadow-dropdown overflow-hidden z-50">
+                  <div className="py-2">
+                    {INSIGHTS_DROPDOWN_LINKS.map((item) => (
                       <Link
-                        key={sub.path}
-                        to={sub.path}
-                        onClick={() => setActiveDropdown(null)}
-                        className="group p-3 rounded-[5.5px] hover:bg-[#F4F6F9] transition-colors"
+                        key={item.path}
+                        to={item.path}
+                        onClick={closeAllMenus}
+                        className="block px-5 py-3 text-[15px] font-semibold text-sudabelt-navy hover:bg-sudabelt-surface border-b-2 border-transparent hover:border-sudabelt-green transition-all"
                       >
-                        <div className="flex items-center justify-between text-[14px] font-bold text-[#001142] group-hover:text-[#006837]">
-                          <span>{sub.label}</span>
-                          <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </div>
-                        <p className="text-[12.5px] text-[#3B4468] leading-snug mt-0.5">
-                          {sub.description}
-                        </p>
+                        {item.label}
                       </Link>
                     ))}
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => setOpenDropdown(null)}
+                    className="w-full text-left px-5 py-3.5 bg-sudabelt-surface hover:bg-sudabelt-header-border border-t border-sudabelt-header-border text-[15px] font-semibold text-sudabelt-navy transition-colors cursor-pointer"
+                  >
+                    Close menu
+                  </button>
                 </div>
               )}
             </div>
-          ))}
-        </nav>
 
-        {/* Action Controls: Measured RFQ Tray + Request Quote CTA */}
-        <div className="flex items-center gap-3">
-          {/* RFQ Tray Button (Measured from Figma 03: #3FA9F5 bg, 12px radius, #001142 badge) */}
+            {/* More Dropdown */}
+            <div className="relative flex items-center">
+              <button
+                type="button"
+                onClick={() => setOpenDropdown((prev) => (prev === 'more' ? null : 'more'))}
+                aria-expanded={openDropdown === 'more'}
+                className={`relative py-2 inline-flex items-center text-[15px] font-semibold text-sudabelt-navy cursor-pointer after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.75 after:bg-sudabelt-green after:transition-transform after:duration-200 ${
+                  openDropdown === 'more'
+                    ? 'after:scale-x-100'
+                    : 'after:scale-x-0 hover:after:scale-x-100'
+                }`}
+              >
+                More
+              </button>
+
+              {openDropdown === 'more' && (
+                <div className="absolute top-[calc(100%+8px)] right-0 w-53.75 rounded-tray bg-white border border-sudabelt-border shadow-dropdown overflow-hidden z-50">
+                  <div className="py-2">
+                    {MORE_DROPDOWN_LINKS.map((item) => (
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        onClick={closeAllMenus}
+                        className="block px-5 py-3 text-[15px] font-semibold text-sudabelt-navy hover:bg-sudabelt-surface border-b-2 border-transparent hover:border-sudabelt-green transition-all"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setOpenDropdown(null)}
+                    className="w-full text-left px-5 py-3.5 bg-sudabelt-surface hover:bg-sudabelt-header-border border-t border-sudabelt-header-border text-[15px] font-semibold text-sudabelt-navy transition-colors cursor-pointer"
+                  >
+                    Close menu
+                  </button>
+                </div>
+              )}
+            </div>
+          </nav>
+
+          {/* Measured RFQ Cart Button with Solid Blue (bg-sudabelt-blue) Background and Dark Navy Badge */}
           <Link
             to="/rfq"
-            aria-label={`Open RFQ Quote Tray with ${itemCount} items`}
-            className="h-[46px] lg:h-[52px] px-3.5 lg:px-4 rounded-[12px] bg-[#3FA9F5] hover:bg-[#2b99eb] text-[#001142] font-extrabold text-[13px] tracking-[0.04em] uppercase inline-flex items-center gap-2.5 transition-colors shrink-0"
+            onClick={closeAllMenus}
+            aria-label={`RFQ Cart with ${itemCount} items`}
+            className="h-11.5 lg:h-13.5 px-4 rounded-tray bg-sudabelt-blue hover:bg-sudabelt-blue-hover text-sudabelt-navy font-extrabold text-[13px] tracking-[0.04em] uppercase inline-flex items-center gap-2.5 transition-colors shrink-0 shadow-xs"
           >
-            <span>RFQ TRAY</span>
-            <span className="w-[30px] h-[30px] lg:w-[34px] lg:h-[34px] rounded-[8px] bg-[#001142] text-white font-mono text-[13px] font-bold inline-flex items-center justify-center">
+            <span>RFQ CART</span>
+            <span className="w-7.5 h-7.5 lg:w-8.5 lg:h-8.5 rounded-badge bg-sudabelt-navy text-white font-mono text-[13px] font-bold inline-flex items-center justify-center">
               {itemCount}
             </span>
           </Link>
 
-          {/* Standard Dark CTA (Measured from Figma 03: 50px high, #001142 bg, 5.5px radius) */}
-          <Link
-            to="/rfq"
-            className="hidden sm:inline-flex h-[46px] lg:h-[50px] px-[22px] rounded-[5.5px] bg-[#001142] hover:bg-[#006837] text-white font-bold text-[13px] tracking-[0.06em] uppercase items-center justify-center transition-colors shrink-0"
-          >
-            Request Quote
-          </Link>
-
-          {/* Mobile Drawer Trigger (Non-circular 5.5px radius) */}
+          {/* Responsive Tablet & Mobile Menu Button */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
             aria-expanded={mobileMenuOpen}
             aria-label="Toggle Navigation Menu"
-            className="xl:hidden w-[44px] h-[44px] rounded-[5.5px] border border-[#DCE1EB] bg-[#F4F6F9] text-[#001142] inline-flex items-center justify-center"
+            className="lg:hidden w-11 h-11 rounded-control border border-sudabelt-border bg-sudabelt-surface text-sudabelt-navy inline-flex items-center justify-center cursor-pointer"
           >
             {mobileMenuOpen ? (
               <X className="w-5 h-5" strokeWidth={1.75} />
@@ -240,56 +254,83 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation Drawer */}
+      {/* Tablet & Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-white border-t border-[#E3E7EF] px-6 py-5 shadow-xl">
-          <nav className="flex flex-col gap-2" aria-label="Mobile Navigation">
-            {PRIMARY_NAV_ITEMS.map((item) => (
-              <div key={item.path} className="border-b border-[#E3E7EF]/70 pb-2">
+        <div className="lg:hidden bg-white border-t border-sudabelt-header-border shadow-xl">
+          <nav
+            aria-label="Mobile Navigation"
+            className="sudabelt-container py-5 flex flex-col divide-y divide-sudabelt-header-border"
+          >
+            <div className="py-2 flex flex-col gap-1">
+              {[
+                { label: 'About', path: '/about' },
+                { label: 'Portfolio', path: '/products' },
+                { label: 'Services', path: '/services/turnkey' },
+                { label: 'Projects', path: '/projects' },
+              ].map((item) => (
                 <NavLink
+                  key={item.path}
                   to={item.path}
-                  onClick={closeMobileMenu}
+                  onClick={closeAllMenus}
                   className={({ isActive }) =>
-                    `block py-2 text-[15px] font-bold ${
-                      isActive ? 'text-[#006837]' : 'text-[#001142]'
+                    `px-3 py-2.5 rounded-control text-[15px] font-semibold ${
+                      isActive
+                        ? 'bg-sudabelt-surface text-sudabelt-navy border-b-2 border-sudabelt-green'
+                        : 'text-sudabelt-navy'
                     }`
                   }
                 >
                   {item.label}
                 </NavLink>
-                {item.children && (
-                  <div className="pl-3 flex flex-col gap-1.5 mt-1">
-                    {item.children.map((sub) => (
-                      <Link
-                        key={sub.path}
-                        to={sub.path}
-                        onClick={closeMobileMenu}
-                        className="text-[13px] font-medium text-[#3B4468] hover:text-[#001142] py-1"
-                      >
-                        • {sub.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
 
-            <div className="pt-3 flex flex-col sm:flex-row gap-3">
-              <Link
-                to="/rfq"
-                onClick={closeMobileMenu}
-                className="h-[48px] px-5 rounded-[5.5px] bg-[#001142] text-white font-bold text-[13px] tracking-[0.06em] uppercase inline-flex items-center justify-center"
+            {/* Insights Mobile Section */}
+            <div className="py-3">
+              <div className="px-3 text-[11.5px] font-bold uppercase tracking-[0.12em] text-sudabelt-label mb-1.5">
+                Insights
+              </div>
+              <div className="flex flex-col gap-1">
+                {INSIGHTS_DROPDOWN_LINKS.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={closeAllMenus}
+                    className="px-3 py-2 rounded-control text-[15px] font-semibold text-sudabelt-navy hover:bg-sudabelt-surface"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* More Mobile Section */}
+            <div className="py-3">
+              <div className="px-3 text-[11.5px] font-bold uppercase tracking-[0.12em] text-sudabelt-label mb-1.5">
+                More
+              </div>
+              <div className="flex flex-col gap-1">
+                {MORE_DROPDOWN_LINKS.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={closeAllMenus}
+                    className="px-3 py-2 rounded-control text-[15px] font-semibold text-sudabelt-navy hover:bg-sudabelt-surface"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-3">
+              <button
+                type="button"
+                onClick={closeAllMenus}
+                className="w-full px-4 py-3 rounded-control bg-sudabelt-surface text-sudabelt-navy text-[14px] font-semibold text-left cursor-pointer"
               >
-                Request Institutional Quote
-              </Link>
-              <Link
-                to="/support/emergency-breakdown"
-                onClick={closeMobileMenu}
-                className="h-[48px] px-5 rounded-[5.5px] border border-[#E30000] text-[#E30000] font-bold text-[13px] tracking-[0.05em] uppercase inline-flex items-center justify-center gap-2"
-              >
-                <ShieldAlert className="w-4 h-4" />
-                <span>Log Breakdown Ticket</span>
-              </Link>
+                Close menu
+              </button>
             </div>
           </nav>
         </div>

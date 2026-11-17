@@ -7,6 +7,7 @@ import AboutPage from './pages/AboutPage'
 import ProductsPage from './pages/ProductsPage'
 import ProductDetailPage from './pages/ProductDetailPage'
 import TurnkeyServicesPage from './pages/TurnkeyServicesPage'
+import ProjectsPage from './pages/ProjectsPage'
 import TrainingHubPage from './pages/TrainingHubPage'
 import TrainingRegisterPage from './pages/TrainingRegisterPage'
 import ComparePage from './pages/ComparePage'
@@ -32,6 +33,8 @@ const App: React.FC = () => {
         <Route path="/portfolio" element={<ProductsPage />} />
         <Route path="/products/:category/:slug" element={<ProductDetailPage />} />
         <Route path="/services/turnkey" element={<TurnkeyServicesPage />} />
+        <Route path="/services" element={<TurnkeyServicesPage />} />
+        <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/training-hub" element={<TrainingHubPage />} />
         <Route path="/training-hub/register" element={<TrainingRegisterPage />} />
         <Route path="/why-sudabelt/compare" element={<ComparePage />} />

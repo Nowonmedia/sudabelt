@@ -7,23 +7,23 @@ const RFQPage: React.FC = () => {
   return (
     <section className="py-16">
       <div className="sudabelt-container">
-        <span className="text-eyebrow text-[#006837]">INSTITUTIONAL PROCUREMENT PORTAL</span>
-        <h1 className="text-section-heading text-[#001142] mt-2">
+        <span className="text-eyebrow text-sudabelt-green">INSTITUTIONAL PROCUREMENT PORTAL</span>
+        <h1 className="text-section-heading text-sudabelt-navy mt-2">
           Multi-Step Request for Quote (RFQ) & Tender Builder
         </h1>
-        <p className="text-[#3B4468] mt-3 max-w-2xl">
-          Items in your RFQ Tray ({itemCount} total units across {selectedItems.length} SKUs) are
+        <p className="text-sudabelt-body mt-3 max-w-2xl">
+          Items in your RFQ Cart ({itemCount} total units across {selectedItems.length} SKUs) are
           automatically persisted as you browse the catalog.
         </p>
 
         {selectedItems.length > 0 && (
-          <div className="mt-8 p-6 rounded-tl-[22px] rounded-br-[22px] border border-[#99C1A1] bg-[#F4F6F9]">
+          <div className="mt-8 p-6 rounded-tl-card rounded-br-card border border-sudabelt-sage bg-sudabelt-surface">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-[18px] font-bold text-[#001142]">Current Quote Tray Items</h2>
+              <h2 className="text-[18px] font-bold text-sudabelt-navy">Current Quote Tray Items</h2>
               <button
                 type="button"
                 onClick={clearTray}
-                className="text-[13px] font-bold text-[#E30000] hover:underline cursor-pointer"
+                className="text-[13px] font-bold text-sudabelt-red hover:underline cursor-pointer"
               >
                 Clear Tray
               </button>
@@ -32,22 +32,22 @@ const RFQPage: React.FC = () => {
               {selectedItems.map((item) => (
                 <li
                   key={item.id}
-                  className="p-3 rounded-[5.5px] bg-white border border-[#DCE1EB] flex items-center justify-between gap-4"
+                  className="p-3 rounded-control bg-white border border-sudabelt-border flex items-center justify-between gap-4"
                 >
                   <div>
-                    <span className="font-bold text-[#001142]">{item.name}</span>
+                    <span className="font-bold text-sudabelt-navy">{item.name}</span>
                     {item.sku && (
-                      <span className="ml-2 font-mono text-[12px] text-[#4A5478]">
+                      <span className="ml-2 font-mono text-[12px] text-sudabelt-label">
                         ({item.sku})
                       </span>
                     )}
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="font-mono font-bold text-[#006837]">Qty: {item.quantity}</span>
+                    <span className="font-mono font-bold text-sudabelt-green">Qty: {item.quantity}</span>
                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
-                      className="text-[12px] font-semibold text-[#E30000] hover:underline cursor-pointer"
+                      className="text-[12px] font-semibold text-sudabelt-red hover:underline cursor-pointer"
                     >
                       Remove
                     </button>

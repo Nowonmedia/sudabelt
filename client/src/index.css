@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   TAILWIND CSS v4 DESIGN TOKENS — SUDABELT MEDICAL (FIGMA FOUNDATIONS 01-04)
+   TAILWIND CSS v4 DESIGN TOKENS - SUDABELT MEDICAL (FIGMA FOUNDATIONS 01-04)
    ========================================================================== */
 @theme {
   /* Font Families */
@@ -10,8 +10,12 @@
 
   /* Brand & Action Colors (02 / FOUNDATIONS) */
   --color-sudabelt-navy: #001142;
+  --color-sudabelt-navy-hover: #001b66;
   --color-sudabelt-green: #006837;
+  --color-sudabelt-green-dark: #004d28;
+  --color-sudabelt-green-tint: #EAF3EC;
   --color-sudabelt-blue: #3FA9F5;
+  --color-sudabelt-blue-hover: #2b99eb;
   --color-sudabelt-blue-accessible: #0A6FC0;
   --color-sudabelt-red: #E30000;
   --color-sudabelt-sage: #99C1A1;
@@ -36,13 +40,14 @@
 
   /* Measured Shadows (03 / IMPLEMENTATION) */
   --shadow-sudabot: 0 12px 32px 0 rgba(0, 17, 66, 0.28);
+  --shadow-dropdown: 0 12px 32px 0 rgba(0, 17, 66, 0.14);
 }
 
 @layer base {
   html {
     font-family: var(--font-sans);
-    color: #001142;
-    background-color: #FFFFFF;
+    color: var(--color-sudabelt-navy);
+    background-color: var(--color-sudabelt-white);
     scroll-behavior: smooth;
   }
 
@@ -50,8 +55,8 @@
     margin: 0;
     font-size: 16px;
     line-height: 26.4px;
-    color: #001142;
-    background-color: #FFFFFF;
+    color: var(--color-sudabelt-navy);
+    background-color: var(--color-sudabelt-white);
   }
 
   code,
@@ -89,15 +94,15 @@
 
   /* Measured Typography Classes from 01 / FOUNDATIONS */
   .text-hero-display {
-    font-size: clamp(2.25rem, 4vw, 3.25rem); /* up to 52px */
-    line-height: 1.19; /* 62px at 52px */
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    line-height: 1.19;
     letter-spacing: -0.03em;
     font-weight: 800;
   }
 
   .text-section-heading {
-    font-size: clamp(1.875rem, 3.2vw, 2.75rem); /* up to 44px */
-    line-height: 1.12; /* 49.28px at 44px */
+    font-size: clamp(1.875rem, 3.2vw, 2.75rem);
+    line-height: 1.12;
     letter-spacing: -0.88px;
     font-weight: 800;
   }

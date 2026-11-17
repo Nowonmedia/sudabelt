@@ -1,316 +1,191 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router'
-import { MapPin, Phone, Mail, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react'
+import { FaLinkedinIn, FaFacebookF, FaInstagram } from 'react-icons/fa6'
 import SudabeltLogo from '../components/common/SudabeltLogo'
 
-const CARE_VALUES = [
-  {
-    letter: 'C',
-    title: 'Commitment',
-    detail: 'Dedicated to elevating clinical outcomes across Sub-Saharan Africa.',
-  },
-  {
-    letter: 'A',
-    title: 'Accountability',
-    detail: 'Single-partner ownership from site engineering to staff certification.',
-  },
-  {
-    letter: 'R',
-    title: 'Reliability',
-    detail: 'Genuine OEM hardware backed by local buffer consumables & spare parts.',
-  },
-  {
-    letter: 'E',
-    title: 'Efficiency',
-    detail: '<24hr biomedical engineering dispatch SLAs that protect hospital uptime.',
-  },
-]
-
-const REGIONAL_HUBS = [
-  {
-    city: 'Lagos (Corporate HQ)',
-    address: 'Victoria Island, Lagos State, Nigeria',
-    coverage: 'South-West & Coastal Teaching Hospital Corridor',
-  },
-  {
-    city: 'Abuja (Federal Capital Hub)',
-    address: 'Maitama District, FCT Abuja, Nigeria',
-    coverage: 'North-Central, Federal Ministry & Specialist Centers',
-  },
-  {
-    city: 'Kano (Northern Operations Hub)',
-    address: 'Sharada Industrial & Clinical Corridor, Kano State',
-    coverage: 'North-West & North-East Tertiary Referral Network',
-  },
-  {
-    city: 'Port Harcourt (South-South Hub)',
-    address: 'GRA Phase II, Port Harcourt, Rivers State',
-    coverage: 'South-South & South-East Clinical Engineering Desk',
-  },
-]
-
 const Footer: React.FC = () => {
-  const [newsletterEmail, setNewsletterEmail] = useState<string>('')
-  const [subscribed, setSubscribed] = useState<boolean>(false)
-
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!newsletterEmail.trim()) return
-    setSubscribed(true)
-    setNewsletterEmail('')
-  }
-
   return (
-    <footer className="bg-[#001142] text-white border-t border-white/18">
-      {/* Top C.A.R.E. Governance Strip */}
-      <div className="border-b border-white/18">
-        <div className="sudabelt-container py-10">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
-            <div>
-              <span className="text-eyebrow text-[#3FA9F5]">THE SUDABELT OPERATING STANDARD</span>
-              <h2 className="text-[24px] lg:text-[28px] font-extrabold tracking-[-0.02em] text-white mt-2">
-                Built on C.A.R.E. Clinical Governance
-              </h2>
-            </div>
-            <Link
-              to="/why-sudabelt/compare"
-              className="h-[50px] px-[26px] rounded-[5.5px] bg-[#006837] hover:bg-[#00552d] text-white font-bold text-[13px] tracking-[0.06em] uppercase inline-flex items-center gap-2.5 self-start transition-colors"
-            >
-              <span>Open Live Comparison</span>
-              <ArrowRight className="w-4 h-4" />
+    <footer className="bg-sudabelt-navy text-white">
+      <div className="sudabelt-container pt-16 pb-10">
+        {/* Top 4-Column Grid matching Figma Screenshot */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/18">
+          {/* Col 1: Larger Logo Aligned Flush to Left Edge, Tagline & Social Icons (5 cols) */}
+          <div className="sm:col-span-2 lg:col-span-5">
+            <Link to="/" className="inline-block focus:outline-none">
+              <SudabeltLogo variant="white" size="footer" />
             </Link>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {CARE_VALUES.map((item) => (
-              <div
-                key={item.letter}
-                className="p-5 rounded-tl-[22px] rounded-br-[22px] border border-white/18 bg-white/[0.03]"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="w-8 h-8 rounded-[5.5px] bg-[#3FA9F5] text-[#001142] font-mono font-extrabold text-[15px] inline-flex items-center justify-center">
-                    {item.letter}
-                  </span>
-                  <h3 className="text-[17px] font-bold text-white">{item.title}</h3>
-                </div>
-                <p className="text-[13.5px] text-white/72 leading-relaxed">{item.detail}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Regional Hubs Bar */}
-      <div className="border-b border-white/18 bg-white/[0.02]">
-        <div className="sudabelt-container py-8">
-          <div className="text-eyebrow text-[#3FA9F5] mb-4">
-            NATIONWIDE WAREHOUSE, COLD-CHAIN & BIOMEDICAL DISPATCH HUBS
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {REGIONAL_HUBS.map((hub) => (
-              <div
-                key={hub.city}
-                className="p-4 rounded-[5.5px] border border-white/18 bg-[#001142]"
-              >
-                <div className="flex items-center gap-2 text-[14px] font-bold text-white">
-                  <MapPin className="w-4 h-4 text-[#3FA9F5] shrink-0" />
-                  <span>{hub.city}</span>
-                </div>
-                <p className="text-[13px] text-white/72 mt-1.5">{hub.address}</p>
-                <p className="font-mono text-[11.5px] text-[#3FA9F5] mt-2">{hub.coverage}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Footer Columns & Newsletter Subscription */}
-      <div className="sudabelt-container py-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
-          {/* Col 1: Brand & Mission (4 cols) */}
-          <div className="lg:col-span-4">
-            <SudabeltLogo variant="white" />
-            <p className="text-[14.5px] text-white/72 leading-relaxed mt-4">
-              Africa’s End-to-End Healthcare Infrastructure Partner. Authorized OEM equipment
-              supply, turnkey facility planning, on-site clinical staff certification, local buffer
-              consumables, and preventive biomedical engineering.
+            <p className="text-[13.5px] leading-5.5 text-white/72 mt-5 max-w-80">
+              Africa’s end-to-end healthcare infrastructure partner: equipment supply, clinical
+              training, consumables and biomedical maintenance.
             </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {['ISO 13485 Aligned', 'NAFDAC Registered', 'CE / FDA OEM Partners'].map((badge) => (
-                <span
-                  key={badge}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[5.5px] border border-white/22 text-[11.5px] font-mono text-white/82"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#3FA9F5]" />
-                  <span>{badge}</span>
-                </span>
-              ))}
+
+            {/* Social Media Icons: Instagram, Facebook, LinkedIn */}
+            <div className="flex items-center gap-2.5 mt-5">
+              <a
+                href="https://www.instagram.com/sudabeltmedical"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Sudabelt Instagram"
+                className="w-8 h-8 rounded-control border border-white/22 text-white/82 hover:border-sudabelt-blue hover:text-sudabelt-blue inline-flex items-center justify-center transition-colors"
+              >
+                <FaInstagram className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href="https://www.facebook.com/sudabeltmedical"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Sudabelt Facebook"
+                className="w-8 h-8 rounded-control border border-white/22 text-white/82 hover:border-sudabelt-blue hover:text-sudabelt-blue inline-flex items-center justify-center transition-colors"
+              >
+                <FaFacebookF className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/sudabelt-medical"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Sudabelt LinkedIn"
+                className="w-8 h-8 rounded-control border border-white/22 text-white/82 hover:border-sudabelt-blue hover:text-sudabelt-blue inline-flex items-center justify-center transition-colors"
+              >
+                <FaLinkedinIn className="w-3.5 h-3.5" />
+              </a>
             </div>
           </div>
 
-          {/* Col 2: Portfolio & Solutions (2 cols) */}
+          {/* Col 2: PORTFOLIO (2 cols) */}
           <div className="lg:col-span-2">
-            <h3 className="text-eyebrow text-[#3FA9F5] mb-4">PORTFOLIO</h3>
-            <ul className="space-y-2.5 text-[14px]">
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.12em] text-sudabelt-blue mb-4">
+              PORTFOLIO
+            </h3>
+            <ul className="space-y-2.5 text-[13.5px]">
               <li>
-                <Link to="/products" className="text-white/82 hover:text-[#3FA9F5] transition-colors">
-                  All OEM Partners
+                <Link
+                  to="/products?category=imaging-and-life-care"
+                  className="text-white/82 hover:text-sudabelt-blue transition-colors"
+                >
+                  Imaging &amp; Life Care
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/products?category=renal-care"
-                  className="text-white/82 hover:text-[#3FA9F5] transition-colors"
+                  to="/products?category=renal-and-critical-care"
+                  className="text-white/82 hover:text-sudabelt-blue transition-colors"
                 >
-                  Renal Care & HD
+                  Renal &amp; Critical Care
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/products?category=blood-banking-apheresis"
-                  className="text-white/82 hover:text-[#3FA9F5] transition-colors"
+                  to="/products?category=blood-management-cell-technologies"
+                  className="text-white/82 hover:text-sudabelt-blue transition-colors"
                 >
-                  Blood Banking & Apheresis
+                  Blood Management
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/products?category=consumables-reagents"
-                  className="text-white/82 hover:text-[#3FA9F5] transition-colors"
+                  to="/products?category=laboratory-and-diagnostics"
+                  className="text-white/82 hover:text-sudabelt-blue transition-colors"
                 >
-                  Consumables & Cartridges
+                  Laboratory &amp; Diagnostics
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/services/turnkey"
-                  className="text-white/82 hover:text-[#3FA9F5] transition-colors"
+                  to="/products?category=respiratory-and-neonatal-care"
+                  className="text-white/82 hover:text-sudabelt-blue transition-colors"
                 >
-                  Turnkey Oxygen & RO Plants
+                  Respiratory &amp; Neonatal
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/products?category=minimally-invasive-surgery"
+                  className="text-white/82 hover:text-sudabelt-blue transition-colors"
+                >
+                  Minimally Invasive Surgery
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Institutional Links (2 cols) */}
+          {/* Col 3: COMPANY (2 cols) */}
           <div className="lg:col-span-2">
-            <h3 className="text-eyebrow text-[#3FA9F5] mb-4">INSTITUTIONAL</h3>
-            <ul className="space-y-2.5 text-[14px]">
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.12em] text-sudabelt-blue mb-4">
+              COMPANY
+            </h3>
+            <ul className="space-y-2.5 text-[13.5px]">
               <li>
-                <Link to="/about" className="text-white/82 hover:text-[#3FA9F5] transition-colors">
-                  About & C.A.R.E.
+                <Link
+                  to="/about"
+                  className="text-white/82 hover:text-sudabelt-blue transition-colors"
+                >
+                  About Us
                 </Link>
               </li>
               <li>
                 <Link
                   to="/why-sudabelt/compare"
-                  className="text-white/82 hover:text-[#3FA9F5] transition-colors"
+                  className="text-white/82 hover:text-sudabelt-blue transition-colors"
                 >
-                  Why Sudabelt (Compare)
+                  Why Sudabelt
                 </Link>
               </li>
               <li>
                 <Link
                   to="/training-hub"
-                  className="text-white/82 hover:text-[#3FA9F5] transition-colors"
+                  className="text-white/82 hover:text-sudabelt-blue transition-colors"
                 >
-                  Clinical Training Hub
+                  Training Hub
                 </Link>
               </li>
               <li>
                 <Link
                   to="/resources/newsletters"
-                  className="text-white/82 hover:text-[#3FA9F5] transition-colors"
+                  className="text-white/82 hover:text-sudabelt-blue transition-colors"
                 >
-                  Newsletter Archive
+                  Newsletters
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-white/82 hover:text-[#3FA9F5] transition-colors">
-                  Clinical Blog
-                </Link>
-              </li>
-              <li>
-                <Link to="/careers" className="text-white/82 hover:text-[#3FA9F5] transition-colors">
-                  Biomedical Careers
+                <Link
+                  to="/rfq"
+                  className="text-white/82 hover:text-sudabelt-blue transition-colors"
+                >
+                  Request a Quote
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 4: Clinical Newsletter Subscription & Direct Desk (4 cols) */}
-          <div className="lg:col-span-4">
-            <h3 className="text-eyebrow text-[#3FA9F5] mb-3">
-              SUBSCRIBE TO CLINICAL & BIOMEDICAL BULLETINS
+          {/* Col 4: REGIONAL HUBS (3 cols) */}
+          <div className="lg:col-span-3">
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.12em] text-sudabelt-blue mb-4">
+              REGIONAL HUBS
             </h3>
-            <p className="text-[13.5px] text-white/72 mb-4">
-              Receive quarterly clinical monographs, NAFDAC/ISO regulatory updates, and preventive
-              maintenance advisories for hospital leaders.
-            </p>
-
-            {subscribed ? (
-              <div className="p-3.5 rounded-[5.5px] bg-[#006837]/30 border border-[#006837] flex items-center gap-2.5 text-[13.5px] text-white">
-                <CheckCircle2 className="w-4 h-4 text-[#3FA9F5] shrink-0" />
-                <span>Thank you! You are subscribed to Sudabelt Clinical Bulletins.</span>
-              </div>
-            ) : (
-              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-2">
-                <label htmlFor="footer-newsletter-email" className="sr-only">
-                  Hospital or Work Email
-                </label>
-                <input
-                  id="footer-newsletter-email"
-                  type="email"
-                  required
-                  value={newsletterEmail}
-                  onChange={(e) => setNewsletterEmail(e.target.value)}
-                  placeholder="Enter hospital / work email..."
-                  className="flex-1 h-[46px] px-3.5 rounded-[5.5px] bg-white/10 border border-white/22 text-white placeholder:text-white/50 text-[14px] focus:outline-none focus:border-[#3FA9F5]"
-                />
-                <button
-                  type="submit"
-                  className="h-[46px] px-5 rounded-[5.5px] bg-[#3FA9F5] hover:bg-[#2b99eb] text-[#001142] font-extrabold text-[13px] tracking-[0.06em] uppercase transition-colors shrink-0 cursor-pointer"
-                >
-                  Subscribe
-                </button>
-              </form>
-            )}
-
-            <div className="mt-6 pt-5 border-t border-white/18 space-y-2 text-[13px] text-white/82">
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#3FA9F5]" />
-                <span className="font-mono">+234 (0) 800-SUDABELT</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-[#3FA9F5]" />
-                <a href="mailto:sales@sudabelt.com" className="hover:text-[#3FA9F5]">
-                  sales@sudabelt.com
+            <ul className="space-y-2.5 text-[13.5px] text-white/82">
+              <li>Lagos HQ: Victoria Island</li>
+              <li>Abuja: Maitama</li>
+              <li>Kano: Sharada</li>
+              <li>Teaching Hospital Satellites</li>
+              <li className="pt-1 font-mono text-[12.5px] text-sudabelt-blue">
+                <a href="tel:+2349011235400" className="hover:underline">
+                  +234 901 123 5400
                 </a>
-                <span className="text-white/30">•</span>
-                <a href="mailto:support@sudabelt.com" className="hover:text-[#3FA9F5]">
-                  support@sudabelt.com
+              </li>
+              <li className="font-mono text-[12.5px] text-sudabelt-blue">
+                <a href="mailto:info@sudabelt.com" className="hover:underline">
+                  info@sudabelt.com
                 </a>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
 
-      {/* Bottom Legal & Copyright Bar */}
-      <div className="border-t border-white/18 bg-[#000c30]">
-        <div className="sudabelt-container py-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12.5px] text-white/70">
-          <p>© {new Date().getFullYear()} Sudabelt Medical Ltd. All rights reserved.</p>
-          <div className="flex flex-wrap items-center gap-5">
-            <Link to="/support/emergency-breakdown" className="hover:text-[#3FA9F5]">
-              Emergency SLA Dispatch
-            </Link>
-            <Link to="/rfq" className="hover:text-[#3FA9F5]">
-              Institutional RFQ Portal
-            </Link>
-            <Link to="/admin" className="hover:text-[#3FA9F5]">
-              Staff CRM
-            </Link>
-          </div>
+        {/* Bottom Copyright & C.A.R.E. Bar */}
+        <div className="pt-7 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-white/70">
+          <p>Commitment • Accountability • Reliability • Efficiency</p>
+          <p>© 2026 Sudabelt Medical Ltd. ISO 9001:2015 &amp; NAFDAC Certified.</p>
         </div>
       </div>
     </footer>

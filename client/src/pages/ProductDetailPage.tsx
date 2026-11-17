@@ -7,13 +7,13 @@ const ProductDetailPage: React.FC = () => {
   return (
     <section className="py-16">
       <div className="sudabelt-container">
-        <span className="text-eyebrow text-[#006837]">
+        <span className="text-eyebrow text-sudabelt-green">
           {category?.replace(/-/g, ' ') || 'PRODUCT SPECIFICATION'}
         </span>
-        <h1 className="text-section-heading text-[#001142] mt-2">
+        <h1 className="text-section-heading text-sudabelt-navy mt-2">
           {slug?.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
         </h1>
-        <p className="text-tech-mono text-[#4A5478] mt-2">
+        <p className="text-tech-mono text-sudabelt-label mt-2">
           Route: /products/{category}/{slug}
         </p>
       </div>
