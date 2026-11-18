@@ -15,7 +15,8 @@ apiV1Router.use('/admin', adminRouter);
 // 3. Public Catalog & Content Retrieval (/api/v1/products*, /api/v1/articles*)
 apiV1Router.use('/', publicContentRouter);
 
-// 4. Public Form Ingestion, WhatsApp Payload & Lead Capture Routes (/api/v1/rfq, etc.)
+// 4. Public Form Ingestion, WhatsApp Payload & Lead Capture Routes (/api/v1/rfq, /api/v1/forms/rfq, etc.)
 apiV1Router.use('/', formsRouter);
+apiV1Router.use('/forms', formsRouter);
 
 export default apiV1Router;

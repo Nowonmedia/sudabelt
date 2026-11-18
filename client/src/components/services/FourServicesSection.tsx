@@ -114,7 +114,7 @@ const FourServicesSection: React.FC = () => {
                   <div className="lg:col-span-5 flex flex-col justify-between">
                     <div>
                       {/* Image from Milanote with Badge */}
-                      <div className="relative aspect-[16/10] rounded-card overflow-hidden shadow-xs bg-sudabelt-surface mb-5">
+                      <div className="relative aspect-16/10 rounded-card overflow-hidden shadow-xs bg-sudabelt-surface mb-5">
                         <img
                           src={service.image}
                           alt={service.title}

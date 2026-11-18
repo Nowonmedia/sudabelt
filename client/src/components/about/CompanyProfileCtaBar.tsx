@@ -23,10 +23,10 @@ const CompanyProfileCtaBar: React.FC = () => {
             <SectionReveal direction="right" delay={0.1}>
               <div>
                 <div className="text-[12px] font-bold uppercase tracking-[0.14em] text-sudabelt-blue mb-1">
-                  Company Overview
+                  Advancing Healthcare Excellence in Africa
                 </div>
                 <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                  Our business, capabilities and portfolio.
+                  Empowering Healthcare, Transforming Lives.
                 </h2>
               </div>
             </SectionReveal>

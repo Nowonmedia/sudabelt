@@ -182,7 +182,7 @@ const leadCaptureSchema = z
       .string({ required_error: 'Work email is required' })
       .trim()
       .email('Valid work email is required'),
-    phone: z.string({ required_error: 'Phone number is required' }).trim().min(7, 'Valid phone number is required'),
+    phone: z.string().trim().optional(),
     facilityName: z
       .string({ required_error: 'Facility name is required' })
       .trim()

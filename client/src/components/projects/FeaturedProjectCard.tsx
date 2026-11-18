@@ -13,7 +13,7 @@ const FeaturedProjectCard: React.FC = () => {
             {/* Left Column: Visual Feature Card with Tiles */}
             <div className="lg:col-span-6">
               <SectionReveal direction="right" delay={0.1}>
-                <div className="relative rounded-card overflow-hidden shadow-md aspect-[16/11] flex flex-col justify-end p-6 sm:p-8 text-white">
+                <div className="relative rounded-card overflow-hidden shadow-md aspect-16/11 flex flex-col justify-end p-6 sm:p-8 text-white">
                   {/* Photo */}
                   <img
                     src="/images/projects/featured-adeboye.webp"
@@ -21,7 +21,7 @@ const FeaturedProjectCard: React.FC = () => {
                     className="absolute inset-0 w-full h-full object-cover object-center"
                   />
                   {/* Dark gradient wash */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-sudabelt-navy/95 via-sudabelt-navy/60 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-sudabelt-navy/95 via-sudabelt-navy/60 to-transparent" />
 
                   {/* Overlay Content */}
                   <div className="relative z-10">
@@ -123,7 +123,7 @@ const FeaturedProjectCard: React.FC = () => {
             </div>
 
             <div className="p-6 sm:p-8 overflow-y-auto space-y-6">
-              <div className="rounded-control overflow-hidden aspect-[16/9] shadow-sm">
+              <div className="rounded-control overflow-hidden aspect-video shadow-sm">
                 <img
                   src="/images/projects/featured-adeboye.webp"
                   alt="Enoch & Folu Adeboye Dialysis Suite"

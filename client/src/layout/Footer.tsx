@@ -1,12 +1,71 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router'
 import { FaLinkedinIn, FaFacebookF, FaInstagram } from 'react-icons/fa6'
+import { toast } from 'react-toastify'
 import SudabeltLogo from '../components/common/SudabeltLogo'
+import { api } from '../api/api'
 
 const Footer: React.FC = () => {
+  const [subscriberEmail, setSubscriberEmail] = useState('')
+  const [isSubscribing, setIsSubscribing] = useState(false)
+  const [subscribedSuccess, setSubscribedSuccess] = useState(false)
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!subscriberEmail || !subscriberEmail.includes('@')) {
+      toast.error('Please enter a valid email address.')
+      return
+    }
+    setIsSubscribing(true)
+    try {
+      const res = await api.subscribeNewsletter({ email: subscriberEmail })
+      setSubscribedSuccess(true)
+      toast.success(res.message || 'Subscribed successfully!')
+      setSubscriberEmail('')
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Subscription failed.'
+      toast.error(msg)
+    } finally {
+      setIsSubscribing(false)
+    }
+  }
+
   return (
     <footer className="bg-sudabelt-navy text-white">
       <div className="sudabelt-container pt-16 pb-10">
+        {/* Newsletter Subscription Row */}
+        <div className="pb-12 mb-12 border-b border-white/18 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <span className="text-[11px] font-bold tracking-[0.14em] uppercase text-emerald-400 block mb-1">
+              CLINICAL DISPATCH &amp; INDUSTRY INSIGHTS
+            </span>
+            <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+              Subscribe to Sudabelt Medical Insights.
+            </h3>
+            <p className="text-xs sm:text-sm text-white/70 mt-1 max-w-lg">
+              Quarterly updates on hospital engineering standards, dialysis protocols, and biomedical maintenance across Nigeria.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <input
+              type="email"
+              value={subscriberEmail}
+              onChange={(e) => setSubscriberEmail(e.target.value)}
+              placeholder="Enter your work email"
+              required
+              className="h-11 px-4 rounded-control bg-white/10 border border-white/20 text-white placeholder-white/50 text-xs focus:outline-none focus:border-sudabelt-blue w-full sm:w-72"
+            />
+            <button
+              type="submit"
+              disabled={isSubscribing}
+              className="h-11 px-6 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-white text-xs font-bold uppercase tracking-wider transition-colors disabled:opacity-50 shrink-0 cursor-pointer"
+            >
+              {isSubscribing ? 'Subscribing...' : subscribedSuccess ? 'Subscribed!' : 'Subscribe'}
+            </button>
+          </form>
+        </div>
+
         {/* Top 4-Column Grid matching Figma Screenshot */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/18">
           {/* Col 1: Larger Logo Aligned Flush to Left Edge, Tagline & Social Icons (5 cols) */}

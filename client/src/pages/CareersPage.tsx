@@ -1,19 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { CareersHeroSection } from '../components/careers/CareersHeroSection'
+import { CareersMetricsSection } from '../components/careers/CareersMetricsSection'
+import { CareersOpenRolesSection } from '../components/careers/CareersOpenRolesSection'
 
 const CareersPage: React.FC = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    document.title = 'Careers | Sudabelt Medical'
+  }, [])
+
   return (
-    <section className="py-16">
-      <div className="sudabelt-container">
-        <span className="text-eyebrow text-sudabelt-green">JOIN OUR CLINICAL & ENGINEERING TEAM</span>
-        <h1 className="text-section-heading text-sudabelt-navy mt-2">
-          Biomedical & Clinical Application Careers
-        </h1>
-        <p className="text-sudabelt-body mt-3 max-w-2xl">
-          Explore opportunities for Biomedical Engineers, Clinical Application Specialists, and
-          Healthcare Supply Chain Officers across Nigeria.
-        </p>
-      </div>
-    </section>
+    <div className="w-full flex flex-col">
+      {/* 1. Hero: Join our community of experts */}
+      <CareersHeroSection />
+
+      {/* 2. Metrics: Work that reaches hospitals across the country */}
+      <CareersMetricsSection />
+
+      {/* 3. Open Roles & CV Application Bento */}
+      <CareersOpenRolesSection />
+    </div>
   )
 }
 

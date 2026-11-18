@@ -38,7 +38,7 @@ const AboutRecognitionSection: React.FC = () => {
         />
         {/* Transparent Blue Glass Overlay - highly visible ward imagery behind */}
         <div className="absolute inset-0 bg-[#06183d]/70 backdrop-blur-[1.5px]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#001142]/85 via-[#06183d]/65 to-[#06183d]/75" />
+        <div className="absolute inset-0 bg-linear-to-r from-sudabelt/85 via-[#06183d]/65 to-[#06183d]/75" />
       </div>
 
       <div className="relative z-10 sudabelt-container">
@@ -62,7 +62,7 @@ const AboutRecognitionSection: React.FC = () => {
           <div className="lg:col-span-7 space-y-4">
             {RECOGNITIONS.map((rec, idx) => (
               <SectionReveal key={rec.badge} direction="left" delay={0.12 * (idx + 1)}>
-                <div className="rounded-[14px] p-5 sm:p-6 bg-white/[0.04] backdrop-blur-[2px] border border-white/20 hover:border-white/35 hover:bg-white/[0.07] transition-all flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
+                <div className="rounded-[14px] p-5 sm:p-6 bg-white/4 backdrop-blur-[2px] border border-white/20 hover:border-white/35 hover:bg-white/[0.07] transition-all flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
                   {/* Year / Event Pill */}
                   <div className="shrink-0">
                     <span className="inline-block px-3 py-1 rounded-control border border-white/25 text-xs font-mono font-bold text-white/90 bg-white/5">

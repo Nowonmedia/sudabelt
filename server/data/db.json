@@ -1,0 +1,931 @@
+{
+  "products": [
+    {
+      "name": "Baxter Artis Physio Hemodialysis System",
+      "slug": "baxter-artis-physio-hemodialysis-system",
+      "modelNumber": "ARTIS-PHYSIO-HD",
+      "sku": "SB-HD-BAX-AP01",
+      "brand": "Baxter International",
+      "category": "renal-care",
+      "shortDescription": "Multi-therapy hemodialysis delivery system engineered for High-Flux HD, HDF, and HF therapies with Hemocontrol biofeedback.",
+      "fullOverview": "The Baxter Artis Physio is a multi-therapy hemodialysis delivery system engineered for High-Flux HD, HDF, and HF therapies, featuring Hemoscan and Hemocontrol biofeedback technology. Supplied, installed, and maintained across Nigeria by Sudabelt Medical with comprehensive renal nurse and biomedical engineer certification.",
+      "specifications": {
+        "electrical": {
+          "mainsVoltage": "220 – 240 V AC, 50 Hz",
+          "powerConsumption": "Max 2,150 VA",
+          "batteryBackup": "30 Minutes (Extracorporeal circuit)"
+        },
+        "fluidics": {
+          "inletWaterPressure": "1.2 – 6.0 Bar",
+          "dialysateFlowRate": "300 – 800 mL/min",
+          "ultrafiltrationRate": "0.00 – 4.00 L/h"
+        }
+      },
+      "keyFeatures": [
+        {
+          "title": "Hemocontrol Biofeedback System",
+          "description": "Continuously adjusts dialysate conductivity and ultrafiltration rate in real time to prevent intradialytic hypotension."
+        },
+        {
+          "title": "Automated Setup & CleanCart Decalcification",
+          "description": "Streamlines nurse workflow with automated priming and integrated cartridge-based heat/chemical disinfection."
+        }
+      ],
+      "clinicalApplications": [
+        "Chronic & Acute Hemodialysis (HD)",
+        "Online Hemodiafiltration (HDF)",
+        "Isolated Ultrafiltration"
+      ],
+      "complianceCertifications": [
+        "CE Marked",
+        "ISO 13485",
+        "NAFDAC Registered"
+      ],
+      "images": {
+        "primaryCutout": "/images/products/baxter-artis-physio-cutout.webp",
+        "contextualGallery": [
+          "/images/products/baxter-artis-physio-clinic.webp"
+        ],
+        "altText": "Baxter Artis Physio Hemodialysis Machine supplied by Sudabelt Medical"
+      },
+      "isConsumable": false,
+      "datasheetUrl": "/docs/datasheets/sudabelt-baxter-artis-physio-datasheet.pdf",
+      "supportPackage": {
+        "installationIncluded": true,
+        "clinicalTrainingHours": 40,
+        "targetTrainees": [
+          "Nephrologists",
+          "Renal Nurses",
+          "Biomedical Engineers"
+        ],
+        "preventiveMaintenanceSLA": "Quarterly PM + <24hr Emergency Response",
+        "warrantyPeriod": "12 Months Comprehensive OEM & Biomedical Warranty",
+        "localSparePartsStocked": true
+      },
+      "published": true,
+      "_id": "f0a7f1b815c9aa1aab53b61b",
+      "createdAt": "2026-11-17T15:49:08.430Z",
+      "updatedAt": "2026-11-17T15:49:08.430Z"
+    },
+    {
+      "name": "GE LOGIQ E10 Ultrasound Imaging System",
+      "slug": "ge-logiq-e10-ultrasound-system",
+      "modelNumber": "LOGIQ-E10",
+      "sku": "SB-IMG-GE-E10",
+      "brand": "GE HealthCare",
+      "category": "diagnostic-imaging",
+      "shortDescription": "Next-generation ultrasound platform powered by cSound Architecture for unprecedented clarity across abdominal, OB/GYN, and vascular exams.",
+      "fullOverview": "The GE LOGIQ E10 delivers exceptional image quality across all patient habitus through GPU-accelerated beamforming and AI-assisted measurement tools. Backed by Sudabelt Medical applications specialists across Nigerian teaching and specialist hospitals.",
+      "specifications": {
+        "display": {
+          "monitorSize": "23.8-inch High-Definition OLED",
+          "touchscreen": "12.1-inch Multi-touch Command Panel"
+        },
+        "imaging": {
+          "architecture": "cSound Image Processing Architecture",
+          "frameRate": "Up to 2,000 frames/second"
+        }
+      },
+      "keyFeatures": [
+        {
+          "title": "cSound Digital Beamformer",
+          "description": "Acquires extraordinary clinical detail with pixel-level uniform resolution from near to far field."
+        },
+        {
+          "title": "Shear Wave Elastography",
+          "description": "Provides non-invasive quantitative liver stiffness and tissue elasticity measurement."
+        }
+      ],
+      "clinicalApplications": [
+        "General Imaging",
+        "Abdominal & Liver Assessment",
+        "OB/GYN & Fetal Health",
+        "Cardiovascular Screening"
+      ],
+      "complianceCertifications": [
+        "CE Marked",
+        "FDA Cleared",
+        "ISO 13485",
+        "NAFDAC Registered"
+      ],
+      "images": {
+        "primaryCutout": "/images/products/ge-logiq-e10-cutout.webp",
+        "altText": "GE LOGIQ E10 Ultrasound Scanner supplied by Sudabelt Medical"
+      },
+      "isConsumable": false,
+      "datasheetUrl": "/docs/datasheets/sudabelt-ge-logiq-e10-datasheet.pdf",
+      "supportPackage": {
+        "installationIncluded": true,
+        "clinicalTrainingHours": 32,
+        "preventiveMaintenanceSLA": "Semi-annual probe calibration and preventive check",
+        "warrantyPeriod": "24 Months OEM Transducer & System Warranty",
+        "localSparePartsStocked": true
+      },
+      "published": true,
+      "_id": "9cb923807f11adbf30226e4b",
+      "createdAt": "2026-11-17T15:49:08.431Z",
+      "updatedAt": "2026-11-17T15:49:08.431Z"
+    },
+    {
+      "name": "Fisher & Paykel Airvo 2 High Flow System",
+      "slug": "fisher-paykel-airvo-2-high-flow",
+      "modelNumber": "AIRVO-2",
+      "sku": "SB-RESP-FP-AV02",
+      "brand": "Fisher & Paykel Healthcare",
+      "category": "respiratory-critical-care",
+      "shortDescription": "Optiflow High Flow Nasal Cannula therapy delivering warm, humidified respiratory gases up to 60 L/min for ICU and emergency care.",
+      "fullOverview": "The Airvo 2 system features an integrated flow generator and humidification chamber designed to deliver comfortable, precise high-flow oxygen therapy to spontaneous breathing patients. Widely deployed across Nigerian critical care and pediatric wards.",
+      "specifications": {
+        "flowRange": "2 to 60 L/min (Pediatric to Adult modes)",
+        "oxygenFraction": "21% to 100% with integrated ultrasonic sensor",
+        "humidityOutput": ">33 mg/L at 37°C target"
+      },
+      "keyFeatures": [
+        {
+          "title": "Integrated Flow Generator",
+          "description": "Operates independently of wall air compressors for flexible point-of-care mobility."
+        },
+        {
+          "title": "Optiflow Nasal Cannula Interface",
+          "description": "Soft, anatomical prongs maintain continuous mucociliary clearance and patient comfort."
+        }
+      ],
+      "clinicalApplications": [
+        "Acute Respiratory Distress Syndrome (ARDS)",
+        "Post-Extubation Support",
+        "Viral Pneumonia & Hypoxemia"
+      ],
+      "complianceCertifications": [
+        "CE Marked",
+        "ISO 13485",
+        "NAFDAC Registered"
+      ],
+      "images": {
+        "primaryCutout": "/images/products/airvo-2-cutout.webp",
+        "altText": "Fisher & Paykel Airvo 2 High Flow Nasal Oxygen System"
+      },
+      "isConsumable": false,
+      "datasheetUrl": "/docs/datasheets/sudabelt-airvo-2-datasheet.pdf",
+      "supportPackage": {
+        "installationIncluded": true,
+        "clinicalTrainingHours": 16,
+        "warrantyPeriod": "12 Months Warranty",
+        "localSparePartsStocked": true
+      },
+      "published": true,
+      "_id": "9c8c075afff3483f95d5b974",
+      "createdAt": "2026-11-17T15:49:08.432Z",
+      "updatedAt": "2026-11-17T15:49:08.432Z"
+    },
+    {
+      "name": "Baxter CleanCart C Decalcification Cartridge",
+      "slug": "baxter-cleancart-c-disinfection-cartridge",
+      "modelNumber": "CLEANCART-C",
+      "sku": "SB-CON-BAX-CC01",
+      "brand": "Baxter International",
+      "category": "consumables-reagents",
+      "shortDescription": "Dry citric-acid based cartridge for automated thermo-chemical disinfection and decalcification of Baxter dialysis systems.",
+      "fullOverview": "Dry citric-acid based cartridge designed for automated thermo-chemical disinfection and decalcification of Baxter Artis and AK 98 hemodialysis systems. Eliminates liquid chemical spills and ensures standardized machine hygiene.",
+      "specifications": {
+        "chemical": {
+          "activeIngredient": "Anhydrous Citric Acid (100%)",
+          "unitsPerCarton": "12 Cartridges"
+        }
+      },
+      "keyFeatures": [
+        {
+          "title": "Spill-Free Dry Powder Cartridge",
+          "description": "Protects nursing staff from hazardous liquid acid contact."
+        }
+      ],
+      "clinicalApplications": [
+        "Post-Treatment Fluid Path Decalcification"
+      ],
+      "complianceCertifications": [
+        "CE Marked",
+        "ISO 13485",
+        "NAFDAC Registered"
+      ],
+      "images": {
+        "primaryCutout": "/images/products/baxter-cleancart-c-cutout.webp",
+        "altText": "Baxter CleanCart C Citric Acid Cartridge"
+      },
+      "isConsumable": true,
+      "datasheetUrl": "/docs/datasheets/sudabelt-cleancart-c-datasheet.pdf",
+      "published": true,
+      "_id": "a1f7cea7bfd2615b842746f0",
+      "createdAt": "2026-11-17T15:49:08.434Z",
+      "updatedAt": "2026-11-17T15:49:08.434Z"
+    },
+    {
+      "name": "Terumo Trima Accel Automated Blood Collection System",
+      "modelNumber": "TRIMA-ACCEL-V7",
+      "brand": "Terumo BCT",
+      "category": "blood-banking-apheresis",
+      "shortDescription": "Multi-component apheresis system for platelets, plasma, and RBC collection.",
+      "fullOverview": "The Trima Accel system is an industry benchmark in cell therapy and automated apheresis.",
+      "specifications": {},
+      "isConsumable": false,
+      "datasheetUrl": "/docs/datasheets/terumo-trima-accel.pdf",
+      "published": true,
+      "slug": "terumo-trima-accel-automated-blood-collection-system",
+      "isDeleted": false,
+      "_id": "6dbe1e0620e23a7bc1d45dcf",
+      "createdAt": "2026-11-17T15:54:38.800Z",
+      "updatedAt": "2026-11-17T15:54:38.800Z"
+    }
+  ],
+  "articles": [
+    {
+      "title": "Mitigating Unplanned Downtime in Nigerian Renal Units: A Water Quality & SLA Guide",
+      "slug": "mitigating-unplanned-downtime-nigerian-renal-units",
+      "type": "blog",
+      "category": "Renal Care Engineering",
+      "summary": "How pre-installation chemical water audits and local buffer spare parts reduce hemodialysis machine failures by over 80%.",
+      "content": "## The Reality of Renal Uptime in Sub-Saharan Africa\n\nChronic Kidney Disease (CKD) incidence across West Africa demands renal facilities that operate without interruption. However, municipal power fluctuations and varying feed-water mineral hardness frequently cause premature fouling of reverse osmosis membranes and heater scale in dialysis machines.\n\n### Core Engineering Interventions\n\n1. **Pre-Installation Feed-Water Chemistry**: Testing for chlorine, chloramines, calcium carbonate, and microbiological endotoxins before machine delivery.\n2. **Double-Pass Reverse Osmosis**: Ensuring total dissolved solids (TDS) remain below ISO 23500 limits.\n3. **Local Consumable Buffer Stock**: Warehousing genuine bloodlines, dialyzers, and CleanCart disinfection media in Lagos, Abuja, and Kano.\n\nSudabelt Medical guarantees turnkey uptime through certified resident biomedical engineers and 24-hour response SLAs.",
+      "coverImage": "/images/projects/project-adeboye.webp",
+      "readTimeMinutes": 6,
+      "publishedDate": "2026-02-15T00:00:00.000Z",
+      "published": true,
+      "_id": "7be7dcb21df5fa561a7b7a57",
+      "createdAt": "2026-11-17T15:49:08.435Z",
+      "updatedAt": "2026-11-17T15:49:08.435Z"
+    },
+    {
+      "title": "Medical Oxygen Infrastructure: Lessons from Turnkey PSA Plant Deliveries Across Nigeria",
+      "slug": "medical-oxygen-infrastructure-lessons-turnkey-psa-plants",
+      "type": "blog",
+      "category": "Hospital Infrastructure",
+      "summary": "Why on-site Pressure Swing Adsorption (PSA) oxygen generation delivers superior clinical safety and long-term operating cost reduction compared to cylinder logistics.",
+      "content": "## Transforming Hospital Oxygen Self-Sufficiency\n\nDuring clinical surges, relying solely on commercial liquid oxygen delivery over long highway distances creates catastrophic supply bottlenecks. On-site PSA plants, such as the landmark installation at Gbagada General Hospital in Lagos, provide guaranteed 93% ± 3% purity oxygen on demand.\n\n### Key Considerations for Hospital Planners\n\n- **Site Structural Audit**: Ensuring adequate ventilation, stable foundation loading, and isolated power backup.\n- **Duplex Compression**: Automatic failover air compressors to prevent single points of failure.\n- **Continuous Purity Monitoring**: Medical paramagnetic oxygen sensors with automatic venting if purity dips below statutory specifications.\n\nSudabelt Medical provides complete turnkey site engineering, installation, staff certification, and lifecycle maintenance.",
+      "coverImage": "/images/projects/project-gbagada.webp",
+      "readTimeMinutes": 8,
+      "publishedDate": "2026-03-01T00:00:00.000Z",
+      "published": true,
+      "_id": "1c1c636351e81f098e8c19f3",
+      "createdAt": "2026-11-17T15:49:08.439Z",
+      "updatedAt": "2026-11-17T15:49:08.439Z"
+    },
+    {
+      "title": "Sudabelt Healthcare Quarterly: Advances in African Hospital Technology",
+      "slug": "sudabelt-healthcare-quarterly-q1-2026",
+      "type": "newsletter",
+      "issueNumber": 1,
+      "quarter": "Q1",
+      "year": 2026,
+      "category": "Industry Newsletter",
+      "summary": "Q1 2026 Edition: Strategic OEM partnerships, national renal expansion, and updates from the Sudabelt Biomedical Training Hub.",
+      "content": "Welcome to the inaugural 2026 edition of the Sudabelt Healthcare Quarterly.\n\nIn this issue, we highlight the commissioning of new dialysis centres across northern Nigeria, introduce our newest diagnostic imaging modalities from GE HealthCare, and showcase our biomedical engineering capacity-building milestones.\n\nSubscribe to receive clinical whitepapers, technology updates, and healthcare infrastructure reports directly in your inbox.",
+      "coverImage": "/images/services/service-1-tech.jpg",
+      "readTimeMinutes": 5,
+      "publishedDate": "2026-01-10T00:00:00.000Z",
+      "published": true,
+      "_id": "494190044cb1b63f1a8fe193",
+      "createdAt": "2026-11-17T15:49:08.441Z",
+      "updatedAt": "2026-11-17T15:49:08.441Z"
+    }
+  ],
+  "projects": [
+    {
+      "title": "Gbagada General Hospital oxygen plant",
+      "slug": "gbagada-general-hospital-oxygen-plant",
+      "category": "Oxygen & medical gas",
+      "facilityName": "Gbagada General Hospital",
+      "locationState": "Lagos",
+      "city": "Gbagada, Lagos",
+      "completionYear": 2020,
+      "isFeatured": true,
+      "heroImage": "/images/projects/project-gbagada.webp",
+      "galleryImages": [
+        "/images/projects/project-gbagada.webp",
+        "/images/services/services-gbagada.webp"
+      ],
+      "shortDescription": "A major role in the COVID-19 pandemic response, commissioned by the Lagos State Government with an official letter of commendation.",
+      "fullDescription": "Turnkey delivery, mechanical installation, electrical integration, and commissioning of a high-capacity Medical Oxygen Pressure Swing Adsorption (PSA) Generating Plant at Gbagada General Hospital. The project provides dedicated pipeline oxygen supply to COVID-19 isolation wards, ICU, and surgical suites, backed by cylinder manifold backup and continuous 24/7 biomedical engineering SLA.",
+      "clientOrCommissionedBy": "Lagos State Ministry of Health & Lagos State Government",
+      "scopeOfWork": [
+        "Turnkey Medical Oxygen Pressure Swing Adsorption (PSA) Generating Plant.",
+        "High-pressure cylinder manifold filling station and distribution piping.",
+        "Emergency delivery and commissioning during peak pandemic demand.",
+        "Certified Lagos State biomedical engineering training & ongoing SLA."
+      ],
+      "equipmentSupplied": [
+        "PSA Medical Oxygen Generation System (60 m³/hr)",
+        "High-Pressure Oxygen Booster Compressor (150 bar)",
+        "Duplex Medical Air Compressor & Refrigerated Air Dryer",
+        "Automatic Manifold Changeover System"
+      ],
+      "impactMetrics": [
+        {
+          "label": "Plant Capacity",
+          "value": "60 m³/hr"
+        },
+        {
+          "label": "Cylinder Filling",
+          "value": "180 Cylinders/Day"
+        },
+        {
+          "label": "Continuous Uptime",
+          "value": "99.8%"
+        }
+      ],
+      "published": true,
+      "isDeleted": false,
+      "_id": "200c1279e1047151f9cc6835",
+      "createdAt": "2026-11-17T15:49:08.418Z",
+      "updatedAt": "2026-11-17T15:49:08.418Z"
+    },
+    {
+      "title": "Enoch & Folu Adeboye Dialysis Centre",
+      "slug": "enoch-and-folu-adeboye-dialysis-centre",
+      "category": "Dialysis & renal",
+      "facilityName": "Enoch & Folu Adeboye Dialysis Centre",
+      "locationState": "Abuja",
+      "city": "Abuja, FCT",
+      "completionYear": 2022,
+      "isFeatured": true,
+      "heroImage": "/images/projects/project-adeboye.webp",
+      "galleryImages": [
+        "/images/projects/project-adeboye.webp"
+      ],
+      "shortDescription": "Eight advanced dialysis machines equipped with a medical-grade reverse osmosis water purification system.",
+      "fullDescription": "Turnkey clinical equipping of a premier renal care centre in Abuja, featuring 8 high-flux hemodialysis stations, dual-pass clinical Reverse Osmosis (RO) water purification plant, sanitary distribution loop, and comprehensive renal nursing certification.",
+      "clientOrCommissionedBy": "His Love Foundation / RCCG National Healthcare Outreach",
+      "scopeOfWork": [
+        "8 High-flux hemodialysis machines with automated ultrafiltration.",
+        "Double-pass clinical reverse osmosis water treatment system.",
+        "Pure water distribution loop and dialysis consumables pipeline.",
+        "Clinical applications certification for nephrology staff."
+      ],
+      "equipmentSupplied": [
+        "Baxter Artis Physio & SWS-6000 Hemodialysis Machines",
+        "Clinical Double-Pass Reverse Osmosis (RO) Plant",
+        "Electronic Dialysis Treatment Chairs",
+        "Automated Decalcification & Disinfection Systems"
+      ],
+      "impactMetrics": [
+        {
+          "label": "Hemodialysis Stations",
+          "value": "8 Stations"
+        },
+        {
+          "label": "Water Purity",
+          "value": "ISO 23500 Compliant"
+        },
+        {
+          "label": "Patients Supported",
+          "value": "1,200+ Annually"
+        }
+      ],
+      "published": true,
+      "isDeleted": false,
+      "_id": "205085843ede42016f44c39a",
+      "createdAt": "2026-11-17T15:49:08.421Z",
+      "updatedAt": "2026-11-17T15:49:08.421Z"
+    },
+    {
+      "title": "Reference Hospital, Okene",
+      "slug": "reference-hospital-okene",
+      "category": "Hospital equipping",
+      "facilityName": "Reference Hospital Okene",
+      "locationState": "Kogi",
+      "city": "Okene, Kogi State",
+      "completionYear": 2022,
+      "isFeatured": false,
+      "heroImage": "/images/projects/project-okene.webp",
+      "galleryImages": [
+        "/images/projects/project-okene.webp"
+      ],
+      "shortDescription": "A landmark multi-department hospital project delivered, installed, and commissioned by President Muhammadu Buhari.",
+      "fullDescription": "Comprehensive turnkey medical equipment delivery and installation across surgical theatre suites, intensive care units, central sterilization department (CSSD), and advanced diagnostic imaging at the ultra-modern Reference Hospital in Okene, Kogi State.",
+      "clientOrCommissionedBy": "Federal Government of Nigeria & Kogi State Government",
+      "scopeOfWork": [
+        "Multi-department clinical equipping across theatre suites, ICU, and radiology.",
+        "Advanced patient monitoring networks and critical care ventilators.",
+        "Biomedical installation, rigorous load testing, and commissioning ceremony.",
+        "Local biomedical support team deployment for continuous uptime."
+      ],
+      "equipmentSupplied": [
+        "GE Diagnostic Ultrasound Systems",
+        "Surgical C-Arm & Operating Tables",
+        "Critical Care ICU Ventilators & Defibrillators",
+        "Hospital Sterilization & Autoclave Units"
+      ],
+      "impactMetrics": [
+        {
+          "label": "Departments Equipped",
+          "value": "7 Core Specialties"
+        },
+        {
+          "label": "Bed Capacity",
+          "value": "300+ Beds"
+        }
+      ],
+      "published": true,
+      "isDeleted": false,
+      "_id": "9f08845ed732ef9c24f90e0d",
+      "createdAt": "2026-11-17T15:49:08.423Z",
+      "updatedAt": "2026-11-17T15:49:08.423Z"
+    },
+    {
+      "title": "Ring Road Hospital, Ibadan",
+      "slug": "ring-road-hospital-ibadan",
+      "category": "Dialysis & renal",
+      "facilityName": "Ring Road State Hospital",
+      "locationState": "Oyo",
+      "city": "Ibadan, Oyo State",
+      "completionYear": 2022,
+      "isFeatured": false,
+      "heroImage": "/images/projects/project-ibadan.webp",
+      "galleryImages": [
+        "/images/projects/project-ibadan.webp"
+      ],
+      "shortDescription": "A specialized renal care centre equipped with hemodialysis machines, water treatment, and consumables pipeline.",
+      "fullDescription": "Establishment and clinical activation of the state dialysis centre at Ring Road Hospital Ibadan, establishing local capacity for affordable chronic kidney disease care in Oyo State.",
+      "clientOrCommissionedBy": "Oyo State Hospitals Management Board",
+      "scopeOfWork": [
+        "Turnkey renal unit planning, layout optimization, and installation.",
+        "Hemodialysis stations, treatment chairs, and patient monitoring.",
+        "Hospital biomedical staff hands-on operational training.",
+        "Genuine spare parts supply agreement and preventive maintenance."
+      ],
+      "equipmentSupplied": [
+        "Baxter Hemodialysis Systems",
+        "Medical RO System with UV Sterilization",
+        "Consumables: Bloodlines, Dialyzers, Acid Concentrates"
+      ],
+      "impactMetrics": [
+        {
+          "label": "Renal Sessions",
+          "value": "250+ Monthly"
+        },
+        {
+          "label": "Trained Nurses",
+          "value": "16 Certified"
+        }
+      ],
+      "published": true,
+      "isDeleted": false,
+      "_id": "f4348bdb59a2f4934dcda923",
+      "createdAt": "2026-11-17T15:49:08.424Z",
+      "updatedAt": "2026-11-17T15:49:08.424Z"
+    },
+    {
+      "title": "Kano Medical Centre",
+      "slug": "kano-medical-centre",
+      "category": "Imaging & diagnostics",
+      "facilityName": "Kano Medical Centre",
+      "locationState": "Kano",
+      "city": "Kano City",
+      "completionYear": 2020,
+      "isFeatured": false,
+      "heroImage": "/images/projects/project-kano.webp",
+      "galleryImages": [
+        "/images/projects/project-kano.webp"
+      ],
+      "shortDescription": "A GE Revolution EVO CT machine and Abbott clinical chemistry equipment delivered and installed.",
+      "fullDescription": "Turnkey radiology and core laboratory equipping for Kano Medical Centre, featuring GE 128-slice computed tomography (CT) installation with radiation shielding audit, power conditioning, and Abbott automated clinical chemistry analyzers.",
+      "clientOrCommissionedBy": "Kano State Ministry of Health",
+      "scopeOfWork": [
+        "Radiation shielding lead-lining site preparation.",
+        "GE Revolution EVO 128-Slice CT scanner installation and chiller setup.",
+        "Abbott Architect & clinical chemistry analyzer integration.",
+        "Radiographer and biomedical technician certification."
+      ],
+      "equipmentSupplied": [
+        "GE Revolution EVO 128-Slice CT Scanner",
+        "Abbott Automated Chemistry Analyzer",
+        "Dedicated Medical UPS & Servo Voltage Stabilizer"
+      ],
+      "impactMetrics": [
+        {
+          "label": "Diagnostic Scans",
+          "value": "45+ Daily"
+        },
+        {
+          "label": "Dose Optimization",
+          "value": "Up to 82% ASiR-V"
+        }
+      ],
+      "published": true,
+      "isDeleted": false,
+      "_id": "70b18e90005bffb3c00285b3",
+      "createdAt": "2026-11-17T15:49:08.426Z",
+      "updatedAt": "2026-11-17T15:49:08.426Z"
+    },
+    {
+      "title": "NNPC Multi-Specialist Hospital",
+      "slug": "nnpc-multi-specialist-hospital",
+      "category": "Imaging & diagnostics",
+      "facilityName": "NNPC Multi-Specialist Hospital",
+      "locationState": "Abuja",
+      "city": "Abuja, FCT",
+      "completionYear": 2020,
+      "isFeatured": false,
+      "heroImage": "/images/projects/project-nnpc.webp",
+      "galleryImages": [
+        "/images/projects/project-nnpc.webp"
+      ],
+      "shortDescription": "Abbott c4000 chemistry analyzer and Cell-Dyn Emerald hematology analyzer supplied, installed, and staff trained.",
+      "fullDescription": "High-throughput clinical pathology laboratory installation for NNPC Multi-Specialist Hospital Abuja, featuring Abbott Architect c4000 integrated clinical chemistry system and 5-part differential hematology platforms.",
+      "clientOrCommissionedBy": "NNPC Medical Services Division",
+      "scopeOfWork": [
+        "Core diagnostic laboratory automation design and installation.",
+        "Cold-chain reagent storage and inventory buffer setup.",
+        "Medical laboratory scientist hands-on method validation training.",
+        "Annual maintenance contract with local Abbott certified engineers."
+      ],
+      "equipmentSupplied": [
+        "Abbott Architect c4000 Clinical Chemistry Analyzer",
+        "Abbott Cell-Dyn Emerald Hematology System",
+        "Laboratory Water Purification Deionizer"
+      ],
+      "impactMetrics": [
+        {
+          "label": "Tests / Hour",
+          "value": "Up to 800 Photometric"
+        },
+        {
+          "label": "Uptime SLA",
+          "value": "<24hr Local Response"
+        }
+      ],
+      "published": true,
+      "isDeleted": false,
+      "_id": "3a67a53b6881c1311322d900",
+      "createdAt": "2026-11-17T15:49:08.428Z",
+      "updatedAt": "2026-11-17T15:49:08.428Z"
+    },
+    {
+      "title": "Delta State Teaching Hospital ICU Equipping",
+      "category": "Hospital Equipping",
+      "facilityName": "Delta State University Teaching Hospital",
+      "locationState": "Delta",
+      "city": "Oghara, Delta State",
+      "completionYear": 2024,
+      "isFeatured": true,
+      "heroImage": "/images/projects/featured-adeboye.webp",
+      "galleryImages": [],
+      "shortDescription": "Turnkey 12-bed ICU installation with central monitoring station and medical air piping.",
+      "fullDescription": "Comprehensive high-dependency and intensive care unit turnkey expansion delivered in Oghara.",
+      "scopeOfWork": [
+        "ICU electrical isolation transformers",
+        "12-bed patient monitoring network"
+      ],
+      "equipmentSupplied": [
+        "GE Carescape Monitors",
+        "Airvo 2 High Flow"
+      ],
+      "impactMetrics": [],
+      "published": false,
+      "slug": "delta-state-teaching-hospital-icu-equipping",
+      "isDeleted": true,
+      "_id": "f1668259f0ef4a162b259dce",
+      "createdAt": "2026-11-17T15:55:49.924Z",
+      "updatedAt": "2026-11-17T15:55:49.938Z"
+    },
+    {
+      "title": "Delta State Teaching Hospital ICU Equipping 1794935137577",
+      "category": "Hospital Equipping",
+      "facilityName": "Delta State University Teaching Hospital",
+      "locationState": "Delta",
+      "city": "Oghara, Delta State",
+      "completionYear": 2024,
+      "isFeatured": true,
+      "heroImage": "/images/projects/featured-adeboye.webp",
+      "galleryImages": [],
+      "shortDescription": "Turnkey 12-bed ICU installation with central monitoring station and medical air piping.",
+      "fullDescription": "Comprehensive high-dependency and intensive care unit turnkey expansion delivered in Oghara.",
+      "scopeOfWork": [
+        "ICU electrical isolation transformers",
+        "12-bed patient monitoring network"
+      ],
+      "equipmentSupplied": [
+        "GE Carescape Monitors",
+        "Airvo 2 High Flow"
+      ],
+      "impactMetrics": [],
+      "published": false,
+      "slug": "delta-state-teaching-hospital-icu-equipping-1794935137577",
+      "isDeleted": true,
+      "_id": "4b2d61958a80eada100ec8a2",
+      "createdAt": "2026-11-17T17:05:37.591Z",
+      "updatedAt": "2026-11-17T17:05:37.605Z"
+    }
+  ],
+  "subscribers": [
+    {
+      "email": "clinical-director@uch-ibadan.org.ng",
+      "name": "Prof. Olufemi Adebayo",
+      "institution": "University College Hospital (UCH) Ibadan",
+      "source": "website_footer",
+      "isActive": true,
+      "subscribedAt": "2026-01-15T00:00:00.000Z",
+      "tags": [
+        "renal_care",
+        "procurement"
+      ],
+      "_id": "19dcd19fc2cbb23e3226a224",
+      "createdAt": "2026-11-17T15:49:08.443Z",
+      "updatedAt": "2026-11-17T15:49:08.443Z"
+    },
+    {
+      "email": "procurement@nationalhospital.gov.ng",
+      "name": "Dr. Fatima Bello",
+      "institution": "National Hospital Abuja",
+      "source": "rfq_tray",
+      "isActive": true,
+      "subscribedAt": "2026-02-02T00:00:00.000Z",
+      "tags": [
+        "icu_equipment",
+        "hospital_leadership"
+      ],
+      "_id": "fae0b72694605ee40b769acb",
+      "createdAt": "2026-11-17T15:49:08.446Z",
+      "updatedAt": "2026-11-17T15:49:08.446Z"
+    },
+    {
+      "email": "biomedical.head@akth.edu.ng",
+      "name": "Engr. Haruna Mohammed",
+      "institution": "Aminu Kano Teaching Hospital",
+      "source": "training_hub",
+      "isActive": true,
+      "subscribedAt": "2026-02-20T00:00:00.000Z",
+      "tags": [
+        "biomedical_training",
+        "imaging"
+      ],
+      "_id": "ffdb66eaee0caeacbf6b10e1",
+      "createdAt": "2026-11-17T15:49:08.447Z",
+      "updatedAt": "2026-11-17T15:49:08.447Z"
+    },
+    {
+      "email": "test-doctor@hospital.ng",
+      "name": "Dr. Test Specialist",
+      "institution": "Lagos University Teaching Hospital",
+      "source": "admin_manual",
+      "isActive": true,
+      "subscribedAt": "2026-11-17T15:55:50.003Z",
+      "_id": "b3dc3e2df93c29d10380c5a0",
+      "createdAt": "2026-11-17T15:55:50.003Z",
+      "updatedAt": "2026-11-17T15:55:50.003Z"
+    },
+    {
+      "email": "test-doctor-1794935137685@hospital.ng",
+      "name": "Dr. Test Specialist",
+      "institution": "Lagos University Teaching Hospital",
+      "source": "admin_manual",
+      "isActive": true,
+      "subscribedAt": "2026-11-17T17:05:37.700Z",
+      "_id": "5d6877b831d8019c8b4d4c3e",
+      "createdAt": "2026-11-17T17:05:37.700Z",
+      "updatedAt": "2026-11-17T17:05:37.700Z"
+    },
+    {
+      "email": "dr.adeyemi@unilorin.edu.ng",
+      "name": "Dr. Adeyemi",
+      "institution": "University of Ilorin Teaching Hospital",
+      "source": "website_footer",
+      "isActive": true,
+      "subscribedAt": "2026-11-17T17:08:30.659Z",
+      "_id": "9f9c671ee23267ec3d08d794",
+      "createdAt": "2026-11-17T17:08:30.659Z",
+      "updatedAt": "2026-11-17T17:08:30.659Z"
+    }
+  ],
+  "campaigns": [
+    {
+      "title": "Sudabelt Clinical Dispatch: Q1 2026 Renal & ICU Infrastructure",
+      "slug": "sudabelt-clinical-dispatch-q1-2026",
+      "subject": "Sustaining 99.5% Clinical Uptime: New Guidelines for Nigerian Renal Units",
+      "issueNumber": 1,
+      "quarter": "Q1",
+      "year": 2026,
+      "summary": "Executive briefing on pre-installation water treatment, buffer stock warehouses, and biomedical certification.",
+      "content": "Full quarterly report and clinical engineering updates from Sudabelt Medical.",
+      "coverImage": "/images/projects/project-adeboye.webp",
+      "status": "sent",
+      "sentAt": "2026-01-25T00:00:00.000Z",
+      "recipientCount": 3,
+      "published": true,
+      "_id": "dda087fa5968810837bea4ba",
+      "createdAt": "2026-11-17T15:49:08.449Z",
+      "updatedAt": "2026-11-17T15:49:08.449Z"
+    },
+    {
+      "title": "Sudabelt Technology Review: Q2 2026 Diagnostic Imaging Modernization",
+      "slug": "sudabelt-technology-review-q2-2026",
+      "subject": "Next-Gen Ultrasound & Computed Tomography in Sub-Saharan Africa",
+      "issueNumber": 2,
+      "quarter": "Q2",
+      "year": 2026,
+      "summary": "Preview of AI-assisted ultrasound beamforming, radiation dose reduction, and local service warranties.",
+      "content": "Draft content for Q2 edition.",
+      "coverImage": "/images/services/service-1-tech.jpg",
+      "status": "draft",
+      "published": false,
+      "_id": "eb13359ddfdd190d3ef48359",
+      "createdAt": "2026-11-17T15:49:08.450Z",
+      "updatedAt": "2026-11-17T15:49:08.450Z"
+    },
+    {
+      "title": "Sudabelt Clinical Dispatch Q3 2026",
+      "subject": "Critical Care Ventilation and Oxygen Innovations",
+      "issueNumber": 3,
+      "quarter": "Q3",
+      "year": 2026,
+      "summary": "Quarterly review of neonatal humidification and high flow oxygen therapy.",
+      "content": "Draft content for Q3 newsletter.",
+      "status": "sent",
+      "published": true,
+      "slug": "sudabelt-clinical-dispatch-q3-2026",
+      "_id": "1fb36c99075ce65aeaf5f50d",
+      "createdAt": "2026-11-17T15:55:50.032Z",
+      "updatedAt": "2026-11-17T15:55:50.045Z",
+      "sentAt": "2026-11-17T15:55:50.045Z",
+      "recipientCount": 4
+    },
+    {
+      "title": "Sudabelt Clinical Dispatch 1794935137716",
+      "subject": "Critical Care Ventilation and Oxygen Innovations",
+      "issueNumber": 5137,
+      "quarter": "Q3",
+      "year": 2026,
+      "summary": "Quarterly review of neonatal humidification and high flow oxygen therapy.",
+      "content": "Draft content for Q3 newsletter.",
+      "status": "sent",
+      "published": true,
+      "slug": "sudabelt-clinical-dispatch-1794935137716",
+      "_id": "478438c832a53e36339729ed",
+      "createdAt": "2026-11-17T17:05:37.720Z",
+      "updatedAt": "2026-11-17T17:05:37.730Z",
+      "sentAt": "2026-11-17T17:05:37.730Z",
+      "recipientCount": 5
+    }
+  ],
+  "users": [
+    {
+      "name": "Sudabelt Executive Superadmin",
+      "email": "admin@sudabelt.com",
+      "passwordHash": "scrypt$79968db357fe6555b628cf10e3120962$d3c82b783f2a73176e3e6a697a0221e43910e7c1b86a041c73034f9c3b9d45658658593700e1373644f1fbf0cbb481d1fc6049c048f8d6d5eb164dcda01dad0a",
+      "role": "superadmin",
+      "isActive": true,
+      "_id": "55f701b91d4e5859060aae7a",
+      "createdAt": "2026-11-17T15:49:08.413Z",
+      "updatedAt": "2026-11-17T17:08:13.267Z",
+      "lastLoginAt": "2026-11-17T17:08:13.267Z"
+    },
+    {
+      "name": "Biomedical Operations Lead",
+      "email": "biomed@sudabelt.com",
+      "passwordHash": "scrypt$98528e9383ae12be3a7eb8a3c039059e$404792eae53a0a500ca3133f579f76f748150204fd3c19ba22484df05e4e58421d49d6985b48c58cf93a5d241209f43766131e992976993bb265702c36308ab1",
+      "role": "admin",
+      "isActive": true,
+      "_id": "8e5988025584d2de434aba11",
+      "createdAt": "2026-11-17T15:49:08.415Z",
+      "updatedAt": "2026-11-17T15:49:08.415Z"
+    },
+    {
+      "name": "Clinical Content Editor",
+      "email": "editor@sudabelt.com",
+      "passwordHash": "scrypt$54fc0ad2fb327c3ede55f444cb6cf22f$b5d8b393b41be4f64a3397064db90bc0a5ea62b5890257ee8a78c7d9da092ca1d053cc4b7ebe89b77144e66172ce4942543b4ebe72a9d67baba24713ef245f6b",
+      "role": "editor",
+      "isActive": true,
+      "_id": "eccd13b0fc10365ab7678c06",
+      "createdAt": "2026-11-17T15:49:08.416Z",
+      "updatedAt": "2026-11-17T17:05:37.926Z",
+      "lastLoginAt": "2026-11-17T17:05:37.926Z"
+    }
+  ],
+  "rfqs": [
+    {
+      "referenceId": "SBM-RFQ-2026-001",
+      "facilityName": "University College Hospital (UCH) Ibadan",
+      "facilityType": "Teaching Hospital",
+      "location": {
+        "city": "Ibadan",
+        "state": "Oyo",
+        "country": "Nigeria"
+      },
+      "urgency": "Medium (1 - 3 months)",
+      "selectedItems": [
+        {
+          "name": "Baxter Artis Physio Hemodialysis System",
+          "category": "renal-care",
+          "quantity": 4,
+          "notes": "Includes double-pass RO plant and 1-year CleanCart supply."
+        }
+      ],
+      "slaTier": "Comprehensive 24/7 Biomedical SLA",
+      "contact": {
+        "name": "Dr. Kehinde Adeleke",
+        "role": "Chief Nephrologist & Head of Renal Services",
+        "email": "k.adeleke@uch-ibadan.org.ng",
+        "phone": "+234 803 123 4567"
+      },
+      "status": "pending",
+      "_id": "1996917d037b4040748aa9dc",
+      "createdAt": "2026-11-17T15:49:08.452Z",
+      "updatedAt": "2026-11-17T15:49:08.452Z"
+    },
+    {
+      "referenceId": "SBM-RFQ-2026-002",
+      "facilityName": "Asokoro District Hospital",
+      "facilityType": "District Specialist Hospital",
+      "location": {
+        "city": "Abuja",
+        "state": "FCT",
+        "country": "Nigeria"
+      },
+      "urgency": "Immediate (Urgent procurement)",
+      "selectedItems": [
+        {
+          "name": "Fisher & Paykel Airvo 2 High Flow System",
+          "category": "respiratory-critical-care",
+          "quantity": 6,
+          "notes": "Required for ICU pediatric & adult high flow oxygen therapy."
+        }
+      ],
+      "contact": {
+        "name": "Matron Aisha Danladi",
+        "role": "ICU Nursing Coordinator",
+        "email": "a.danladi@asokorohospital.gov.ng",
+        "phone": "+234 802 987 6543"
+      },
+      "status": "quoted",
+      "_id": "17dc7b0e3e46504934fd0ae7",
+      "createdAt": "2026-11-17T15:49:08.454Z",
+      "updatedAt": "2026-11-17T15:49:08.454Z"
+    }
+  ],
+  "tickets": [
+    {
+      "ticketId": "SBM-SRV-2026-001",
+      "hospitalName": "National Hospital Abuja",
+      "equipmentModel": "Baxter Artis Physio HD (Station 3)",
+      "serialNumber": "BAX-AP-2022-8841",
+      "issueType": "breakdown",
+      "urgencyLevel": "critical_patient_impact",
+      "description": "Ultrafiltration sensor error code UF-402 during patient treatment cycle. System safely in bypass. Resident engineer requested on site.",
+      "contactName": "Engr. Chukwudi Okafor",
+      "email": "c.okafor@nationalhospital.gov.ng",
+      "phone": "+234 803 555 1212",
+      "locationState": "Abuja",
+      "status": "in_progress",
+      "_id": "5f7bfba0beacf16da0ae9a55",
+      "createdAt": "2026-11-17T15:49:08.456Z",
+      "updatedAt": "2026-11-17T15:49:08.456Z"
+    },
+    {
+      "ticketId": "SBM-SRV-2026-002",
+      "hospitalName": "Lagos Island Maternity Hospital",
+      "equipmentModel": "GE LOGIQ Healthcare Ultrasound",
+      "serialNumber": "GE-LQ-2021-3329",
+      "issueType": "preventive_maintenance",
+      "urgencyLevel": "routine",
+      "description": "Scheduled Q1 quarterly preventive maintenance, transducer array acoustic test, and trackball servicing.",
+      "contactName": "Mrs. Folashade Adele",
+      "email": "f.adele@lagosstate.gov.ng",
+      "phone": "+234 802 333 4444",
+      "locationState": "Lagos",
+      "status": "resolved",
+      "_id": "7d8905c24c7755d861d17ba6",
+      "createdAt": "2026-11-17T15:49:08.458Z",
+      "updatedAt": "2026-11-17T15:49:08.458Z"
+    }
+  ],
+  "leads": [],
+  "trainings": [
+    {
+      "institutionName": "Asokoro District Hospital",
+      "courseTrack": "Renal Nurses",
+      "numberOfTrainees": 8,
+      "targetHospitalState": "Abuja FCT",
+      "contactName": "Matron Patricia",
+      "contactRole": "Chief Nursing Officer",
+      "email": "matron.patricia@asokoro.gov.ng",
+      "phone": "+234 803 555 1234",
+      "preferredDates": "First week of November",
+      "notes": "Focus on Baxter Artis Physio setup",
+      "registrationId": "SBM-TRN-293120",
+      "status": "pending",
+      "_id": "68ea5d586cabc55f15f975db",
+      "createdAt": "2026-11-17T17:08:13.120Z",
+      "updatedAt": "2026-11-17T17:08:13.120Z"
+    }
+  ],
+  "inquiries": [
+    {
+      "name": "Engr. Daniel Alabi",
+      "email": "d.alabi@reddington.com",
+      "phone": "+234 809 111 2233",
+      "facilityName": "Reddington Hospital Victoria Island",
+      "department": "biomedical_sla",
+      "message": "Inquiring about annual preventive maintenance contract for 4 dialysis stations.",
+      "status": "new",
+      "_id": "3b0f6b81e413421fcfaa3f52",
+      "createdAt": "2026-11-17T17:08:13.158Z",
+      "updatedAt": "2026-11-17T17:08:13.158Z"
+    }
+  ]
+}

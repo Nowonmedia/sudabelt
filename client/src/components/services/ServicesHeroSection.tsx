@@ -16,11 +16,11 @@ const ServicesHeroSection: React.FC = () => {
 
       <div className="relative z-10 sudabelt-container py-16 sm:py-20 lg:py-24">
         <div className="max-w-xl lg:max-w-2xl">
-          {/* Eyebrow */}
+          {/* Eyebrow / Page Badge */}
           <SectionReveal direction="up" delay={0.1}>
             <div className="flex items-center gap-3 mb-4">
               <span className="w-8 sm:w-10 h-0.75 bg-sudabelt-red rounded-xs" />
-              <span className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.14em] text-sudabelt-blue drop-shadow-md">
+              <span className="inline-block px-3.5 py-1 rounded-control bg-sudabelt-blue text-white text-[12px] sm:text-[13px] font-extrabold uppercase tracking-[0.14em] shadow-md">
                 Services
               </span>
             </div>

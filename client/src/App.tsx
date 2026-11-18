@@ -21,11 +21,18 @@ import MaintenanceCalibrationPage from './pages/MaintenanceCalibrationPage'
 import RFQPage from './pages/RFQPage'
 import ContactPage from './pages/ContactPage'
 import CareersPage from './pages/CareersPage'
-import AdminDashboardPage from './pages/AdminDashboardPage'
+import AdminLoginPage from './pages/admin/AdminLoginPage'
+import AdminDashboardPage from './pages/admin/AdminDashboardPage'
 
 const App: React.FC = () => {
   return (
     <Routes>
+      {/* Dedicated Admin CRM & CMS Routes (Outside Public Layout) */}
+      <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route path="/admin" element={<AdminDashboardPage />} />
+      <Route path="/admin/*" element={<AdminDashboardPage />} />
+
+      {/* Public Client Routes with Global Header & PreFooter CTA */}
       <Route element={<RootLayout />}>
         <Route path="/" element={<Homepage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -38,17 +45,19 @@ const App: React.FC = () => {
         <Route path="/training-hub" element={<TrainingHubPage />} />
         <Route path="/training-hub/register" element={<TrainingRegisterPage />} />
         <Route path="/why-sudabelt/compare" element={<ComparePage />} />
+        <Route path="/compare" element={<ComparePage />} />
         <Route path="/resources/newsletters" element={<NewslettersPage />} />
         <Route path="/resources/newsletters/:slug" element={<NewsletterDetailPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogDetailPage />} />
         <Route path="/support" element={<SupportHubPage />} />
+        <Route path="/support/after-sales" element={<EmergencyBreakdownPage />} />
         <Route path="/support/emergency-breakdown" element={<EmergencyBreakdownPage />} />
+        <Route path="/support/medical-training" element={<MaintenanceCalibrationPage />} />
         <Route path="/support/maintenance-calibration" element={<MaintenanceCalibrationPage />} />
         <Route path="/rfq" element={<RFQPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/careers" element={<CareersPage />} />
-        <Route path="/admin/*" element={<AdminDashboardPage />} />
       </Route>
     </Routes>
   )

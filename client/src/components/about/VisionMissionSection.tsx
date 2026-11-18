@@ -39,7 +39,7 @@ const VisionMissionSection: React.FC = () => {
 
           {/* Mission Card - Zero Border Radius + Interactive Hover Background Change */}
           <SectionReveal direction="up" delay={0.2}>
-            <div className="group h-full rounded-none bg-[#EAF3EC] border border-sudabelt-sage hover:border-sudabelt-green hover:bg-sudabelt-green p-8 sm:p-10 lg:p-12 flex flex-col justify-between shadow-xs transition-all duration-300 cursor-default">
+            <div className="group h-full rounded-none bg-sudabelt-green-tint border border-sudabelt-sage hover:border-sudabelt-green hover:bg-sudabelt-green p-8 sm:p-10 lg:p-12 flex flex-col justify-between shadow-xs transition-all duration-300 cursor-default">
               <div>
                 <div className="flex items-center gap-3 mb-3">
                   <span className="w-8 h-0.75 bg-sudabelt-red rounded-xs" />

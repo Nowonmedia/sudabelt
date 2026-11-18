@@ -3,6 +3,8 @@ import { Outlet, useLocation } from 'react-router'
 import Header from './Header'
 import Footer from './Footer'
 import SudaBotWidget from '../components/common/SudaBotWidget'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const RootLayout: React.FC = () => {
   const { pathname } = useLocation()
@@ -20,6 +22,18 @@ const RootLayout: React.FC = () => {
       <Footer />
       {/* Permanently suspended Suda Bot widget on bottom-right of viewport */}
       <SudaBotWidget />
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   )
 }

@@ -1,39 +1,44 @@
 import React, { useState } from 'react'
-import { FileCheck, ShieldCheck, X, CheckCircle } from 'lucide-react'
+import { ZoomIn, X } from 'lucide-react'
 import { HeaderTextReveal, SectionReveal } from '../common/Reveal'
-import LeadMagnetModal from '../common/LeadMagnetModal'
 
 interface OemPartnerItem {
   name: string
-  domain: string
-  flagship: string
+  description: string
 }
 
 const OEM_PARTNERS: OemPartnerItem[] = [
   {
     name: 'GE HealthCare',
-    domain: 'Diagnostic Imaging, Maternal Health & Monitoring',
-    flagship: 'LOGIQ Ultrasound, Definium XR, C-Arms',
+    description: 'Medical imaging and life care solutions',
   },
   {
     name: 'Baxter',
-    domain: 'Renal Care, Medication Delivery & Critical Care',
-    flagship: 'AK 98 Dialysis System, PrisMax CRRT',
+    description: 'Renal therapy',
   },
   {
     name: 'Abbott',
-    domain: 'Point of Care, Core Diagnostics & Blood Screening',
-    flagship: 'i-STAT 1 Blood Analyzer, Architect Testing',
+    description: 'Diagnostics, devices, pharmaceuticals',
   },
   {
     name: 'Terumo BCT',
-    domain: 'Blood Transfusion, Apheresis & Cell Therapy',
-    flagship: 'Mirasol PRT System, Trima Accel Apheresis',
+    description: 'Blood management, apheresis, cell therapy',
   },
   {
     name: 'Fisher & Paykel',
-    domain: 'Respiratory Care & Neonatal Humidification',
-    flagship: 'Airvo 2 High Flow, myAirvo 2, Neonatal CPAP',
+    description: 'Respiratory care, surgery, sleep apnea',
+  },
+  {
+    name: 'Maccura',
+    description: 'Diagnostics, clinical chemistry, immunoassay',
+  },
+  {
+    name: 'SWS Medical',
+    description: 'Renal care, hemodialysis equipment',
+  },
+  {
+    name: 'EziSurg Medical',
+    description: 'Minimally invasive surgery, surgical stapling',
   },
 ]
 
@@ -47,210 +52,236 @@ const ISO_POLICY_POINTS = [
   'Conducting all work to a high professional standard with technical and commercial integrity.',
 ]
 
-const ISO_CERTIFICATE_URL =
-  'https://media.milanote.com/p/files/1WYxA01oRhl26L/ud6/updated_Company%20profile%20Copy.docx.pdf'
-
 const BrandMilestonesSection: React.FC = () => {
-  const [showLeadModal, setShowLeadModal] = useState<boolean>(false)
-  const [showIsoPolicyModal, setShowIsoPolicyModal] = useState<boolean>(false)
+  const [activeCertModal, setActiveCertModal] = useState<string | null>(null)
 
   return (
-    <>
-      <section className="py-16 sm:py-20 lg:py-24 bg-white">
-        <div className="sudabelt-container">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
-            {/* Left Column: Story, Official ISO Badge of Professionality & ISO Action */}
-            <div className="lg:col-span-5">
-              <SectionReveal direction="up" delay={0.1}>
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="w-8 h-0.75 bg-sudabelt-red rounded-xs" />
-                  <span className="text-[12px] font-bold uppercase tracking-[0.14em] text-sudabelt-green">
-                    OEM Partners
-                  </span>
-                </div>
-              </SectionReveal>
+    <section className="py-16 sm:py-20 lg:py-24 bg-white">
+      <div className="sudabelt-container">
+        {/* ======================================================== */}
+        {/* TOP ROW: PARTNERSHIPS SECTION (EXACT FIGMA 2-COLUMN LAYOUT) */}
+        {/* ======================================================== */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start pb-16 lg:pb-24 border-b border-sudabelt-border">
+          {/* Left Column: Eyebrow, Title, Description, Certification Card */}
+          <div className="lg:col-span-5">
+            <SectionReveal direction="up" delay={0.1}>
+              <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-sudabelt-green mb-3">
+                PARTNERSHIPS
+              </p>
+            </SectionReveal>
 
-              <HeaderTextReveal className="mb-5">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-sudabelt-navy tracking-tight leading-tight">
-                  From one global brand to five.
-                </h2>
-              </HeaderTextReveal>
+            <HeaderTextReveal className="mb-4">
+              <h2 className="text-3xl sm:text-4xl lg:text-[40px] font-extrabold text-sudabelt-navy tracking-tight leading-[1.15]">
+                From one global brand to eight.
+              </h2>
+            </HeaderTextReveal>
 
-              <SectionReveal direction="up" delay={0.25}>
-                <p className="text-sudabelt-body text-base sm:text-[17px] leading-relaxed mb-6">
-                  From our founding partnership to representing five of the world's most trusted medical technology OEMs, our growth reflects an uncompromising standard of clinical excellence and commercial integrity.
-                </p>
+            <SectionReveal direction="up" delay={0.25}>
+              <p className="text-sudabelt-body text-base leading-relaxed mb-8">
+                Partnerships have grown under the co-founder's leadership, each built on the same quality standards the company has held since inception.
+              </p>
+            </SectionReveal>
 
-                {/* Prominent ISO 9001:2015 Badge of Professionality per Milanote & Client Requirement */}
-                <div className="mb-8 p-4 rounded-card bg-sudabelt-surface border border-sudabelt-border flex items-center gap-4 shadow-2xs">
-                  <div className="w-14 h-14 rounded-full bg-sudabelt-green/10 border-2 border-sudabelt-green/30 flex items-center justify-center shrink-0">
-                    <ShieldCheck className="w-7 h-7 text-sudabelt-green" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10.5px] font-extrabold uppercase tracking-widest text-sudabelt-green bg-sudabelt-green/10 px-2 py-0.5 rounded-control">
-                        Certified Standard
-                      </span>
-                      <CheckCircle className="w-3.5 h-3.5 text-sudabelt-green" />
-                    </div>
-                    <h4 className="text-sm font-extrabold text-sudabelt-navy mt-1 tracking-tight">
-                      ISO 9001:2015 Quality Management
-                    </h4>
-                    <p className="text-xs text-sudabelt-muted mt-0.5">
-                      Scope: Medical Equipment Supply, Turnkey Projects, Clinical Engineering & Support.
-                    </p>
-                  </div>
-                </div>
+            {/* Figma Certification Callout Card */}
+            <SectionReveal direction="up" delay={0.35}>
+              <div className="p-6 rounded-2xl bg-sudabelt-green-tint border border-sudabelt-green/20">
+                <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-sudabelt-green">
+                  CERTIFICATION
+                </span>
+                <h3 className="text-base sm:text-lg font-extrabold text-sudabelt-navy mt-1">
+                  ISO 9001:2015 Quality Management System
+                </h3>
+              </div>
+            </SectionReveal>
+          </div>
 
-                <div className="flex flex-col sm:flex-row gap-3 items-start">
-                  <button
-                    type="button"
-                    onClick={() => setShowLeadModal(true)}
-                    className="inline-flex items-center gap-2.5 h-12 px-6 rounded-control border border-sudabelt-navy hover:bg-sudabelt-navy hover:text-white text-sudabelt-navy font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-xs"
+          {/* Right Column: Clean list with border-bottom after each item (no border around card) */}
+          <div className="lg:col-span-7">
+            <SectionReveal direction="up" delay={0.2}>
+              <div className="divide-y divide-sudabelt-border border-t border-sudabelt-border">
+                {OEM_PARTNERS.map((partner) => (
+                  <div
+                    key={partner.name}
+                    className="py-4 sm:py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4 hover:bg-sudabelt-surface/40 px-2 sm:px-3 rounded-lg transition-colors"
                   >
-                    <FileCheck className="w-4 h-4 text-sudabelt-green" />
-                    <span>Download ISO 9001:2015 Certificate</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowIsoPolicyModal(true)}
-                    className="inline-flex items-center gap-1.5 h-12 px-4 rounded-control text-xs font-bold uppercase tracking-wider text-sudabelt-muted hover:text-sudabelt-navy transition-colors cursor-pointer"
-                  >
-                    <span>View Quality Policy</span>
-                  </button>
-                </div>
-              </SectionReveal>
-            </div>
-
-            {/* Right Column: Clean List with NO border around the card, only border-bottom after each item */}
-            <div className="lg:col-span-7">
-              <SectionReveal direction="up" delay={0.2}>
-                <div className="w-full">
-                  {OEM_PARTNERS.map((partner) => (
-                    <div
-                      key={partner.name}
-                      className="py-5 sm:py-6 border-b border-sudabelt-border hover:bg-sudabelt-surface/40 transition-colors flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-6"
-                    >
-                      <div>
-                        <h3 className="text-lg sm:text-[19px] font-bold text-sudabelt-navy">
-                          {partner.name}
-                        </h3>
-                        <p className="text-xs sm:text-sm text-sudabelt-muted mt-0.5">
-                          {partner.flagship}
-                        </p>
-                      </div>
-
-                      <div className="sm:text-right shrink-0">
-                        <span className="inline-block px-3 py-1 rounded-control bg-sudabelt-surface text-sudabelt-navy text-xs font-semibold border border-sudabelt-border">
-                          {partner.domain}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Supporting Partners note */}
-                <div className="mt-5 text-xs text-sudabelt-muted flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <span className="font-semibold text-sudabelt-navy">Additional Authorised Portfolios:</span>
-                  <span>Maccura Biotechnology</span>
-                  <span>•</span>
-                  <span>SWS Medical</span>
-                  <span>•</span>
-                  <span>EziSurg Medical</span>
-                </div>
-              </SectionReveal>
-            </div>
+                    <span className="text-base sm:text-lg font-bold text-sudabelt-navy shrink-0">
+                      {partner.name}
+                    </span>
+                    <span className="text-xs sm:text-sm text-sudabelt-muted sm:text-right font-normal">
+                      {partner.description}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </SectionReveal>
           </div>
         </div>
-      </section>
 
-      {/* Lead Capture Modal for ISO 9001:2015 Certificate */}
-      <LeadMagnetModal
-        isOpen={showLeadModal}
-        onClose={() => setShowLeadModal(false)}
-        assetTitle="ISO 9001:2015 Quality Management Certificate"
-        assetSlug="iso-9001-2015-certificate"
-        directDownloadUrl={ISO_CERTIFICATE_URL}
-        description="Please provide your professional work email to download the certified Sudabelt Medical ISO 9001:2015 Quality Management System Certificate and technical compliance audit dossier."
-        buttonLabel="Download ISO Certificate"
-      />
+        {/* ======================================================== */}
+        {/* BOTTOM ROW: ACTUAL CERTIFICATES (NO TEXT MOCKUPS) & 7 ITEMS */}
+        {/* ======================================================== */}
+        <div className="pt-16 sm:pt-20">
+          <div className="max-w-3xl mb-12">
+            <SectionReveal direction="up" delay={0.1}>
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-8 h-0.75 bg-sudabelt-green rounded-xs" />
+                <span className="text-[12px] font-bold uppercase tracking-[0.16em] text-sudabelt-green">
+                  OFFICIAL ACCREDITATION
+                </span>
+              </div>
+            </SectionReveal>
 
-      {/* ISO Quality Policy Modal */}
-      {showIsoPolicyModal && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-sudabelt-navy/80 backdrop-blur-sm"
-        >
-          <div className="relative w-full max-w-2xl bg-white rounded-card shadow-modal overflow-hidden border border-sudabelt-border max-h-[90vh] flex flex-col">
-            <div className="bg-sudabelt-navy text-white px-6 sm:px-8 py-5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="w-6 h-6 text-sudabelt-blue" />
-                <div>
-                  <h3 className="text-lg font-bold">ISO 9001:2015 Quality Policy</h3>
-                  <p className="text-xs text-white/75">Certificate Ref: QMS-NG-SBM-2020</p>
+            <HeaderTextReveal className="mb-4">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-sudabelt-navy tracking-tight leading-tight">
+                Our ISO 9001:2015 Certifications
+              </h2>
+            </HeaderTextReveal>
+
+            <SectionReveal direction="up" delay={0.2}>
+              <p className="text-sudabelt-body text-base sm:text-lg leading-relaxed">
+                Sudabelt Medical operates under full ISO 9001:2015 Quality Management System accreditation, verified and audited by Cognicert for medical equipment procurement, turnkey delivery, and biomedical lifecycle engineering.
+              </p>
+            </SectionReveal>
+          </div>
+
+          {/* Actual Certificate Images (Displayed Prominently) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 mb-16">
+            {/* Certificate 1: ISO 9001:2015 Certificate of Registration */}
+            <SectionReveal direction="up" delay={0.25}>
+              <div className="group bg-white rounded-2xl border border-sudabelt-border p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300">
+                <div
+                  className="relative cursor-pointer overflow-hidden rounded-xl bg-sudabelt-surface border border-sudabelt-border aspect-[3/4] flex items-center justify-center"
+                  onClick={() => setActiveCertModal('/images/about/iso-9001-certificate.png')}
+                >
+                  <img
+                    src="/images/about/iso-9001-certificate.png"
+                    alt="ISO 9001:2015 Certificate of Registration - Sudabelt Medical Company Limited"
+                    className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-sudabelt-navy/0 group-hover:bg-sudabelt-navy/20 transition-colors flex items-center justify-center">
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-sudabelt-navy font-bold text-xs px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
+                      <ZoomIn className="w-4 h-4 text-sudabelt-green" /> View Full Certificate
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-sudabelt-border text-center">
+                  <h4 className="text-sm sm:text-base font-bold text-sudabelt-navy">
+                    ISO 9001:2015 Certificate of Registration
+                  </h4>
+                  <p className="text-xs text-sudabelt-muted mt-1">
+                    Cognicert Accreditation · Quality Management System
+                  </p>
                 </div>
               </div>
+            </SectionReveal>
+
+            {/* Certificate 2: Surveillance Audit & Continual Improvement Letter */}
+            <SectionReveal direction="up" delay={0.35}>
+              <div className="group bg-white rounded-2xl border border-sudabelt-border p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300">
+                <div
+                  className="relative cursor-pointer overflow-hidden rounded-xl bg-sudabelt-surface border border-sudabelt-border aspect-[3/4] flex items-center justify-center"
+                  onClick={() => setActiveCertModal('/images/about/iso-audit-confirmation.png')}
+                >
+                  <img
+                    src="/images/about/iso-audit-confirmation.png"
+                    alt="ISO Continual Improvement & Surveillance Confirmation Letter - Sudabelt Medical"
+                    className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-sudabelt-navy/0 group-hover:bg-sudabelt-navy/20 transition-colors flex items-center justify-center">
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-sudabelt-navy font-bold text-xs px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
+                      <ZoomIn className="w-4 h-4 text-sudabelt-green" /> View Full Document
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-sudabelt-border text-center">
+                  <h4 className="text-sm sm:text-base font-bold text-sudabelt-navy">
+                    Surveillance Audit & Continual Improvement Confirmation
+                  </h4>
+                  <p className="text-xs text-sudabelt-muted mt-1">
+                    Cognicert Certification Board · Compliance Endorsement
+                  </p>
+                </div>
+              </div>
+            </SectionReveal>
+          </div>
+
+          {/* Quality Policy & The 7 Items Numbered 1 to 7 */}
+          <SectionReveal direction="up" delay={0.3}>
+            <div className="p-8 sm:p-10 lg:p-12 rounded-3xl bg-sudabelt-green-tint border border-sudabelt-green/20">
+              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-sudabelt-green block mb-2">
+                ISO 9001:2015 QUALITY POLICY
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-sudabelt-navy mb-4">
+                Our Seven Pillars of Quality Assurance
+              </h3>
+              <p className="text-sudabelt-body text-base sm:text-lg leading-relaxed mb-8">
+                Quality is at the core of Sudabelt Medical's operations. From inception, the company has built its processes on the foundation of excellence, achieving and maintaining the ISO 9001:2015 Quality Management System (QMS) certification. This is a clear endorsement of Sudabelt's continuous commitment to delivering high-quality healthcare products and services while embracing global best practices. As outlined in the ISO 9001:2015 quality policy, Sudabelt is dedicated to:
+              </p>
+
+              {/* Items Numbered 1 to 7 */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5 mb-8">
+                {ISO_POLICY_POINTS.map((point, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-start gap-3.5 p-4 sm:p-5 rounded-2xl bg-white border border-sudabelt-border shadow-xs hover:border-sudabelt-green/40 transition-colors"
+                  >
+                    <span className="w-8 h-8 rounded-full bg-sudabelt-green text-white text-xs font-extrabold flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                      {idx + 1}
+                    </span>
+                    <p className="text-sm text-sudabelt-navy font-semibold leading-relaxed">
+                      {point}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Content Underneath from Milanote */}
+              <div className="p-6 sm:p-8 rounded-2xl bg-white border border-sudabelt-border text-sm sm:text-base text-sudabelt-body leading-relaxed space-y-4">
+                <p>
+                  These priorities are backed by substantial investment in staff training and development. Our employees are encouraged to take ownership of quality in every task, ensuring that both service delivery and internal processes meet the highest standards.
+                </p>
+                <p>
+                  In an industry that evolves with technological advancements, our team remains ahead through regular training, exposure to the latest tools, and strict adherence to standard operating procedures for consistency. At Sudabelt Medical, we believe quality healthcare starts with quality solutions. By upholding these principles, we continue to play our part in building healthier communities and consistently meeting and often surpassing international expectations.
+                </p>
+              </div>
+            </div>
+          </SectionReveal>
+        </div>
+      </div>
+
+      {/* Lightbox Modal for Certificate Full View */}
+      {activeCertModal && (
+        <div
+          className="fixed inset-0 z-50 bg-sudabelt-navy/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
+          onClick={() => setActiveCertModal(null)}
+        >
+          <div
+            className="relative bg-white rounded-2xl max-w-3xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-4 border-b border-sudabelt-border bg-sudabelt-surface">
+              <span className="text-xs font-bold uppercase tracking-wider text-sudabelt-navy">
+                Official ISO 9001:2015 Accreditation Document
+              </span>
               <button
                 type="button"
-                onClick={() => setShowIsoPolicyModal(false)}
-                className="w-8 h-8 rounded-control bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors cursor-pointer"
+                onClick={() => setActiveCertModal(null)}
+                className="w-8 h-8 rounded-full bg-white border border-sudabelt-border flex items-center justify-center text-sudabelt-navy hover:bg-sudabelt-surface transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
-
-            <div className="p-6 sm:p-8 overflow-y-auto space-y-4 text-sm text-sudabelt-body">
-              <p className="font-medium text-sudabelt-navy leading-relaxed">
-                Quality is at the core of Sudabelt Medical's operations. From inception, the company has built its processes on the foundation of excellence, achieving and maintaining the ISO 9001:2015 Quality Management System (QMS) certification.
-              </p>
-
-              <h4 className="text-xs font-bold uppercase tracking-wider text-sudabelt-green pt-2">
-                Seven Pillars of Sudabelt Quality Assurance:
-              </h4>
-
-              <ol className="list-decimal pl-5 space-y-2 text-xs sm:text-sm text-sudabelt-navy/85">
-                {ISO_POLICY_POINTS.map((point) => (
-                  <li key={point} className="leading-relaxed">
-                    {point}
-                  </li>
-                ))}
-              </ol>
-
-              <div className="p-4 rounded-control bg-sudabelt-surface border border-sudabelt-border mt-4">
-                <div className="text-xs font-bold text-sudabelt-navy uppercase tracking-wider mb-1">
-                  Accreditation Status
-                </div>
-                <div className="text-xs text-sudabelt-muted">
-                  Fully certified for medical equipment supply, clinical installation, preventive biomedical maintenance, and specialized hospital logistics across Nigeria.
-                </div>
-              </div>
-            </div>
-
-            <div className="px-6 sm:px-8 py-4 bg-sudabelt-surface border-t border-sudabelt-border flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowIsoPolicyModal(false)
-                  setShowLeadModal(true)
-                }}
-                className="text-xs font-bold uppercase text-sudabelt-green hover:underline cursor-pointer"
-              >
-                Request Downloadable Certificate PDF →
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowIsoPolicyModal(false)}
-                className="px-5 py-2 rounded-control bg-sudabelt-navy text-white text-xs font-bold uppercase hover:bg-sudabelt-navy/90 transition-colors cursor-pointer"
-              >
-                Close Statement
-              </button>
+            <div className="overflow-auto p-4 flex items-center justify-center">
+              <img
+                src={activeCertModal}
+                alt="Accreditation Certificate Full"
+                className="max-h-[75vh] w-auto object-contain rounded-lg shadow-sm"
+              />
             </div>
           </div>
         </div>
       )}
-    </>
+    </section>
   )
 }
 

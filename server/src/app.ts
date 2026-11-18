@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
+import path from 'path';
 import mongoose from 'mongoose';
 import apiV1Router from './routes';
 import { globalErrorHandler, notFoundHandler } from './middleware/errorHandler';
@@ -10,15 +11,9 @@ const app: Application = express();
 // 1. Security & CORS Middleware
 app.use(helmet());
 
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  'http://localhost:5173',
-  'http://localhost:3000',
-].filter((origin): origin is string => Boolean(origin));
-
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: true, // Allow localhost, 127.0.0.1, LAN IP 192.168.100.164, etc.
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-key'],
@@ -26,8 +21,11 @@ app.use(
 );
 
 // 2. Body Parsing Middleware
-app.use(express.json({ limit: '5mb' }));
-app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+app.use(express.json({ limit: '25mb' }));
+app.use(express.urlencoded({ extended: true, limit: '25mb' }));
+
+// Static uploads serving
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // 3. Health Check Endpoint
 app.get('/api/v1/health', (_req: Request, res: Response) => {

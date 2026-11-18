@@ -1,5 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
+import fs from 'fs';
+import path from 'path';
 import { z } from 'zod';
 import {
   Product,
@@ -9,14 +11,70 @@ import {
   LeadMagnet,
   TrainingRegistration,
   ContactInquiry,
+  Project,
+  NewsletterSubscriber,
+  NewsletterCampaign,
+  User,
 } from '../models';
-import { requireAdminAuth } from '../middleware/auth.middleware';
+import { requireAdminAuth, requireSuperAdmin } from '../middleware/auth.middleware';
+import { hashPassword } from '../utils/auth.utils';
 import { AppError } from '../middleware/errorHandler';
 
 const router = Router();
 
 // Protect all /api/v1/admin/* endpoints
 router.use(requireAdminAuth);
+
+/**
+ * POST /api/v1/admin/upload
+ * Accepts base64 data or data URL for images and documents (PDFs, brochures).
+ * Writes file to server/uploads and client/public/uploads, returning the relative URL.
+ * Storing only the URL in the database prevents bloat and ensures fast CDN capability.
+ */
+router.post('/upload', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const uploadSchema = z.object({
+      fileName: z.string().min(1),
+      fileData: z.string().min(1),
+      mimeType: z.string().optional(),
+    });
+
+    const { fileName, fileData, mimeType } = uploadSchema.parse(req.body);
+
+    const base64Content = fileData.includes(';base64,')
+      ? fileData.split(';base64,')[1]
+      : fileData;
+
+    const buffer = Buffer.from(base64Content, 'base64');
+    const ext = path.extname(fileName) || (mimeType ? `.${mimeType.split('/')[1]}` : '.bin');
+    const cleanBase = path.basename(fileName, ext).replace(/[^a-zA-Z0-9_-]/g, '_');
+    const uniqueFileName = `${cleanBase}_${Date.now()}${ext}`;
+
+    const serverUploadDir = path.resolve(__dirname, '../../uploads');
+    const clientUploadDir = path.resolve(__dirname, '../../../client/public/uploads');
+
+    if (!fs.existsSync(serverUploadDir)) {
+      fs.mkdirSync(serverUploadDir, { recursive: true });
+    }
+    if (!fs.existsSync(clientUploadDir)) {
+      fs.mkdirSync(clientUploadDir, { recursive: true });
+    }
+
+    fs.writeFileSync(path.join(serverUploadDir, uniqueFileName), buffer);
+    fs.writeFileSync(path.join(clientUploadDir, uniqueFileName), buffer);
+
+    const relativeUrl = `/uploads/${uniqueFileName}`;
+
+    res.status(200).json({
+      success: true,
+      url: relativeUrl,
+      fileName: uniqueFileName,
+      sizeBytes: buffer.length,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 const slugify = (text: string): string =>
   text
@@ -432,12 +490,24 @@ router.patch('/rfqs/:id', async (req: Request, res: Response, next: NextFunction
 
 router.get('/support-tickets', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { status, urgencyLevel, issueType } = req.query;
+    const { status, urgencyLevel, issueType, type } = req.query;
     const filter: Record<string, unknown> = {};
 
     if (
       typeof status === 'string' &&
-      ['open', 'dispatched', 'in_progress', 'resolved', 'closed'].includes(status)
+      [
+        'open',
+        'dispatched',
+        'in_progress',
+        'resolved',
+        'closed',
+        'new',
+        'responded',
+        'archived',
+        'confirmed',
+        'completed',
+        'cancelled',
+      ].includes(status)
     ) {
       filter.status = status;
     }
@@ -456,12 +526,61 @@ router.get('/support-tickets', async (req: Request, res: Response, next: NextFun
       filter.issueType = issueType;
     }
 
-    const tickets = await AfterSalesTicket.find(filter).sort({ createdAt: -1 }).lean().exec();
+    const requestedType = typeof type === 'string' ? type.toLowerCase() : 'all';
+    const allTickets: Array<Record<string, unknown>> = [];
+
+    if (
+      requestedType === 'all' ||
+      requestedType === 'after_sales' ||
+      requestedType === 'breakdown'
+    ) {
+      const tickets = await AfterSalesTicket.find(filter).sort({ createdAt: -1 }).lean().exec();
+      const mapped = tickets.map((t) => ({
+        ...t,
+        ticketType: 'after_sales',
+        displayType: t.issueType === 'breakdown' ? 'Emergency Breakdown' : 'After-Sales Service',
+        unifiedId: t.ticketId || String(t._id),
+      }));
+      allTickets.push(...mapped);
+    }
+
+    if (requestedType === 'all' || requestedType === 'training') {
+      const trainings = await TrainingRegistration.find({}).sort({ createdAt: -1 }).lean().exec();
+      const mapped = trainings.map((tr) => ({
+        ...tr,
+        ticketType: 'training',
+        displayType: 'Clinical Training Booking',
+        unifiedId: tr.registrationId || String(tr._id),
+        facilityName: tr.institutionName,
+        contactPerson: tr.contactName,
+        urgencyLevel: 'routine',
+        description: `Track: ${tr.courseTrack} | ${tr.numberOfTrainees} Trainees in ${tr.targetHospitalState}`,
+      }));
+      allTickets.push(...mapped);
+    }
+
+    if (requestedType === 'all' || requestedType === 'contact') {
+      const inquiries = await ContactInquiry.find({}).sort({ createdAt: -1 }).lean().exec();
+      const mapped = inquiries.map((inq) => ({
+        ...inq,
+        ticketType: 'contact',
+        displayType: `Contact Inquiry (${inq.department})`,
+        unifiedId: `SBM-INQ-${String(inq._id).slice(-6)}`,
+        contactPerson: inq.name,
+        urgencyLevel: 'routine',
+        description: inq.message,
+      }));
+      allTickets.push(...mapped);
+    }
+
+    allTickets.sort(
+      (a, b) => new Date(String(b.createdAt)).getTime() - new Date(String(a.createdAt)).getTime()
+    );
 
     res.status(200).json({
       success: true,
-      count: tickets.length,
-      data: tickets,
+      count: allTickets.length,
+      data: allTickets,
     });
   } catch (error) {
     next(error);
@@ -472,7 +591,7 @@ router.patch('/support-tickets/:id', async (req: Request, res: Response, next: N
   try {
     const { status } = z
       .object({
-        status: z.enum(['open', 'dispatched', 'in_progress', 'resolved', 'closed']),
+        status: z.string().min(1),
       })
       .parse(req.body);
     const idOrTicket = String(req.params.id);
@@ -480,7 +599,7 @@ router.patch('/support-tickets/:id', async (req: Request, res: Response, next: N
       ? { _id: idOrTicket }
       : { ticketId: idOrTicket };
 
-    const updated = await AfterSalesTicket.findOneAndUpdate(
+    let updated: any = await AfterSalesTicket.findOneAndUpdate(
       filter,
       { $set: { status } },
       { new: true }
@@ -489,7 +608,34 @@ router.patch('/support-tickets/:id', async (req: Request, res: Response, next: N
       .exec();
 
     if (!updated) {
-      throw new AppError(`Support ticket not found for identifier: ${idOrTicket}`, 404);
+      const trainingFilter = mongoose.Types.ObjectId.isValid(idOrTicket)
+        ? { _id: idOrTicket }
+        : { registrationId: idOrTicket };
+      updated = await TrainingRegistration.findOneAndUpdate(
+        trainingFilter,
+        { $set: { status } },
+        { new: true }
+      )
+        .lean()
+        .exec();
+    }
+
+    if (!updated) {
+      const cleanId = idOrTicket.replace('SBM-INQ-', '');
+      const inqFilter = mongoose.Types.ObjectId.isValid(cleanId)
+        ? { _id: cleanId }
+        : { _id: idOrTicket };
+      updated = await ContactInquiry.findOneAndUpdate(
+        inqFilter,
+        { $set: { status } },
+        { new: true }
+      )
+        .lean()
+        .exec();
+    }
+
+    if (!updated) {
+      throw new AppError(`Inquiry/ticket not found for identifier: ${idOrTicket}`, 404);
     }
 
     res.status(200).json({
@@ -539,13 +685,458 @@ router.get('/training-registrations', async (_req: Request, res: Response, next:
   }
 });
 
-router.get('/contact-inquiries', async (_req: Request, res: Response, next: NextFunction) => {
+// ============================================================================
+// PROJECTS CRUD ENDPOINTS
+// ============================================================================
+
+const projectCreateSchema = z.object({
+  title: z.string({ required_error: 'Title is required' }).trim().min(3),
+  slug: z.string().trim().optional(),
+  category: z.string({ required_error: 'Category is required' }).trim().min(2),
+  facilityName: z.string({ required_error: 'Facility name is required' }).trim().min(2),
+  locationState: z.string({ required_error: 'Location state is required' }).trim().min(2),
+  city: z.string().trim().optional(),
+  completionYear: z.coerce.number().min(2015).max(2035).default(2023),
+  isFeatured: z.boolean().optional().default(false),
+  heroImage: z.string({ required_error: 'Hero image is required' }).trim(),
+  galleryImages: z.array(z.string().trim()).optional().default([]),
+  shortDescription: z.string({ required_error: 'Short description is required' }).trim().min(5),
+  fullDescription: z.string({ required_error: 'Full description is required' }).trim().min(10),
+  clientOrCommissionedBy: z.string().trim().optional(),
+  scopeOfWork: z.array(z.string().trim()).optional().default([]),
+  equipmentSupplied: z.array(z.string().trim()).optional().default([]),
+  impactMetrics: z
+    .array(
+      z.object({
+        label: z.string().trim(),
+        value: z.string().trim(),
+      })
+    )
+    .optional()
+    .default([]),
+  published: z.boolean().optional().default(true),
+});
+
+const projectUpdateSchema = projectCreateSchema.partial();
+
+router.get('/projects', async (_req: Request, res: Response, next: NextFunction) => {
   try {
-    const inquiries = await ContactInquiry.find().sort({ createdAt: -1 }).lean().exec();
+    const projects = await Project.find({ isDeleted: { $ne: true } })
+      .sort({ completionYear: -1, createdAt: -1 })
+      .lean()
+      .exec();
+
     res.status(200).json({
       success: true,
-      count: inquiries.length,
-      data: inquiries,
+      count: projects.length,
+      data: projects,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/projects', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const parsed = projectCreateSchema.parse(req.body);
+    const slug = parsed.slug ? slugify(parsed.slug) : slugify(parsed.title);
+
+    const existing = await Project.findOne({ slug }).lean().exec();
+    if (existing) {
+      throw new AppError(`Project with slug '${slug}' already exists.`, 409);
+    }
+
+    const created = await Project.create({
+      ...parsed,
+      slug,
+      isDeleted: false,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Project created successfully.',
+      data: created,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/projects/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+    const parsed = projectUpdateSchema.parse(req.body);
+
+    const updatePayload: Record<string, unknown> = { ...parsed };
+    if (parsed.slug) {
+      updatePayload.slug = slugify(parsed.slug);
+    } else if (parsed.title) {
+      updatePayload.slug = slugify(parsed.title);
+    }
+
+    const updated = await Project.findByIdAndUpdate(
+      id,
+      { $set: updatePayload },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      throw new AppError(`Project not found with id: ${id}`, 404);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Project updated successfully.',
+      data: updated,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/projects/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+    const deleted = await Project.findByIdAndUpdate(
+      id,
+      { $set: { isDeleted: true, published: false } },
+      { new: true }
+    );
+
+    if (!deleted) {
+      throw new AppError(`Project not found with id: ${id}`, 404);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Project marked as deleted.',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// ============================================================================
+// NEWSLETTER CRUD ENDPOINTS
+// ============================================================================
+
+router.get('/newsletter/subscribers', async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const subscribers = await NewsletterSubscriber.find()
+      .sort({ subscribedAt: -1 })
+      .lean()
+      .exec();
+
+    res.status(200).json({
+      success: true,
+      count: subscribers.length,
+      data: subscribers,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/newsletter/subscribers', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const schema = z.object({
+      email: z.string().trim().email(),
+      name: z.string().trim().optional(),
+      institution: z.string().trim().optional(),
+      source: z.string().trim().optional().default('admin_manual'),
+    });
+
+    const parsed = schema.parse(req.body);
+    const existing = await NewsletterSubscriber.findOne({ email: parsed.email.toLowerCase() })
+      .lean()
+      .exec();
+
+    if (existing) {
+      throw new AppError('Subscriber email already registered.', 409);
+    }
+
+    const created = await NewsletterSubscriber.create({
+      ...parsed,
+      email: parsed.email.toLowerCase(),
+      isActive: true,
+      subscribedAt: new Date(),
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Subscriber added successfully.',
+      data: created,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/newsletter/subscribers/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+    await NewsletterSubscriber.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Subscriber removed successfully.',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+const campaignSchema = z.object({
+  title: z.string().trim().min(3),
+  slug: z.string().trim().optional(),
+  subject: z.string().trim().min(3),
+  issueNumber: z.coerce.number().min(1),
+  quarter: z.enum(['Q1', 'Q2', 'Q3', 'Q4']).optional(),
+  year: z.coerce.number().min(2020).max(2035).default(2026),
+  summary: z.string().trim().min(5),
+  content: z.string().trim().min(10),
+  coverImage: z.string().trim().optional(),
+  pdfUrl: z.string().trim().optional(),
+  status: z.enum(['draft', 'scheduled', 'sent']).default('draft'),
+  published: z.boolean().optional().default(false),
+});
+
+router.get('/newsletter/campaigns', async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const campaigns = await NewsletterCampaign.find()
+      .sort({ issueNumber: -1, createdAt: -1 })
+      .lean()
+      .exec();
+
+    res.status(200).json({
+      success: true,
+      count: campaigns.length,
+      data: campaigns,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/newsletter/campaigns', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const parsed = campaignSchema.parse(req.body);
+    const slug = parsed.slug ? slugify(parsed.slug) : slugify(parsed.title);
+
+    const created = await NewsletterCampaign.create({
+      ...parsed,
+      slug,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Newsletter campaign draft created.',
+      data: created,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/newsletter/campaigns/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+    const parsed = campaignSchema.partial().parse(req.body);
+
+    const updated = await NewsletterCampaign.findByIdAndUpdate(
+      id,
+      { $set: parsed },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      throw new AppError(`Campaign not found with id: ${id}`, 404);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Newsletter campaign updated.',
+      data: updated,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/newsletter/campaigns/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+    await NewsletterCampaign.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Campaign deleted successfully.',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/newsletter/campaigns/:id/send', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+    const activeSubscribers = await NewsletterSubscriber.find({ isActive: true }).lean().exec();
+
+    const updated = await NewsletterCampaign.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          status: 'sent',
+          published: true,
+          sentAt: new Date(),
+          recipientCount: activeSubscribers.length,
+        },
+      },
+      { new: true }
+    );
+
+    if (!updated) {
+      throw new AppError(`Campaign not found with id: ${id}`, 404);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Newsletter broadcast dispatched to ${activeSubscribers.length} active subscribers.`,
+      data: updated,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// ============================================================================
+// ADMIN USER MANAGEMENT (SUPER ADMIN ONLY)
+// ============================================================================
+
+const adminUserCreateSchema = z.object({
+  name: z.string({ required_error: 'Name is required' }).trim().min(2),
+  email: z.string({ required_error: 'Email is required' }).trim().email().toLowerCase(),
+  password: z.string({ required_error: 'Password is required' }).min(6, 'Password must be at least 6 characters'),
+  role: z.enum(['superadmin', 'admin', 'editor'], { required_error: 'Role is required' }),
+});
+
+const adminUserUpdateSchema = z.object({
+  name: z.string().trim().min(2).optional(),
+  role: z.enum(['superadmin', 'admin', 'editor']).optional(),
+  isActive: z.boolean().optional(),
+  password: z.string().min(6).optional(),
+});
+
+router.get('/users', requireSuperAdmin, async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const users = await User.find()
+      .select('-passwordHash')
+      .sort({ createdAt: -1 })
+      .lean()
+      .exec();
+
+    res.status(200).json({
+      success: true,
+      count: users.length,
+      data: users,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/users', requireSuperAdmin, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const parsed = adminUserCreateSchema.parse(req.body);
+
+    const existing = await User.findOne({ email: parsed.email }).lean().exec();
+    if (existing) {
+      throw new AppError(`Administrator with email '${parsed.email}' already exists.`, 409);
+    }
+
+    const passwordHash = hashPassword(parsed.password);
+
+    const created = await User.create({
+      name: parsed.name,
+      email: parsed.email,
+      passwordHash,
+      role: parsed.role,
+      isActive: true,
+    });
+
+    const safeUser = {
+      _id: (created as any)._id,
+      name: parsed.name,
+      email: parsed.email,
+      role: parsed.role,
+      isActive: true,
+      createdAt: new Date(),
+    };
+
+    res.status(201).json({
+      success: true,
+      message: `New ${parsed.role} account created successfully.`,
+      data: safeUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.patch('/users/:id', requireSuperAdmin, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+    const parsed = adminUserUpdateSchema.parse(req.body);
+
+    const patchPayload: Record<string, unknown> = {};
+    if (parsed.name) patchPayload.name = parsed.name;
+    if (parsed.role) patchPayload.role = parsed.role;
+    if (parsed.isActive !== undefined) patchPayload.isActive = parsed.isActive;
+    if (parsed.password) patchPayload.passwordHash = hashPassword(parsed.password);
+
+    const updated = await User.findByIdAndUpdate(
+      id,
+      { $set: patchPayload },
+      { new: true }
+    );
+
+    if (!updated) {
+      throw new AppError(`Admin user not found with id: ${id}`, 404);
+    }
+
+    const safeUpdated = {
+      _id: (updated as any)._id,
+      name: (updated as any).name,
+      email: (updated as any).email,
+      role: (updated as any).role,
+      isActive: (updated as any).isActive,
+      updatedAt: new Date(),
+    };
+
+    res.status(200).json({
+      success: true,
+      message: 'Admin user updated successfully.',
+      data: safeUpdated,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/users/:id', requireSuperAdmin, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+
+    // Prevent deleting own account
+    if (req.adminUser && req.adminUser.id === id) {
+      throw new AppError('Security violation: You cannot delete your own administrator account.', 400);
+    }
+
+    await User.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Administrator account removed successfully.',
     });
   } catch (error) {
     next(error);

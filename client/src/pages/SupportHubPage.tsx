@@ -1,35 +1,25 @@
-import React from 'react'
-import { Link } from 'react-router'
+import React, { useEffect } from 'react'
+import SupportHeroSection from '../components/support/SupportHeroSection'
+import SupportActionCardsSection from '../components/support/SupportActionCardsSection'
+import SupportFaqSection from '../components/support/SupportFaqSection'
 
 const SupportHubPage: React.FC = () => {
-  return (
-    <section className="py-16">
-      <div className="sudabelt-container">
-        <span className="text-eyebrow text-sudabelt-green">BIOMEDICAL AFTER-SALES ENGINEERING</span>
-        <h1 className="text-section-heading text-sudabelt-navy mt-2">
-          24/7 Biomedical Support & Preventive SLA Hub
-        </h1>
-        <p className="text-sudabelt-body mt-3 max-w-2xl">
-          Direct dispatch for critical equipment breakdowns, scheduled OEM calibration, and genuine
-          spare parts across Lagos, Abuja, Kano, and Port Harcourt.
-        </p>
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    document.title = 'Support & Maintenance | Sudabelt Medical'
+  }, [])
 
-        <div className="mt-8 flex flex-wrap gap-4">
-          <Link
-            to="/support/emergency-breakdown"
-            className="h-12.5 px-6.5 rounded-control bg-sudabelt-red text-white font-bold text-[13px] tracking-[0.06em] uppercase inline-flex items-center"
-          >
-            Log Emergency Breakdown
-          </Link>
-          <Link
-            to="/support/maintenance-calibration"
-            className="h-12.5 px-6.5 rounded-control bg-sudabelt-navy text-white font-bold text-[13px] tracking-[0.06em] uppercase inline-flex items-center"
-          >
-            Schedule Preventive Calibration
-          </Link>
-        </div>
-      </div>
-    </section>
+  return (
+    <div className="w-full flex flex-col">
+      {/* 1. Hero: Our engineers are on standby */}
+      <SupportHeroSection />
+
+      {/* 2. Action Cards: After Sales Support & Medical Training */}
+      <SupportActionCardsSection />
+
+      {/* 3. Common questions FAQ with slow, smooth animations */}
+      <SupportFaqSection />
+    </div>
   )
 }
 

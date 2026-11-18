@@ -191,13 +191,6 @@ const Header: React.FC = () => {
                       </Link>
                     ))}
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setOpenDropdown(null)}
-                    className="w-full text-left px-4 py-2 bg-sudabelt-surface hover:bg-sudabelt-header-border border-t border-sudabelt-header-border text-[12px] font-semibold text-sudabelt-muted hover:text-sudabelt-navy transition-colors cursor-pointer"
-                  >
-                    Close menu
-                  </button>
                 </div>
               )}
             </div>
@@ -250,13 +243,6 @@ const Header: React.FC = () => {
                       </Link>
                     ))}
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setOpenDropdown(null)}
-                    className="w-full text-left px-4 py-2 bg-sudabelt-surface hover:bg-sudabelt-header-border border-t border-sudabelt-header-border text-[12px] font-semibold text-sudabelt-muted hover:text-sudabelt-navy transition-colors cursor-pointer"
-                  >
-                    Close menu
-                  </button>
                 </div>
               )}
             </div>

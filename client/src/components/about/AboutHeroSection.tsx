@@ -53,9 +53,9 @@ const AboutHeroSection: React.FC = () => {
           className="w-full h-full object-cover object-center"
         />
         {/* Horizontal Gradient Fade: Deep Navy on the left fading out so the photo on the right is prominently visible */}
-        <div className="absolute inset-0 bg-gradient-to-r from-sudabelt-navy via-sudabelt-navy/70 via-30% to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-sudabelt-navy via-sudabelt-navy/70 via-30% to-transparent" />
         {/* Vertical subtle gradient to anchor seamlessly into green stat bar */}
-        <div className="absolute inset-0 bg-gradient-to-t from-sudabelt-navy via-transparent to-transparent opacity-80" />
+        <div className="absolute inset-0 bg-linear-to-t from-sudabelt-navy via-transparent to-transparent opacity-80" />
       </div>
 
       <div className="relative z-10 sudabelt-container pt-16 sm:pt-20 lg:pt-26 pb-16 lg:pb-22">
@@ -72,7 +72,7 @@ const AboutHeroSection: React.FC = () => {
 
           {/* Headline */}
           <HeaderTextReveal className="mb-6">
-            <h1 className="text-3xl sm:text-4xl lg:text-[48px] font-extrabold text-white leading-[1.14] tracking-[-0.025em]">
+            <h1 className="text-3xl sm:text-4xl lg:text-[48px] font-extrabold text-white leading-[1.14] tracking-tight">
               Building a healthier future across Sub-Saharan Africa.
             </h1>
           </HeaderTextReveal>
@@ -100,10 +100,10 @@ const AboutHeroSection: React.FC = () => {
               </div>
             </SectionReveal>
 
-            {/* KPI 2: 5 */}
+            {/* KPI 2: 8 Global OEM Partners */}
             <SectionReveal direction="up" delay={0.2} className="flex flex-col justify-center pt-6 sm:pt-0 lg:pl-8">
               <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-mono">
-                <AnimatedCounter value={5} duration={1.4} />
+                <AnimatedCounter value={8} duration={1.4} />
               </div>
               <div className="text-xs sm:text-sm text-white/85 font-medium mt-1.5 leading-snug max-w-xs">
                 Global OEM manufacturer partnerships

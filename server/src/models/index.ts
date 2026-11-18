@@ -5,5 +5,6 @@ export * from './ContactInquiry';
 export * from './LeadMagnet';
 export * from './Product';
 export * from './Article';
+export * from './Project';
+export * from './Newsletter';
 export * from './User';
-

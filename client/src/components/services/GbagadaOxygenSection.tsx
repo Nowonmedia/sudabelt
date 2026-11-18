@@ -11,7 +11,7 @@ const SCOPE_TILES = [
 
 const GbagadaOxygenSection: React.FC = () => {
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-[#EAF3EC] border-y border-sudabelt-sage/40">
+    <section className="py-16 sm:py-20 lg:py-24 bg-sudabelt-green-tint border-y border-sudabelt-sage/40">
       <div className="sudabelt-container">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Solid Green Delivery Scope Card */}
@@ -38,7 +38,7 @@ const GbagadaOxygenSection: React.FC = () => {
                     {SCOPE_TILES.map((tile) => (
                       <div
                         key={tile}
-                        className="p-3.5 sm:p-4 rounded-control bg-[#00542c] border border-white/10 text-center text-xs sm:text-sm font-bold text-white flex items-center justify-center min-h-[54px]"
+                        className="p-3.5 sm:p-4 rounded-control bg-[#00542c] border border-white/10 text-center text-xs sm:text-sm font-bold text-white flex items-center justify-center min-h-13.5"
                       >
                         {tile}
                       </div>

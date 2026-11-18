@@ -39,24 +39,28 @@ router.post('/login', loginRateLimiter, async (req: Request, res: Response, next
       id: string;
       email: string;
       name: string;
-      role: 'admin' | 'editor';
+      role: 'superadmin' | 'admin' | 'editor';
     } | null = null;
 
     // 1. Check User collection in MongoDB first (gracefully fallback if DB not seeded with user)
     const dbUser = await User.findOne({ email, isActive: true }).exec().catch(() => null);
     if (dbUser && verifyPassword(password, dbUser.passwordHash)) {
-      dbUser.lastLoginAt = new Date();
-      await dbUser.save().catch(() => null);
+      if (typeof dbUser.save === 'function') {
+        dbUser.lastLoginAt = new Date();
+        await dbUser.save().catch(() => null);
+      } else {
+        await User.findByIdAndUpdate(dbUser._id, { lastLoginAt: new Date() }).catch(() => null);
+      }
 
       authenticatedUser = {
         id: String(dbUser._id),
         email: dbUser.email,
         name: dbUser.name,
-        role: dbUser.role,
+        role: dbUser.role as 'superadmin' | 'admin' | 'editor',
       };
     }
 
-    // 2. Fallback to environment admin variables
+    // 2. Fallback to environment admin variables (Always has superadmin role)
     if (!authenticatedUser) {
       const envAdminEmail = (process.env.ADMIN_EMAIL || 'admin@sudabelt.com').toLowerCase().trim();
       const envAdminPassword =
@@ -70,7 +74,7 @@ router.post('/login', loginRateLimiter, async (req: Request, res: Response, next
           id: 'env-admin-01',
           email: envAdminEmail,
           name: envAdminName,
-          role: 'admin',
+          role: 'superadmin',
         };
       }
     }

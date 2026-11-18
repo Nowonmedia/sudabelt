@@ -95,7 +95,7 @@ const TeamSection: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {TEAM_MEMBERS.map((member, idx) => (
             <SectionReveal key={member.name} direction="up" delay={0.08 * (idx + 1)}>
-              <div className="h-full bg-white border border-sudabelt-border rounded-tl-[22px] rounded-br-[22px] rounded-tr-none rounded-bl-none p-6 sm:p-7 flex flex-col justify-between hover:border-sudabelt-green hover:shadow-card transition-all group">
+              <div className="h-full bg-white border border-sudabelt-border rounded-tl-card rounded-br-card rounded-tr-none rounded-bl-none p-6 sm:p-7 flex flex-col justify-between hover:border-sudabelt-green hover:shadow-card transition-all group">
                 <div>
                   {/* Left-Aligned Circular Avatar */}
                   <div className="flex justify-start mb-4">

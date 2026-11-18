@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { ArrowRight, X, CheckCircle2 } from 'lucide-react'
 import { SectionReveal } from '../common/Reveal'
+import { useProjects } from '../../api/api'
 
 export interface ProjectItem {
   id: string
@@ -190,21 +191,42 @@ const YEAR_FILTERS = ['All', '2022', '2020'] as const
 const ITEMS_PER_PAGE = 6
 
 const ProjectsGridWithFilters: React.FC = () => {
+  const { data: apiData } = useProjects()
+
   const [selectedCategory, setSelectedCategory] = useState<string>('All projects')
   const [selectedYear, setSelectedYear] = useState<string>('All')
   const [displayCount, setDisplayCount] = useState<number>(ITEMS_PER_PAGE)
   const [activeModalProject, setActiveModalProject] = useState<ProjectItem | null>(null)
 
+  const allProjectsList: ProjectItem[] = useMemo(() => {
+    if (apiData?.data && apiData.data.length > 0) {
+      return apiData.data.map((p) => ({
+        id: p.slug || p._id,
+        title: p.title,
+        category: p.category as ProjectItem['category'],
+        year: String(p.completionYear) as ProjectItem['year'],
+        yearLabel: String(p.completionYear),
+        location: (p.city || p.locationState || 'NIGERIA').toUpperCase(),
+        overlayBadge: p.category.toUpperCase(),
+        image: p.heroImage,
+        description: p.shortDescription,
+        fullScope: p.scopeOfWork || [],
+      }))
+    }
+    return ALL_PROJECTS
+  }, [apiData])
+
   // Filter logic
   const filteredProjects = useMemo(() => {
-    return ALL_PROJECTS.filter((project) => {
+    return allProjectsList.filter((project) => {
       const matchCategory =
-        selectedCategory === 'All projects' || project.category === selectedCategory
+        selectedCategory === 'All projects' ||
+        project.category.toLowerCase() === selectedCategory.toLowerCase()
       const matchYear =
-        selectedYear === 'All' || project.year === selectedYear
+        selectedYear === 'All' || String(project.year) === selectedYear
       return matchCategory && matchYear
     })
-  }, [selectedCategory, selectedYear])
+  }, [allProjectsList, selectedCategory, selectedYear])
 
   // Pagination slice
   const visibleProjects = useMemo(() => {
@@ -328,13 +350,13 @@ const ProjectsGridWithFilters: React.FC = () => {
                 <div className="h-full bg-white border border-sudabelt-border rounded-card overflow-hidden hover:border-sudabelt-green hover:shadow-card transition-all duration-300 flex flex-col justify-between group">
                   <div>
                     {/* Top Photo with Overlay Badge */}
-                    <div className="relative aspect-[16/10] overflow-hidden bg-sudabelt-navy">
+                    <div className="relative aspect-16/10 overflow-hidden bg-sudabelt-navy">
                       <img
                         src={project.image}
                         alt={project.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-sudabelt-navy/90 via-sudabelt-navy/40 to-transparent" />
+                      <div className="absolute inset-0 bg-linear-to-t from-sudabelt-navy/90 via-sudabelt-navy/40 to-transparent" />
 
                       <div className="absolute bottom-4 left-4 right-4">
                         <div className="w-6 h-0.75 bg-sudabelt-red rounded-xs mb-1.5" />
@@ -426,7 +448,7 @@ const ProjectsGridWithFilters: React.FC = () => {
             </div>
 
             <div className="p-6 sm:p-8 overflow-y-auto space-y-6">
-              <div className="rounded-control overflow-hidden aspect-[16/9] shadow-sm">
+              <div className="rounded-control overflow-hidden aspect-video shadow-sm">
                 <img
                   src={activeModalProject.image}
                   alt={activeModalProject.title}

@@ -8,7 +8,7 @@ declare global {
         id: string;
         email: string;
         name: string;
-        role: 'admin' | 'editor';
+        role: 'superadmin' | 'admin' | 'editor';
       };
     }
   }
@@ -32,8 +32,8 @@ export const requireAdminAuth = (req: Request, res: Response, next: NextFunction
     req.adminUser = {
       id: 'env-api-key-admin',
       email: process.env.ADMIN_EMAIL || 'admin@sudabelt.com',
-      name: 'Sudabelt API Admin',
-      role: 'admin',
+      name: 'Sudabelt API Super Admin',
+      role: 'superadmin',
     };
     next();
     return;
@@ -73,5 +73,19 @@ export const requireAdminAuth = (req: Request, res: Response, next: NextFunction
     role: decoded.role,
   };
 
+  next();
+};
+
+/**
+ * Middleware ensuring ONLY Superadmin can manage administrators and critical system configuration.
+ */
+export const requireSuperAdmin = (req: Request, res: Response, next: NextFunction): void => {
+  if (!req.adminUser || req.adminUser.role !== 'superadmin') {
+    res.status(403).json({
+      success: false,
+      message: 'Forbidden. Only Superadmin has permission to manage team administrators.',
+    });
+    return;
+  }
   next();
 };

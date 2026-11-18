@@ -1,19 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import CompareHeroSection from '../components/compare/CompareHeroSection'
+import type { DepartmentFilter } from '../components/compare/CompareHeroSection'
+import ComparisonMatrixSection from '../components/compare/ComparisonMatrixSection'
+import DowntimeSimulatorSection from '../components/compare/DowntimeSimulatorSection'
+import PreFooterCTA from '../components/common/PreFooterCTA'
 
 const ComparePage: React.FC = () => {
+  const [activeFilter, setActiveFilter] = useState<DepartmentFilter>('all')
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    document.title = 'Why Sudabelt · Live Comparison | Sudabelt Medical'
+  }, [])
+
   return (
-    <section className="py-16">
-      <div className="sudabelt-container">
-        <span className="text-eyebrow text-sudabelt-green">TOTAL COST OF OWNERSHIP & SLA MATRIX</span>
-        <h1 className="text-section-heading text-sudabelt-navy mt-2">
-          Why Sudabelt: Live Procurement Comparison Engine
-        </h1>
-        <p className="text-sudabelt-body mt-3 max-w-2xl">
-          Compare Sudabelt’s turnkey engineering, local buffer consumables, and &lt;24hr biomedical
-          SLAs against standard equipment importers and catalog retailers.
-        </p>
-      </div>
-    </section>
+    <div className="w-full flex flex-col">
+      {/* 1. Hero with Department Filter Pills */}
+      <CompareHeroSection
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+      />
+
+      {/* 2. Comprehensive 4-Factor Comparison Matrix Table */}
+      <ComparisonMatrixSection activeFilter={activeFilter} />
+
+      {/* 3. Interactive Downtime & TCO Evaluator Simulator */}
+      <DowntimeSimulatorSection />
+
+      {/* 4. Pre-Footer Call to Action */}
+      <PreFooterCTA
+        title="Ready to build on a partner, not a vendor?"
+        primaryLabel="REQUEST A QUOTE"
+        primaryTo="/rfq"
+        secondaryLabel="SEE THE TRAINING HUB"
+        secondaryTo="/training-hub"
+      />
+    </div>
   )
 }
 

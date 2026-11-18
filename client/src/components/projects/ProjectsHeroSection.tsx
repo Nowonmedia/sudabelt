@@ -7,7 +7,7 @@ const STAGES = ['Planning.', 'Installation.', 'Handover.', 'Support.']
 
 const ProjectsHeroSection: React.FC = () => {
   return (
-    <section className="relative text-white overflow-hidden py-16 sm:py-20 lg:py-24 min-h-[480px] sm:min-h-[520px] flex items-center">
+    <section className="relative text-white overflow-hidden py-16 sm:py-20 lg:py-24 min-h-120 sm:min-h-130 flex items-center">
       {/* Full Background Clinical Photo (100% visible, NO blue background; just image and text on top) */}
       <div className="absolute inset-0 z-0">
         <img
@@ -24,14 +24,14 @@ const ProjectsHeroSection: React.FC = () => {
             <SectionReveal direction="up" delay={0.1}>
               <div className="flex items-center gap-3 mb-4">
                 <span className="w-8 sm:w-10 h-0.75 bg-sudabelt-red rounded-xs" />
-                <span className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.14em] text-sudabelt-blue drop-shadow-md">
+                <span className="inline-block px-3.5 py-1 rounded-control bg-sudabelt-blue text-white text-[12px] sm:text-[13px] font-extrabold uppercase tracking-[0.14em] shadow-md">
                   Projects & Success Stories
                 </span>
               </div>
             </SectionReveal>
 
             <HeaderTextReveal className="mb-5">
-              <h1 className="text-3xl sm:text-4xl lg:text-[48px] font-extrabold text-white leading-[1.14] tracking-[-0.025em] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
+              <h1 className="text-3xl sm:text-4xl lg:text-[48px] font-extrabold text-white leading-[1.14] tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
                 Hospitals we have helped build and equip.
               </h1>
             </HeaderTextReveal>

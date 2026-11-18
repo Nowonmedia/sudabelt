@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 
 export const API_BASE_URL: string =
   import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'
@@ -27,7 +27,9 @@ export interface ApiProduct {
     altText?: string
   }
   isConsumable: boolean
-  datasheetUrl: string
+  datasheetUrl?: string
+  brochureUrl?: string
+  primaryImage?: string
   pricingNotes?: string
   compatibleProductSlugs?: string[]
   supportPackage?: {
@@ -39,11 +41,6 @@ export interface ApiProduct {
     localSparePartsStocked?: boolean
   }
   faqs?: { question: string; answer: string }[]
-  seoMeta?: {
-    metaTitle?: string
-    metaDescription?: string
-    keywords?: string[]
-  }
   published: boolean
   createdAt?: string
   updatedAt?: string
@@ -60,13 +57,117 @@ export interface ApiArticle {
   category: string
   summary: string
   content: string
-  takeaways?: string[]
-  coverImage: string
+  coverImage?: string
   pdfUrl?: string
   readTimeMinutes?: number
-  featuredProductSlugs?: string[]
-  publishedDate: string
+  publishedDate?: string
   published: boolean
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface ApiProject {
+  _id: string
+  title: string
+  slug: string
+  category: string
+  facilityName: string
+  locationState: string
+  city?: string
+  completionYear: number
+  isFeatured: boolean
+  heroImage: string
+  galleryImages?: string[]
+  shortDescription: string
+  fullDescription: string
+  clientOrCommissionedBy?: string
+  scopeOfWork?: string[]
+  equipmentSupplied?: string[]
+  impactMetrics?: { label: string; value: string }[]
+  published: boolean
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface ApiNewsletterSubscriber {
+  _id: string
+  email: string
+  name?: string
+  institution?: string
+  source: string
+  isActive: boolean
+  subscribedAt: string
+  tags?: string[]
+}
+
+export interface ApiNewsletterCampaign {
+  _id: string
+  title: string
+  slug: string
+  subject: string
+  issueNumber: number
+  quarter?: 'Q1' | 'Q2' | 'Q3' | 'Q4'
+  year: number
+  summary: string
+  content: string
+  coverImage?: string
+  pdfUrl?: string
+  status: 'draft' | 'scheduled' | 'sent'
+  sentAt?: string
+  recipientCount?: number
+  published: boolean
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface ApiAdminUser {
+  _id: string
+  name: string
+  email: string
+  role: 'superadmin' | 'admin' | 'editor'
+  isActive: boolean
+  lastLoginAt?: string
+  createdAt?: string
+}
+
+export interface ApiRfq {
+  _id: string
+  referenceId: string
+  facilityName: string
+  facilityType: string
+  location: { city: string; state: string; country?: string }
+  urgency: string
+  selectedItems: { name: string; category?: string; quantity: number; notes?: string }[]
+  contact: { name: string; role: string; email: string; phone: string }
+  status: 'pending' | 'quoted' | 'fulfilled' | 'cancelled'
+  createdAt: string
+}
+
+export interface ApiSupportTicket {
+  _id: string
+  ticketId?: string
+  unifiedId?: string
+  ticketType?: 'after_sales' | 'training' | 'contact'
+  displayType?: string
+  facilityName?: string
+  institutionName?: string
+  hospitalName?: string
+  equipmentModel?: string
+  serialNumber?: string
+  issueType?: string
+  urgencyLevel?: string
+  description?: string
+  contactName?: string
+  contactPerson?: string
+  email?: string
+  phone?: string
+  locationState?: string
+  targetHospitalState?: string
+  courseTrack?: string
+  numberOfTrainees?: number
+  department?: string
+  status: string
+  createdAt: string
 }
 
 export interface RFQItemPayload {
@@ -81,28 +182,13 @@ export interface RFQItemPayload {
 export interface RFQSubmissionPayload {
   facilityName: string
   facilityType: string
-  location: {
-    city: string
-    state: string
-    country?: string
-  }
+  location: { city: string; state: string; country?: string }
   urgency: string
   selectedItems: RFQItemPayload[]
   slaTier?: string
-  contact: {
-    name: string
-    role: string
-    email: string
-    phone: string
-  }
+  contact: { name: string; role: string; email: string; phone: string }
   tenderAttachmentUrl?: string
   additionalNotes?: string
-}
-
-export interface RFQSubmissionResponse {
-  success: boolean
-  referenceId: string
-  whatsappUrl: string
 }
 
 export interface TrainingBookingPayload {
@@ -118,13 +204,6 @@ export interface TrainingBookingPayload {
   notes?: string
 }
 
-export interface TrainingBookingResponse {
-  success: boolean
-  registrationId: string
-  message: string
-  whatsappUrl: string
-}
-
 export interface SupportTicketPayload {
   hospitalName: string
   equipmentModel: string
@@ -138,12 +217,6 @@ export interface SupportTicketPayload {
   locationState?: string
 }
 
-export interface SupportTicketResponse {
-  success: boolean
-  ticketId: string
-  whatsappUrgentUrl: string
-}
-
 export interface ContactInquiryPayload {
   name: string
   email: string
@@ -151,27 +224,6 @@ export interface ContactInquiryPayload {
   facilityName?: string
   department: 'sales' | 'biomedical_sla' | 'training' | 'general'
   message: string
-}
-
-export interface ContactInquiryResponse {
-  success: boolean
-  inquiryId: string
-  message: string
-}
-
-export interface LeadCapturePayload {
-  name: string
-  workEmail: string
-  phone: string
-  facilityName: string
-  assetSlug: string
-  assetTitle?: string
-  assetUrl?: string
-}
-
-export interface LeadCaptureResponse {
-  success: boolean
-  downloadUrl: string
 }
 
 // ============================================================================
@@ -268,113 +320,268 @@ export const api = {
   getArticleBySlug: (slug: string) =>
     request<{ success: boolean; data: ApiArticle }>(`/articles/${encodeURIComponent(slug)}`),
 
-  // Public Form Submissions
+  // Public Projects
+  getProjects: (params?: { category?: string; year?: number; featured?: boolean; search?: string }) => {
+    const query = new URLSearchParams()
+    if (params?.category) query.set('category', params.category)
+    if (params?.year) query.set('year', String(params.year))
+    if (params?.featured !== undefined) query.set('featured', String(params.featured))
+    if (params?.search) query.set('search', params.search)
+    const qs = query.toString()
+    return request<{ success: boolean; count: number; data: ApiProject[] }>(
+      `/projects${qs ? `?${qs}` : ''}`
+    )
+  },
+
+  getProjectBySlug: (slug: string) =>
+    request<{ success: boolean; data: ApiProject }>(`/projects/${encodeURIComponent(slug)}`),
+
+  // Public Newsletter
+  subscribeNewsletter: (payload: { email: string; name?: string; institution?: string }) =>
+    request<{ success: boolean; message: string }>('/newsletter/subscribe', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // Public Forms
   submitRFQ: (payload: RFQSubmissionPayload) =>
-    request<RFQSubmissionResponse>('/rfq', {
+    request<{ success: boolean; referenceId: string; whatsappUrl: string }>('/forms/rfq', {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
 
   submitTrainingBooking: (payload: TrainingBookingPayload) =>
-    request<TrainingBookingResponse>('/training-booking', {
+    request<{ success: boolean; registrationId: string; whatsappUrl: string }>('/forms/training-booking', {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
 
   submitSupportTicket: (payload: SupportTicketPayload) =>
-    request<SupportTicketResponse>('/after-sales-support', {
+    request<{ success: boolean; ticketId: string; whatsappUrgentUrl: string }>('/forms/support-ticket', {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
 
   submitContactInquiry: (payload: ContactInquiryPayload) =>
-    request<ContactInquiryResponse>('/contact', {
+    request<{ success: boolean; inquiryId: string; message: string }>('/forms/contact-inquiry', {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
 
-  submitLeadCapture: (payload: LeadCapturePayload) =>
-    request<LeadCaptureResponse>('/lead-capture', {
+  // ============================================================================
+  // ADMIN AUTH & CRUD METHODS
+  // ============================================================================
+
+  adminLogin: (credentials: { email: string; password: string }) =>
+    request<{
+      success: boolean
+      token: string
+      user: { id: string; email: string; name: string; role: 'superadmin' | 'admin' | 'editor' }
+    }>('/auth/login', {
       method: 'POST',
+      body: JSON.stringify(credentials),
+    }),
+
+  adminLogout: () =>
+    request<{ success: boolean; message: string }>('/auth/logout', { method: 'POST' }),
+
+  adminGetMe: () =>
+    request<{
+      success: boolean
+      user: { id: string; email: string; name: string; role: 'superadmin' | 'admin' | 'editor' }
+    }>('/auth/me'),
+
+  // Products
+  adminGetProducts: () =>
+    request<{ success: boolean; count: number; data: ApiProduct[] }>('/admin/products'),
+
+  adminCreateProduct: (payload: Partial<ApiProduct>) =>
+    request<{ success: boolean; message: string; data: ApiProduct }>('/admin/products', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  adminUpdateProduct: (id: string, payload: Partial<ApiProduct>) =>
+    request<{ success: boolean; message: string; data: ApiProduct }>(`/admin/products/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
+
+  adminDeleteProduct: (id: string) =>
+    request<{ success: boolean; message: string }>(`/admin/products/${id}`, {
+      method: 'DELETE',
+    }),
+
+  // Projects
+  adminGetProjects: () =>
+    request<{ success: boolean; count: number; data: ApiProject[] }>('/admin/projects'),
+
+  adminCreateProject: (payload: Partial<ApiProject>) =>
+    request<{ success: boolean; message: string; data: ApiProject }>('/admin/projects', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  adminUpdateProject: (id: string, payload: Partial<ApiProject>) =>
+    request<{ success: boolean; message: string; data: ApiProject }>(`/admin/projects/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
+
+  adminDeleteProject: (id: string) =>
+    request<{ success: boolean; message: string }>(`/admin/projects/${id}`, {
+      method: 'DELETE',
+    }),
+
+  // Articles / Blogs
+  adminGetArticles: () =>
+    request<{ success: boolean; count: number; data: ApiArticle[] }>('/admin/articles'),
+
+  adminCreateArticle: (payload: Partial<ApiArticle>) =>
+    request<{ success: boolean; message: string; data: ApiArticle }>('/admin/articles', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  adminUpdateArticle: (id: string, payload: Partial<ApiArticle>) =>
+    request<{ success: boolean; message: string; data: ApiArticle }>(`/admin/articles/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
+
+  adminDeleteArticle: (id: string) =>
+    request<{ success: boolean; message: string }>(`/admin/articles/${id}`, {
+      method: 'DELETE',
+    }),
+
+  // Newsletters
+  adminGetSubscribers: () =>
+    request<{ success: boolean; count: number; data: ApiNewsletterSubscriber[] }>('/admin/newsletter/subscribers'),
+
+  adminCreateSubscriber: (payload: { email: string; name?: string; institution?: string }) =>
+    request<{ success: boolean; message: string; data: ApiNewsletterSubscriber }>('/admin/newsletter/subscribers', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  adminDeleteSubscriber: (id: string) =>
+    request<{ success: boolean; message: string }>(`/admin/newsletter/subscribers/${id}`, {
+      method: 'DELETE',
+    }),
+
+  adminGetCampaigns: () =>
+    request<{ success: boolean; count: number; data: ApiNewsletterCampaign[] }>('/admin/newsletter/campaigns'),
+
+  adminCreateCampaign: (payload: Partial<ApiNewsletterCampaign>) =>
+    request<{ success: boolean; message: string; data: ApiNewsletterCampaign }>('/admin/newsletter/campaigns', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  adminUpdateCampaign: (id: string, payload: Partial<ApiNewsletterCampaign>) =>
+    request<{ success: boolean; message: string; data: ApiNewsletterCampaign }>(`/admin/newsletter/campaigns/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
+
+  adminDeleteCampaign: (id: string) =>
+    request<{ success: boolean; message: string }>(`/admin/newsletter/campaigns/${id}`, {
+      method: 'DELETE',
+    }),
+
+  adminSendCampaign: (id: string) =>
+    request<{ success: boolean; message: string; data: ApiNewsletterCampaign }>(`/admin/newsletter/campaigns/${id}/send`, {
+      method: 'POST',
+    }),
+
+  // Admin Users (Super Admin Only)
+  adminGetUsers: () =>
+    request<{ success: boolean; count: number; data: ApiAdminUser[] }>('/admin/users'),
+
+  adminCreateUser: (payload: { name: string; email: string; password: string; role: 'superadmin' | 'admin' | 'editor' }) =>
+    request<{ success: boolean; message: string; data: ApiAdminUser }>('/admin/users', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  adminUpdateUser: (id: string, payload: Partial<ApiAdminUser> & { password?: string }) =>
+    request<{ success: boolean; message: string; data: ApiAdminUser }>(`/admin/users/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    }),
+
+  adminDeleteUser: (id: string) =>
+    request<{ success: boolean; message: string }>(`/admin/users/${id}`, {
+      method: 'DELETE',
+    }),
+
+  // Uploads
+  adminUploadMedia: (payload: { fileName: string; fileData: string; mimeType?: string }) =>
+    request<{ success: boolean; url: string; fileName: string; sizeBytes: number }>('/admin/upload', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // RFQs & Support Tickets
+  adminGetRfqs: () =>
+    request<{ success: boolean; count: number; data: ApiRfq[] }>('/admin/rfqs'),
+
+  adminUpdateRfq: (id: string, payload: { status: string; adminNotes?: string }) =>
+    request<{ success: boolean; data: ApiRfq }>(`/admin/rfqs/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    }),
+
+  adminGetTickets: (params?: { type?: string }) =>
+    request<{ success: boolean; count: number; data: ApiSupportTicket[] }>(
+      `/admin/support-tickets${params?.type ? `?type=${params.type}` : ''}`
+    ),
+
+  adminUpdateTicket: (id: string, payload: { status: string; resolutionNotes?: string }) =>
+    request<{ success: boolean; data: ApiSupportTicket }>(`/admin/support-tickets/${id}`, {
+      method: 'PATCH',
       body: JSON.stringify(payload),
     }),
 }
 
-// ============================================================================
-// TANSTACK QUERY HOOKS
-// ============================================================================
-
-export const useProductsQuery = (params?: {
-  category?: string
-  brand?: string
-  isConsumable?: boolean
-  search?: string
-}) => {
+// React Query hooks for public projects
+export function useProjects(params?: { category?: string; year?: number; featured?: boolean; search?: string }) {
   return useQuery({
-    queryKey: ['products', params],
-    queryFn: () => api.getProducts(params),
+    queryKey: ['projects', params],
+    queryFn: () => api.getProjects(params),
+    staleTime: 5 * 60 * 1000,
   })
 }
 
-export const useProductBySlugQuery = (slug?: string) => {
+export function useProjectDetail(slug: string) {
   return useQuery({
-    queryKey: ['product', slug],
-    queryFn: () => api.getProductBySlug(slug || ''),
+    queryKey: ['project', slug],
+    queryFn: () => api.getProjectBySlug(slug),
     enabled: Boolean(slug),
   })
 }
 
-export const useArticlesQuery = (params?: {
-  type?: 'blog' | 'newsletter'
-  category?: string
-  year?: number
-  quarter?: string
-  search?: string
-}) => {
-  return useQuery({
-    queryKey: ['articles', params],
-    queryFn: () => api.getArticles(params),
-  })
+export interface LeadCapturePayload {
+  name: string
+  workEmail: string
+  phone: string
+  facilityName: string
+  assetSlug: string
+  assetTitle?: string
+  assetUrl?: string
 }
 
-export const useArticleBySlugQuery = (slug?: string) => {
-  return useQuery({
-    queryKey: ['article', slug],
-    queryFn: () => api.getArticleBySlug(slug || ''),
-    enabled: Boolean(slug),
-  })
+export interface LeadCaptureResponse {
+  success: boolean
+  downloadUrl: string
 }
 
-export const useSubmitRFQMutation = () => {
-  const queryClient = useQueryClient()
+export function useLeadCaptureMutation() {
   return useMutation({
-    mutationFn: (payload: RFQSubmissionPayload) => api.submitRFQ(payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['admin-rfqs'] })
-    },
-  })
-}
-
-export const useSubmitTrainingBookingMutation = () => {
-  return useMutation({
-    mutationFn: (payload: TrainingBookingPayload) => api.submitTrainingBooking(payload),
-  })
-}
-
-export const useSubmitSupportTicketMutation = () => {
-  return useMutation({
-    mutationFn: (payload: SupportTicketPayload) => api.submitSupportTicket(payload),
-  })
-}
-
-export const useSubmitContactInquiryMutation = () => {
-  return useMutation({
-    mutationFn: (payload: ContactInquiryPayload) => api.submitContactInquiry(payload),
-  })
-}
-
-export const useLeadCaptureMutation = () => {
-  return useMutation({
-    mutationFn: (payload: LeadCapturePayload) => api.submitLeadCapture(payload),
+    mutationFn: (payload: LeadCapturePayload) =>
+      request<LeadCaptureResponse>('/forms/lead-capture', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }),
   })
 }

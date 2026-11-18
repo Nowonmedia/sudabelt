@@ -4,7 +4,7 @@ export interface AdminTokenPayload {
   sub: string;
   email: string;
   name: string;
-  role: 'admin' | 'editor';
+  role: 'superadmin' | 'admin' | 'editor';
   iat: number;
   exp: number;
 }
@@ -63,7 +63,7 @@ export const verifyPassword = (password: string, storedHashOrPlain: string): boo
  * Signs an RFC 7519 HS256 JWT with a 7-day default expiration.
  */
 export const signAdminJwt = (
-  user: { id: string; email: string; name: string; role: 'admin' | 'editor' },
+  user: { id: string; email: string; name: string; role: 'superadmin' | 'admin' | 'editor' },
   expiresInSeconds = SEVEN_DAYS_SECONDS
 ): string => {
   const now = Math.floor(Date.now() / 1000);

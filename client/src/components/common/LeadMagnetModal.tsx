@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { X, Download, CheckCircle2, ShieldCheck, Mail, Building, User, Phone } from 'lucide-react'
+import { X, Download, CheckCircle2, ShieldCheck, Mail, Building, User } from 'lucide-react'
 import { useLeadCaptureMutation } from '../../api/api'
 
 interface LeadMagnetModalProps {
@@ -23,7 +23,6 @@ export const LeadMagnetModal: React.FC<LeadMagnetModalProps> = ({
 }) => {
   const [name, setName] = useState('')
   const [workEmail, setWorkEmail] = useState('')
-  const [phone, setPhone] = useState('')
   const [facilityName, setFacilityName] = useState('')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [isSuccess, setIsSuccess] = useState(false)
@@ -45,7 +44,7 @@ export const LeadMagnetModal: React.FC<LeadMagnetModalProps> = ({
       await leadMutation.mutateAsync({
         name: name.trim() || 'Medical Professional',
         workEmail: workEmail.trim(),
-        phone: phone.trim() || '+234000000000',
+        phone: '',
         facilityName: facilityName.trim() || 'Healthcare Facility',
         assetSlug,
         assetTitle,
@@ -75,7 +74,6 @@ export const LeadMagnetModal: React.FC<LeadMagnetModalProps> = ({
     setIsSuccess(false)
     setName('')
     setWorkEmail('')
-    setPhone('')
     setFacilityName('')
     setErrorMsg(null)
     onClose()
@@ -207,22 +205,6 @@ export const LeadMagnetModal: React.FC<LeadMagnetModalProps> = ({
                         className="w-full h-11 pl-10 pr-3 rounded-control border border-sudabelt-border focus:border-sudabelt-green focus:outline-none text-sm text-sudabelt-navy bg-white"
                       />
                     </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-sudabelt-label mb-1">
-                    Phone Number
-                  </label>
-                  <div className="relative">
-                    <Phone className="w-4 h-4 text-sudabelt-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+234..."
-                      className="w-full h-11 pl-10 pr-3 rounded-control border border-sudabelt-border focus:border-sudabelt-green focus:outline-none text-sm text-sudabelt-navy bg-white font-mono"
-                    />
                   </div>
                 </div>
               </div>
