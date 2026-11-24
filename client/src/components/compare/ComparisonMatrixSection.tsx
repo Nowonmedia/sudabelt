@@ -129,8 +129,109 @@ export const ComparisonMatrixSection: React.FC<ComparisonMatrixSectionProps> = (
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-white">
       <div className="sudabelt-container">
-        {/* Table Container with responsive horizontal scroll */}
-        <div className="overflow-x-auto border border-sudabelt-border rounded-card shadow-xs bg-white">
+        {/* Mobile Stacked Comparison Cards (< lg) */}
+        <div className="lg:hidden space-y-5">
+          {ROWS.map((row) => (
+            <div
+              key={row.id}
+              className="rounded-card border border-sudabelt-border bg-white shadow-xs overflow-hidden"
+            >
+              <div className="p-4 sm:p-5 bg-sudabelt-surface/60 border-b border-sudabelt-border">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-sudabelt-green block mb-1">
+                  {row.tag}
+                </span>
+                <h4 className="text-base font-bold text-sudabelt-navy leading-snug">
+                  {row.title}
+                </h4>
+                <p className="text-xs text-sudabelt-body mt-1 leading-relaxed">
+                  {row.subtitle}
+                </p>
+              </div>
+
+              <div className="divide-y divide-sudabelt-border">
+                <div className="p-4 bg-sudabelt-green-tint/50">
+                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-sudabelt-green mb-1.5">
+                    Sudabelt Medical
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <div className="w-5 h-5 rounded-control bg-sudabelt-green text-white flex items-center justify-center shrink-0 mt-0.5">
+                      <Check className="w-3 h-3 stroke-[3]" />
+                    </div>
+                    <div>
+                      <div className="text-xs sm:text-sm font-bold text-sudabelt-navy">
+                        {row.sudabelt.title}
+                      </div>
+                      <p className="text-xs text-sudabelt-body mt-0.5 leading-relaxed">
+                        {row.sudabelt.desc}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-white">
+                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-sudabelt-muted mb-1.5">
+                    Standard Equipment Importers
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <div className="w-5 h-5 rounded-control bg-sudabelt-surface border border-sudabelt-border text-sudabelt-muted flex items-center justify-center shrink-0 mt-0.5">
+                      {row.importers.status === 'cross' ? (
+                        <X className="w-3 h-3 stroke-[2.5]" />
+                      ) : (
+                        <Minus className="w-3 h-3 stroke-[2.5]" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="text-xs sm:text-sm font-bold text-sudabelt-navy">
+                        {row.importers.title}
+                      </div>
+                      <p className="text-xs text-sudabelt-muted mt-0.5 leading-relaxed">
+                        {row.importers.desc}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-white">
+                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-sudabelt-muted mb-1.5">
+                    General Medical Catalog Retailers
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <div className="w-5 h-5 rounded-control bg-sudabelt-surface border border-sudabelt-border text-sudabelt-muted flex items-center justify-center shrink-0 mt-0.5">
+                      {row.retailers.status === 'cross' ? (
+                        <X className="w-3 h-3 stroke-[2.5]" />
+                      ) : (
+                        <Minus className="w-3 h-3 stroke-[2.5]" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="text-xs sm:text-sm font-bold text-sudabelt-navy">
+                        {row.retailers.title}
+                      </div>
+                      <p className="text-xs text-sudabelt-muted mt-0.5 leading-relaxed">
+                        {row.retailers.desc}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {row.callout && (
+                <div className="bg-sudabelt-navy text-white px-4 py-3 flex items-start gap-2.5 text-xs">
+                  <Info className="w-4 h-4 text-sudabelt-blue shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-bold uppercase text-emerald-300 mr-1.5">
+                      {row.callout.label}:
+                    </span>
+                    <span className="text-gray-200">{row.callout.text}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table Container (>= lg) */}
+        <div className="hidden lg:block overflow-x-auto border border-sudabelt-border rounded-card shadow-xs bg-white">
           <table className="w-full min-w-[900px] border-collapse text-left">
             {/* Table Header */}
             <thead>

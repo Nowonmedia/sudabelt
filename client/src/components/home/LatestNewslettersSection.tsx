@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { ArrowRight, Download } from 'lucide-react'
 import { HeaderTextReveal, SectionReveal } from '../common/Reveal'
+import LeadMagnetModal from '../common/LeadMagnetModal'
 import { API_BASE_URL, useArticles } from '../../api/api'
 
 interface InsightTeaserCard {
@@ -20,6 +21,7 @@ interface InsightTeaserCard {
 const LatestNewslettersSection: React.FC = () => {
   const { data: blogData } = useArticles({ type: 'blog' })
   const { data: newsletterData } = useArticles({ type: 'newsletter' })
+  const [activeLeadCard, setActiveLeadCard] = useState<InsightTeaserCard | null>(null)
 
   const cards: InsightTeaserCard[] = useMemo(() => {
     const blogs = Array.isArray(blogData?.data) ? blogData.data.slice(0, 2) : []
@@ -160,16 +162,14 @@ const LatestNewslettersSection: React.FC = () => {
             )
 
             return card.type === 'newsletter' ? (
-              <a
+              <button
                 key={card.slug}
-                href={card.linkTo}
-                download={`${card.slug}.pdf`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group rounded-card border border-sudabelt-border hover:border-sudabelt-sage bg-white overflow-hidden flex flex-col transition-all"
+                type="button"
+                onClick={() => setActiveLeadCard(card)}
+                className="group text-left rounded-card border border-sudabelt-border hover:border-sudabelt-sage bg-white overflow-hidden flex flex-col transition-all cursor-pointer"
               >
                 {innerContent}
-              </a>
+              </button>
             ) : (
               <Link
                 key={card.slug}
@@ -182,6 +182,19 @@ const LatestNewslettersSection: React.FC = () => {
           })}
         </div>
       </SectionReveal>
+
+      {activeLeadCard && (
+        <LeadMagnetModal
+          isOpen={Boolean(activeLeadCard)}
+          onClose={() => setActiveLeadCard(null)}
+          assetTitle={activeLeadCard.title}
+          assetSlug={activeLeadCard.slug}
+          directDownloadUrl={activeLeadCard.linkTo}
+          description="Please provide your contact information to immediately download this Sudabelt Medical newsletter edition."
+          buttonLabel="Download Newsletter PDF"
+          leadSource={`Newsletter: ${activeLeadCard.title}`}
+        />
+      )}
     </section>
   )
 }

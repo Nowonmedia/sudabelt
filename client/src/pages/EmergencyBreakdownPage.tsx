@@ -3,6 +3,8 @@ import { Link } from 'react-router'
 import { api } from '../api/api'
 import { toast } from 'react-toastify'
 import { Loader2, CheckCircle2 } from 'lucide-react'
+import FormCaptcha from '../components/common/FormCaptcha'
+import { getEmailValidationError } from '../utils/validation'
 
 const STORAGE_KEY = 'sudabelt_after_sales_ticket_session'
 
@@ -25,6 +27,7 @@ export const EmergencyBreakdownPage: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [captchaVerified, setCaptchaVerified] = useState(false)
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -69,10 +72,9 @@ export const EmergencyBreakdownPage: React.FC = () => {
     if (!formData.systemDescription.trim()) errors.systemDescription = 'System description is required.'
     if (!formData.serialNumber.trim()) errors.serialNumber = 'Serial number is required.'
     if (!formData.telephone.trim()) errors.telephone = 'Telephone number is required.'
-    if (!formData.email.trim()) {
-      errors.email = 'Email address is required.'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      errors.email = 'Please provide a valid email address.'
+    const emailError = getEmailValidationError(formData.email)
+    if (emailError) {
+      errors.email = emailError
     }
     if (!formData.designation.trim()) errors.designation = 'Designation is required.'
     if (!formData.complaint.trim()) errors.complaint = 'Please describe the fault or issue complaint.'
@@ -86,6 +88,13 @@ export const EmergencyBreakdownPage: React.FC = () => {
 
     if (!validate()) {
       toast.error('Please complete all mandatory ticket fields marked with an asterisk.', {
+        theme: 'colored',
+      })
+      return
+    }
+
+    if (!captchaVerified) {
+      toast.error('Please complete the security check before submitting.', {
         theme: 'colored',
       })
       return
@@ -516,6 +525,8 @@ export const EmergencyBreakdownPage: React.FC = () => {
                         </div>
                       </div>
                     </div>
+
+                    <FormCaptcha onVerifyChange={setCaptchaVerified} />
 
                     {/* Submit Button */}
                     <div className="pt-4">

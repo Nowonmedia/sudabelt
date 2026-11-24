@@ -4,6 +4,7 @@ import { FaLinkedinIn, FaFacebookF, FaInstagram } from 'react-icons/fa6'
 import { toast } from 'react-toastify'
 import SudabeltLogo from '../components/common/SudabeltLogo'
 import { api } from '../api/api'
+import { getEmailValidationError } from '../utils/validation'
 
 const Footer: React.FC = () => {
   const [subscriberEmail, setSubscriberEmail] = useState('')
@@ -12,8 +13,9 @@ const Footer: React.FC = () => {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!subscriberEmail || !subscriberEmail.includes('@')) {
-      toast.error('Please enter a valid email address.')
+    const emailError = getEmailValidationError(subscriberEmail)
+    if (emailError) {
+      toast.error(emailError)
       return
     }
     setIsSubscribing(true)
@@ -241,10 +243,27 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom Copyright & C.A.R.E. Bar */}
-        <div className="pt-7 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-white/70">
+        {/* Bottom Copyright, Legal Links & C.A.R.E. Bar */}
+        <div className="pt-7 flex flex-col md:flex-row items-center justify-between gap-4 text-[12px] text-white/70">
           <p>Commitment • Accountability • Reliability • Efficiency</p>
-          <p>© 2026 Sudabelt Medical Ltd. <a href='https://nowon.media' target='_blank'>Powered by Now On Media</a> </p>
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link to="/privacy-policy" className="hover:text-sudabelt-blue transition-colors">
+              Privacy Policy
+            </Link>
+            <span aria-hidden="true" className="text-white/30">
+              •
+            </span>
+            <Link to="/terms-of-use" className="hover:text-sudabelt-blue transition-colors">
+              Terms of Use
+            </Link>
+            <span aria-hidden="true" className="text-white/30">
+              •
+            </span>
+            <Link to="/sitemap" className="hover:text-sudabelt-blue transition-colors">
+              Sitemap
+            </Link>
+          </div>
+          <p>© 2026 Sudabelt Medical Ltd. <a href='https://nowon.media' target='_blank' rel='noopener noreferrer'>Powered by Now On Media</a> </p>
         </div>
       </div>
     </footer>

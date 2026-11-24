@@ -14,7 +14,7 @@ const ComparePage: React.FC = () => {
   }, [])
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col overflow-x-hidden">
       {/* 1. Hero with Department Filter Pills */}
       <CompareHeroSection
         activeFilter={activeFilter}

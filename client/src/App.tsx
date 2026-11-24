@@ -22,6 +22,9 @@ const MaintenanceCalibrationPage = lazy(() => import('./pages/MaintenanceCalibra
 const RFQPage = lazy(() => import('./pages/RFQPage'))
 const ContactPage = lazy(() => import('./pages/ContactPage'))
 const CareersPage = lazy(() => import('./pages/CareersPage'))
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
+const TermsOfUsePage = lazy(() => import('./pages/TermsOfUsePage'))
+const SitemapPage = lazy(() => import('./pages/SitemapPage'))
 const AdminLoginPage = lazy(() => import('./pages/admin/AdminLoginPage'))
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'))
 
@@ -71,6 +74,9 @@ const App: React.FC = () => {
         <Route path="/rfq" element={<RFQPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/careers" element={<CareersPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms-of-use" element={<TermsOfUsePage />} />
+        <Route path="/sitemap" element={<SitemapPage />} />
       </Route>
       </Routes>
     </Suspense>

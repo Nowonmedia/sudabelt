@@ -3,8 +3,7 @@ import { Download } from 'lucide-react'
 import { SectionReveal } from '../common/Reveal'
 import LeadMagnetModal from '../common/LeadMagnetModal'
 
-const COMPANY_PROFILE_PDF_URL =
-  'https://res.cloudinary.com/ajgpbpap/image/upload/v1795512004/Sudabelt_Business_Profile.pdf'
+const COMPANY_PROFILE_PDF_URL = '/docs/Sudabelt_Business_Profile.pdf'
 
 const CompanyProfileCtaBar: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false)

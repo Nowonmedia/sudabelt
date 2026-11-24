@@ -3,6 +3,8 @@ import { Link } from 'react-router'
 import { api } from '../api/api'
 import { toast } from 'react-toastify'
 import { Loader2, CheckCircle2 } from 'lucide-react'
+import FormCaptcha from '../components/common/FormCaptcha'
+import { getEmailValidationError } from '../utils/validation'
 
 const STORAGE_KEY = 'sudabelt_medical_training_session'
 
@@ -21,6 +23,7 @@ export const MaintenanceCalibrationPage: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [captchaVerified, setCaptchaVerified] = useState(false)
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -77,10 +80,9 @@ export const MaintenanceCalibrationPage: React.FC = () => {
     if (!formData.phone.trim()) {
       errors.phone = 'Phone number is required.'
     }
-    if (!formData.email.trim()) {
-      errors.email = 'Email address is required.'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      errors.email = 'Please provide a valid email address.'
+    const emailError = getEmailValidationError(formData.email)
+    if (emailError) {
+      errors.email = emailError
     }
 
     setFieldErrors(errors)
@@ -92,6 +94,13 @@ export const MaintenanceCalibrationPage: React.FC = () => {
 
     if (!validate()) {
       toast.error('Please complete all mandatory training fields before booking.', {
+        theme: 'colored',
+      })
+      return
+    }
+
+    if (!captchaVerified) {
+      toast.error('Please complete the security check before submitting.', {
         theme: 'colored',
       })
       return
@@ -421,6 +430,8 @@ export const MaintenanceCalibrationPage: React.FC = () => {
                         )}
                       </div>
                     </div>
+
+                    <FormCaptcha onVerifyChange={setCaptchaVerified} />
 
                     {/* Submit Button */}
                     <div className="pt-4">

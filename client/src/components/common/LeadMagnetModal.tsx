@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { X, Download, CheckCircle2, ShieldCheck, Mail, Building, User } from 'lucide-react'
 import { useLeadCaptureMutation } from '../../api/api'
+import { getEmailValidationError } from '../../utils/validation'
 
 interface LeadMagnetModalProps {
   isOpen: boolean
@@ -37,10 +38,23 @@ export const LeadMagnetModal: React.FC<LeadMagnetModalProps> = ({
     e.preventDefault()
     setErrorMsg(null)
 
-    if (!workEmail.trim() || !workEmail.includes('@')) {
-      setErrorMsg('Please enter a valid work email address.')
+    const emailErr = getEmailValidationError(workEmail)
+    if (emailErr) {
+      setErrorMsg(emailErr)
       return
     }
+
+    // Trigger download immediately on user gesture so mobile/Safari popup blockers don't block it
+    const link = document.createElement('a')
+    link.href = directDownloadUrl
+    link.target = '_blank'
+    link.rel = 'noopener noreferrer'
+    const extMatch = directDownloadUrl.split('?')[0].match(/\.(pdf|pptx|docx|ppt|doc)$/i)
+    const ext = extMatch ? extMatch[1].toLowerCase() : 'pdf'
+    link.download = `${assetSlug}.${ext}`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
 
     try {
       await leadMutation.mutateAsync({
@@ -59,20 +73,6 @@ export const LeadMagnetModal: React.FC<LeadMagnetModalProps> = ({
     }
 
     setIsSuccess(true)
-
-    // Trigger download in new window/tab
-    setTimeout(() => {
-      const link = document.createElement('a')
-      link.href = directDownloadUrl
-      link.target = '_blank'
-      link.rel = 'noopener noreferrer'
-      const extMatch = directDownloadUrl.split('?')[0].match(/\.(pdf|pptx|docx|ppt|doc)$/i)
-      const ext = extMatch ? extMatch[1].toLowerCase() : 'pdf'
-      link.download = `${assetSlug}.${ext}`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    }, 400)
   }
 
   const handleClose = () => {
