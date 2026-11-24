@@ -16,38 +16,38 @@ const TURNKEY_PILLARS: TurnkeyPillar[] = [
   {
     number: '01',
     icon: Package,
-    title: 'Equipment Supply',
+    title: 'Healthcare Technology Solutions & Medical Consumables',
     description:
-      'Genuine OEM hardware from Baxter, Terumo BCT, Abbott and more, with local consumable buffer stock.',
-    ctaLabel: 'BROWSE CATALOG →',
+      'Specialized medical equipment and consumables sales, marketing, workshops, and live clinical demonstrations for hospitals, clinics, and laboratories.',
+    ctaLabel: 'BROWSE PORTFOLIO →',
     ctaPath: '/products',
   },
   {
     number: '02',
     icon: Building2,
-    title: 'Facility Planning & Installation',
+    title: 'Healthcare Infrastructure & Turnkey Projects',
     description:
-      'Site audits, electrical, RO water and medical gas infrastructure before delivery.',
-    ctaLabel: 'TURNKEY PROCESS →',
-    ctaPath: '/services/turnkey',
+      'End-to-end hospital design, equipment procurement, ICU, dialysis and diagnostic centre development, installation, integration, and commissioning.',
+    ctaLabel: 'EXPLORE PROJECTS →',
+    ctaPath: '/projects',
   },
   {
     number: '03',
-    icon: GraduationCap,
-    title: 'Clinical Staff Training',
+    icon: Wrench,
+    title: 'Biomedical Engineering Solutions',
     description:
-      'Hands-on certification for nurses, doctors and engineers directly in your ward.',
-    ctaLabel: 'TRAINING HUB →',
-    ctaPath: '/training-hub',
+      'Preventive and corrective maintenance, calibration, lifecycle management, clinical applications support, and system optimization.',
+    ctaLabel: 'AFTER-SALES SUPPORT →',
+    ctaPath: '/support',
   },
   {
     number: '04',
-    icon: Wrench,
-    title: 'Preventive Biomedical Engineering',
+    icon: GraduationCap,
+    title: 'Healthcare Education & Capacity Building',
     description:
-      'Scheduled calibration, genuine spare parts and <24hr emergency response across regional hubs.',
-    ctaLabel: 'VIEW OUR SLA →',
-    ctaPath: '/support',
+      'Clinical training, CME programmes, biomedical engineering certifications, technical workshops, and community health outreach.',
+    ctaLabel: 'TRAINING HUB →',
+    ctaPath: '/training-hub',
   },
 ]
 
