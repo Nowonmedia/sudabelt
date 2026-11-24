@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { X, CheckCircle2, MessageCircle } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { api } from '../../api/api'
+import FormCaptcha from '../common/FormCaptcha'
+import { getEmailValidationError } from '../../utils/validation'
 
 interface TrainingBookingModalProps {
   isOpen: boolean
@@ -76,6 +78,7 @@ const TrainingBookingModal: React.FC<TrainingBookingModalProps> = ({
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [captchaVerified, setCaptchaVerified] = useState(false)
   const [submissionResult, setSubmissionResult] = useState<{
     referenceId: string
     whatsappUrl?: string
@@ -102,7 +105,8 @@ const TrainingBookingModal: React.FC<TrainingBookingModalProps> = ({
     if (!formData.institutionName.trim()) errs.institutionName = 'Hospital / Institution name is required'
     if (!formData.contactName.trim()) errs.contactName = 'Contact name is required'
     if (!formData.contactRole.trim()) errs.contactRole = 'Role / Designation is required'
-    if (!formData.email.trim() || !formData.email.includes('@')) errs.email = 'Valid work email is required'
+    const emailError = getEmailValidationError(formData.email)
+    if (emailError) errs.email = emailError
     if (!formData.phone.trim() || formData.phone.length < 7) errs.phone = 'Valid phone number is required'
     if (!formData.numberOfTrainees || Number(formData.numberOfTrainees) < 1) {
       errs.numberOfTrainees = 'At least 1 trainee required'
@@ -115,6 +119,11 @@ const TrainingBookingModal: React.FC<TrainingBookingModalProps> = ({
     e.preventDefault()
     if (!validate()) {
       toast.error('Please correct the highlighted fields in red.')
+      return
+    }
+
+    if (!captchaVerified) {
+      toast.error('Please complete the security check before submitting.')
       return
     }
 
@@ -367,6 +376,8 @@ const TrainingBookingModal: React.FC<TrainingBookingModalProps> = ({
                   className="w-full p-2.5 rounded-xl border border-sudabelt-border"
                 />
               </div>
+
+              <FormCaptcha onVerifyChange={setCaptchaVerified} />
 
               <div className="pt-3 flex justify-end gap-3 border-t border-sudabelt-border">
                 <button

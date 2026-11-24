@@ -85,14 +85,14 @@ export const DowntimeSimulatorSection: React.FC = () => {
         {/* 2 Interactive Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
           {/* Left Card: Interactive Configurator */}
-          <div className="lg:col-span-6 bg-white border border-sudabelt-border rounded-card p-7 sm:p-9 shadow-xs flex flex-col justify-between">
+          <div className="lg:col-span-6 bg-white border border-sudabelt-border rounded-card p-5 sm:p-9 shadow-xs flex flex-col justify-between">
             <div>
               {/* Selector 1: Facility Size */}
               <div className="mb-7">
                 <label className="block text-xs font-mono font-bold uppercase tracking-wider text-sudabelt-muted mb-2.5">
                   FACILITY SIZE
                 </label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   {[
                     { id: 'clinic' as const, label: 'Clinic' },
                     { id: 'mid-size' as const, label: 'Mid-size' },
@@ -119,7 +119,7 @@ export const DowntimeSimulatorSection: React.FC = () => {
                 <label className="block text-xs font-mono font-bold uppercase tracking-wider text-sudabelt-muted mb-2.5">
                   EQUIPMENT FOCUS
                 </label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   {[
                     { id: 'renal' as const, label: 'Renal' },
                     { id: 'apheresis' as const, label: 'Apheresis' },

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { api } from '../../api/api'
 import { CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
+import FormCaptcha from '../common/FormCaptcha'
+import { getEmailValidationError } from '../../utils/validation'
 
 const STORAGE_KEY = 'sudabelt_contact_form_session'
 
@@ -18,6 +20,7 @@ export const ContactFormAndInfoSection: React.FC = () => {
   const [submitted, setSubmitted] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [captchaVerified, setCaptchaVerified] = useState(false)
 
   // 1. Session Persistence: Load saved draft on mount
   useEffect(() => {
@@ -62,10 +65,9 @@ export const ContactFormAndInfoSection: React.FC = () => {
     if (!formData.lastName.trim()) {
       errors.lastName = 'Last name is required.'
     }
-    if (!formData.email.trim()) {
-      errors.email = 'Email address is required.'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      errors.email = 'Please provide a valid email address.'
+    const emailError = getEmailValidationError(formData.email)
+    if (emailError) {
+      errors.email = emailError
     }
     if (!formData.message.trim()) {
       errors.message = 'Please provide a message describing your request.'
@@ -80,6 +82,13 @@ export const ContactFormAndInfoSection: React.FC = () => {
 
     if (!validate()) {
       toast.error('Please complete all required fields correctly before submitting.', {
+        theme: 'colored',
+      })
+      return
+    }
+
+    if (!captchaVerified) {
+      toast.error('Please complete the security check before submitting.', {
         theme: 'colored',
       })
       return
@@ -293,6 +302,8 @@ export const ContactFormAndInfoSection: React.FC = () => {
                     </p>
                   )}
                 </div>
+
+                <FormCaptcha onVerifyChange={setCaptchaVerified} />
 
                 {/* Submit Button */}
                 <div className="pt-2">

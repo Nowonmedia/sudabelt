@@ -13,6 +13,8 @@ import {
 import { FaWhatsapp } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { useQuote } from '../context/QuoteContext'
+import FormCaptcha from '../components/common/FormCaptcha'
+import { getEmailValidationError } from '../utils/validation'
 
 const NIGERIAN_STATES = [
   'Lagos',
@@ -263,6 +265,7 @@ const RFQPage: React.FC = () => {
 
   // UI state
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [captchaVerified, setCaptchaVerified] = useState<boolean>(false)
   const [activeModalTab, setActiveModalTab] = useState<'EQUIPMENT' | 'CONSUMABLES' | 'TRAINING' | 'MAINTENANCE / SLA' | null>(null)
   const [submittedRef, setSubmittedRef] = useState<string | null>(null)
   const [whatsappUrlFromApi, setWhatsappUrlFromApi] = useState<string | null>(null)
@@ -296,8 +299,14 @@ const RFQPage: React.FC = () => {
       return
     }
 
-    if (!workEmail.trim() || !workEmail.includes('@')) {
-      toast.error('Please enter a valid work email address.')
+    const emailError = getEmailValidationError(workEmail)
+    if (emailError) {
+      toast.error(emailError)
+      return
+    }
+
+    if (!captchaVerified) {
+      toast.error('Please complete the security check before submitting.')
       return
     }
 
@@ -844,6 +853,8 @@ const RFQPage: React.FC = () => {
                   />
                 </div>
               </div>
+
+              <FormCaptcha onVerifyChange={setCaptchaVerified} />
 
               {/* Action Buttons: Submit & WhatsApp */}
               <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">

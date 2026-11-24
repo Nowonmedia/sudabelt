@@ -5,7 +5,9 @@ import { Mail, Calendar, Download, CheckCircle2, Award } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { HeaderTextReveal, SectionReveal } from '../components/common/Reveal'
 import PreFooterCTA from '../components/common/PreFooterCTA'
+import LeadMagnetModal from '../components/common/LeadMagnetModal'
 import { API_BASE_URL, useArticles, api, type ApiArticle } from '../api/api'
+import { getEmailValidationError } from '../utils/validation'
 
 const SUDABELT_AWARDS = [
   {
@@ -148,6 +150,7 @@ const NewslettersPage: React.FC = () => {
   const [isSubscribing, setIsSubscribing] = useState<boolean>(false)
   const [subscribedSuccess, setSubscribedSuccess] = useState<boolean>(false)
   const [visibleArchiveCount, setVisibleArchiveCount] = useState<number>(2)
+  const [activeLeadNewsletter, setActiveLeadNewsletter] = useState<ApiArticle | null>(null)
 
   const allNewsletters: ApiArticle[] = useMemo(() => {
     if (apiData && Array.isArray(apiData.data)) {
@@ -168,8 +171,9 @@ const NewslettersPage: React.FC = () => {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!subscriberEmail.trim() || !subscriberEmail.includes('@')) {
-      toast.error('Please enter a valid work email address.')
+    const emailError = getEmailValidationError(subscriberEmail)
+    if (emailError) {
+      toast.error(emailError)
       return
     }
 
@@ -312,16 +316,14 @@ const NewslettersPage: React.FC = () => {
                       </p>
 
                       <div className="flex flex-wrap items-center gap-3">
-                        <a
-                          href={featuredNewsletter.pdfUrl || `${API_BASE_URL}/articles/${encodeURIComponent(featuredNewsletter.slug)}/pdf`}
-                          download={`${featuredNewsletter.slug}.pdf`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="h-11 px-6 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-sudabelt-navy hover:text-white font-extrabold text-xs uppercase tracking-wider inline-flex items-center gap-2 transition-colors shadow-xs"
+                        <button
+                          type="button"
+                          onClick={() => setActiveLeadNewsletter(featuredNewsletter)}
+                          className="h-11 px-6 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-sudabelt-navy hover:text-white font-extrabold text-xs uppercase tracking-wider inline-flex items-center gap-2 transition-colors shadow-xs cursor-pointer"
                         >
                           <Download className="w-4 h-4" />
                           <span>Download Newsletter PDF</span>
-                        </a>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -391,18 +393,16 @@ const NewslettersPage: React.FC = () => {
                             </div>
                           </div>
 
-                          {/* Card Footer: Direct Download */}
+                          {/* Card Footer: Gated Lead Magnet Download */}
                           <div className="px-6 pb-6 pt-2 border-t border-sudabelt-border/60 flex items-center justify-between">
-                            <a
-                              href={newsletter.pdfUrl || `${API_BASE_URL}/articles/${encodeURIComponent(newsletter.slug)}/pdf`}
-                              download={`${newsletter.slug}.pdf`}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                            <button
+                              type="button"
+                              onClick={() => setActiveLeadNewsletter(newsletter)}
                               className="w-full h-10 px-4 rounded-control bg-sudabelt-navy hover:bg-sudabelt-green text-white text-xs font-extrabold uppercase tracking-wider inline-flex items-center justify-center gap-2 transition-colors cursor-pointer"
                             >
                               <Download className="w-3.5 h-3.5" />
                               <span>Download Newsletter PDF</span>
-                            </a>
+                            </button>
                           </div>
                         </div>
                       </SectionReveal>
@@ -485,6 +485,23 @@ const NewslettersPage: React.FC = () => {
         secondaryTo="/services/turnkey"
         secondaryType="link"
       />
+
+      {/* Lead Magnet Modal for Newsletter Downloads */}
+      {activeLeadNewsletter && (
+        <LeadMagnetModal
+          isOpen={Boolean(activeLeadNewsletter)}
+          onClose={() => setActiveLeadNewsletter(null)}
+          assetTitle={activeLeadNewsletter.title}
+          assetSlug={activeLeadNewsletter.slug}
+          directDownloadUrl={
+            activeLeadNewsletter.pdfUrl ||
+            `${API_BASE_URL}/articles/${encodeURIComponent(activeLeadNewsletter.slug)}/pdf`
+          }
+          description="Please provide your contact information to immediately download this Sudabelt Medical newsletter edition."
+          buttonLabel="Download Newsletter PDF"
+          leadSource={`Newsletter: ${activeLeadNewsletter.title}`}
+        />
+      )}
     </div>
   )
 }
