@@ -26,7 +26,7 @@ const TrainingCtaBanner: React.FC<TrainingCtaBannerProps> = ({ onBookClick }) =>
           className="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left"
         >
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight max-w-xl">
-            Certify your team before the machine arrives.
+            Certify Your Team Before the Machine Arrives.
           </h2>
 
           <button

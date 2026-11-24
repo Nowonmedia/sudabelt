@@ -21,7 +21,7 @@ const NationwidePresenceSection: React.FC = () => {
 
             <HeaderTextReveal className="mb-4">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-sudabelt-navy tracking-tight leading-tight">
-                Engineers on call anywhere in Nigeria.
+                Engineers on Call Anywhere in Nigeria.
               </h2>
             </HeaderTextReveal>
 

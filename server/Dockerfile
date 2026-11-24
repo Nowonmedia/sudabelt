@@ -23,6 +23,7 @@ ENV PORT=5000
 COPY --from=builder --chown=node:node /app/package.json ./package.json
 COPY --from=builder --chown=node:node /app/node_modules ./node_modules
 COPY --from=builder --chown=node:node /app/dist ./dist
+RUN mkdir -p /app/uploads && chown -R node:node /app/uploads
 
 USER node
 

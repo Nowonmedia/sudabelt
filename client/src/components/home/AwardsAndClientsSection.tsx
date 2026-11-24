@@ -95,7 +95,7 @@ const AwardsAndClientsSection: React.FC = () => {
               <div className="w-5.5 h-0.75 bg-sudabelt-red rounded-mark mb-3" />
               <span className="text-eyebrow text-sudabelt-green">AWARDS &amp; RECOGNITIONS</span>
               <h2 className="text-section-heading text-sudabelt-navy mt-2">
-                Recognized excellence in healthcare delivery
+                Recognized Excellence in Healthcare Delivery
               </h2>
             </HeaderTextReveal>
 
@@ -111,14 +111,14 @@ const AwardsAndClientsSection: React.FC = () => {
             {AWARDS_LIST.map((award) => (
               <div
                 key={award.title}
-                className="rounded-card bg-white border border-sudabelt-sage overflow-hidden flex flex-col"
+                className="group rounded-card bg-white border border-sudabelt-sage hover:border-sudabelt-green hover:-translate-y-1.5 hover:shadow-xl overflow-hidden flex flex-col transition-all duration-300"
               >
-                <div className="h-57.5 bg-sudabelt-navy/3 p-5 flex items-center justify-center border-b border-sudabelt-header-border">
+                <div className="h-57.5 bg-sudabelt-navy/3 p-5 flex items-center justify-center border-b border-sudabelt-header-border overflow-hidden">
                   <img
                     src={award.imageUrl}
                     alt={award.title}
                     loading="lazy"
-                    className="max-h-49 w-auto object-contain rounded-badge"
+                    className="max-h-49 w-auto object-contain rounded-badge group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
                 <div className="p-6 flex-1 flex flex-col justify-between">
@@ -126,7 +126,7 @@ const AwardsAndClientsSection: React.FC = () => {
                     <span className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-sudabelt-green">
                       {award.organization}
                     </span>
-                    <h3 className="text-[17px] leading-6 font-bold text-sudabelt-navy mt-2">
+                    <h3 className="text-[17px] leading-6 font-bold text-sudabelt-navy group-hover:text-sudabelt-green transition-colors mt-2">
                       {award.title}
                     </h3>
                   </div>

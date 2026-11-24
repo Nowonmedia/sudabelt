@@ -9,6 +9,7 @@
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
     "seed": "tsx src/scripts/seed.ts",
+    "sync:cloudinary": "tsx src/scripts/sync-cloudinary.ts",
     "test:forms": "tsx src/scripts/test-forms-routes.ts",
     "test:crm": "tsx src/scripts/test-admin-crm-routes.ts"
   },

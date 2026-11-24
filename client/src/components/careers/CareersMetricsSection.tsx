@@ -35,7 +35,7 @@ export const CareersMetricsSection: React.FC = () => {
               WHY SUDABELT
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-sudabelt-navy leading-tight">
-              Work that reaches hospitals across the country.
+              Work That Reaches Hospitals Across the Country.
             </h2>
           </div>
 

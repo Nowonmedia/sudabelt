@@ -7,11 +7,13 @@ export const ContactHeroSection: React.FC = () => {
         {/* Left Side: 2/3 (8 of 12 columns), Soft Gray Background */}
         <div className="lg:col-span-8 xl:col-span-9 bg-sudabelt-surface px-6 sm:px-12 lg:px-16 py-12 lg:py-16 flex flex-col justify-center">
           <div className="max-w-xl">
-            {/* Red Accent Bar */}
-            <div className="w-10 h-1 bg-sudabelt-red mb-4" />
-            <span className="text-xs uppercase tracking-widest font-bold text-sudabelt-green block mb-2">
-              CONTACT US
-            </span>
+            {/* Red Accent Bar + Eyebrow */}
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-8 sm:w-10 h-0.75 bg-sudabelt-red rounded-xs" />
+              <span className="inline-block px-3.5 py-1 rounded-control bg-sudabelt-blue text-white text-[12px] sm:text-[13px] font-extrabold uppercase tracking-[0.14em] shadow-sm">
+                CONTACT US
+              </span>
+            </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-sudabelt-navy leading-tight">
               We would love to hear from you.
             </h1>

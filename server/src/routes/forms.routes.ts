@@ -191,6 +191,7 @@ const leadCaptureSchema = z
     downloadedAssetSlug: z.string().trim().min(2).optional(),
     assetTitle: z.string().trim().optional(),
     assetUrl: z.string().trim().optional(),
+    leadSource: z.string().trim().optional(),
   })
   .refine((data) => Boolean(data.assetSlug || data.downloadedAssetSlug), {
     message: 'assetSlug is required',
@@ -366,6 +367,20 @@ router.post('/lead-capture', async (req: Request, res: Response, next: NextFunct
       }
     }
 
+    let resolvedSource = validatedData.leadSource?.trim();
+    if (!resolvedSource) {
+      const slugLower = resolvedSlug.toLowerCase();
+      if (slugLower.includes('profile') || slugLower.includes('handbook')) {
+        resolvedSource = 'Company Handbook';
+      } else if (matchingProduct) {
+        resolvedSource = 'Product Datasheet';
+      } else if (slugLower.includes('newsletter')) {
+        resolvedSource = 'Newsletter';
+      } else {
+        resolvedSource = 'Technical Document';
+      }
+    }
+
     const leadRecord = await LeadMagnet.create({
       name: validatedData.name,
       workEmail: validatedData.workEmail,
@@ -374,6 +389,7 @@ router.post('/lead-capture', async (req: Request, res: Response, next: NextFunct
       downloadedAssetSlug: resolvedSlug,
       downloadedAssetTitle: assetTitle,
       downloadedAssetUrl: downloadUrl,
+      leadSource: resolvedSource,
       downloadedAt: new Date(),
     });
 

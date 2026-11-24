@@ -86,7 +86,7 @@ const TeamSection: React.FC = () => {
 
           <HeaderTextReveal>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-sudabelt-navy tracking-tight">
-              The team behind Sudabelt.
+              The Team Behind Sudabelt.
             </h2>
           </HeaderTextReveal>
         </div>

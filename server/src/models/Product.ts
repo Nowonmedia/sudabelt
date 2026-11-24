@@ -3,39 +3,32 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IProduct extends Document {
   name: string;
   slug: string;
-  modelNumber: string;
-  sku?: string;
-  brand: string;
+  modelNumber?: string;
+  brand?: string;
   category: string;
-  shortDescription: string;
-  fullOverview: string;
-  specifications: Record<string, unknown>;
+  categoryLabel?: string;
+  productType?: 'Technology' | 'Consumable';
+  shortDescription?: string;
+  fullOverview?: string;
+  productFeatures?: string[];
+  commonUses?: string[];
+  usps?: string;
+  otherInformation?: string[];
+  specifications?: Record<string, unknown>;
   keyFeatures?: { title: string; description: string }[];
   clinicalApplications?: string[];
-  complianceCertifications?: string[];
+  primaryImage?: string;
+  galleryImages?: string[];
   images?: {
     primaryCutout?: string;
     contextualGallery?: string[];
     altText?: string;
   };
   isConsumable: boolean;
-  datasheetUrl: string;
-  pricingNotes?: string;
-  compatibleProductSlugs?: string[];
-  supportPackage?: {
-    installationIncluded?: boolean;
-    clinicalTrainingHours?: number;
-    targetTrainees?: string[];
-    preventiveMaintenanceSLA?: string;
-    warrantyPeriod?: string;
-    localSparePartsStocked?: boolean;
-  };
+  datasheetUrl?: string;
+  brochureUrl?: string;
+  videoUrl?: string;
   faqs?: { question: string; answer: string }[];
-  seoMeta?: {
-    metaTitle?: string;
-    metaDescription?: string;
-    keywords?: string[];
-  };
   published: boolean;
   isDeleted?: boolean;
   createdAt: Date;
@@ -46,12 +39,22 @@ const ProductSchema = new Schema<IProduct>(
   {
     name: { type: String, required: true, trim: true },
     slug: { type: String, required: true, unique: true, index: true, trim: true, lowercase: true },
-    modelNumber: { type: String, required: true, trim: true },
-    sku: { type: String, trim: true },
-    brand: { type: String, required: true, trim: true, index: true },
+    modelNumber: { type: String, trim: true, default: '' },
+    brand: { type: String, trim: true, default: '', index: true },
     category: { type: String, required: true, trim: true, index: true },
-    shortDescription: { type: String, required: true, trim: true },
-    fullOverview: { type: String, required: true, trim: true },
+    categoryLabel: { type: String, trim: true, default: '' },
+    productType: {
+      type: String,
+      enum: ['Technology', 'Consumable'],
+      default: 'Technology',
+      index: true,
+    },
+    shortDescription: { type: String, trim: true, default: '' },
+    fullOverview: { type: String, trim: true, default: '' },
+    productFeatures: [{ type: String, trim: true }],
+    commonUses: [{ type: String, trim: true }],
+    usps: { type: String, trim: true, default: '' },
+    otherInformation: [{ type: String, trim: true }],
     specifications: { type: Schema.Types.Mixed, default: {} },
     keyFeatures: [
       {
@@ -61,24 +64,17 @@ const ProductSchema = new Schema<IProduct>(
       },
     ],
     clinicalApplications: [{ type: String, trim: true }],
-    complianceCertifications: [{ type: String, trim: true }],
+    primaryImage: { type: String, trim: true, default: '' },
+    galleryImages: [{ type: String, trim: true }],
     images: {
-      primaryCutout: { type: String, trim: true },
+      primaryCutout: { type: String, trim: true, default: '' },
       contextualGallery: [{ type: String, trim: true }],
-      altText: { type: String, trim: true },
+      altText: { type: String, trim: true, default: '' },
     },
     isConsumable: { type: Boolean, default: false, index: true },
     datasheetUrl: { type: String, trim: true, default: '' },
-    pricingNotes: { type: String, trim: true },
-    compatibleProductSlugs: [{ type: String, trim: true }],
-    supportPackage: {
-      installationIncluded: { type: Boolean, default: true },
-      clinicalTrainingHours: { type: Number, default: 40 },
-      targetTrainees: [{ type: String, trim: true }],
-      preventiveMaintenanceSLA: { type: String, trim: true },
-      warrantyPeriod: { type: String, trim: true },
-      localSparePartsStocked: { type: Boolean, default: true },
-    },
+    brochureUrl: { type: String, trim: true, default: '' },
+    videoUrl: { type: String, trim: true, default: '' },
     faqs: [
       {
         question: { type: String, trim: true },
@@ -86,11 +82,6 @@ const ProductSchema = new Schema<IProduct>(
         _id: false,
       },
     ],
-    seoMeta: {
-      metaTitle: { type: String, trim: true },
-      metaDescription: { type: String, trim: true },
-      keywords: [{ type: String, trim: true }],
-    },
     published: { type: Boolean, default: true, index: true },
     isDeleted: { type: Boolean, default: false, index: true },
   },

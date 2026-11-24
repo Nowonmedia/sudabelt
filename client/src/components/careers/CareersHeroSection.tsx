@@ -10,16 +10,18 @@ export const CareersHeroSection: React.FC = () => {
   }
 
   return (
-    <section className="relative w-full bg-sudabelt-navy overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[420px] lg:min-h-[480px]">
+    <section className="relative w-full bg-sudabelt-navy/80 overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-105 lg:min-h-120">
         {/* Left Text Column */}
         <div className="lg:col-span-6 z-10 px-6 sm:px-12 lg:px-16 py-14 lg:py-20 flex flex-col justify-center">
           <div className="max-w-xl">
-            {/* Red Accent Bar */}
-            <div className="w-10 h-1 bg-sudabelt-red mb-4" />
-            <span className="text-xs uppercase tracking-widest font-bold text-sudabelt-blue block mb-3">
-              CAREERS
-            </span>
+            {/* Red Accent Bar + Eyebrow */}
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-8 sm:w-10 h-0.75 bg-sudabelt-red rounded-xs" />
+              <span className="inline-block px-3.5 py-1 rounded-control bg-sudabelt-blue text-white text-[12px] sm:text-[13px] font-extrabold uppercase tracking-[0.14em] shadow-sm">
+                CAREERS
+              </span>
+            </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
               Join our community of experts.
             </h1>
@@ -30,7 +32,7 @@ export const CareersHeroSection: React.FC = () => {
               <a
                 href="#apply-section"
                 onClick={scrollToApply}
-                className="inline-flex items-center justify-center px-7 py-3.5 rounded-[6px] bg-sudabelt-blue hover:bg-blue-400 text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                className="inline-flex items-center justify-center px-7 py-3.5 rounded-md bg-sudabelt-blue hover:bg-sudabelt-green text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer"
               >
                 SHARE YOUR CV
               </a>
@@ -39,15 +41,15 @@ export const CareersHeroSection: React.FC = () => {
         </div>
 
         {/* Right Photo Column with smooth blend */}
-        <div className="lg:col-span-6 relative min-h-[280px] lg:min-h-full">
+        <div className="lg:col-span-6 relative min-h-70 lg:min-h-full">
           <img
             src="/images/careers/careers-hero.webp"
             alt="Sudabelt medical engineer and clinical specialist"
             className="w-full h-full object-cover object-center"
           />
           {/* Subtle gradient vignette blending into navy on the left */}
-          <div className="absolute inset-0 bg-gradient-to-r from-sudabelt-navy via-sudabelt-navy/20 to-transparent hidden lg:block" />
-          <div className="absolute inset-0 bg-gradient-to-t from-sudabelt-navy/80 via-transparent to-transparent lg:hidden" />
+          <div className="absolute inset-0 bg-linear-to-r from-sudabelt-navy via-sudabelt-navy/20 to-transparent hidden lg:block" />
+          <div className="absolute inset-0 bg-linear-to-t from-sudabelt-navy/80 via-transparent to-transparent lg:hidden" />
         </div>
       </div>
     </section>

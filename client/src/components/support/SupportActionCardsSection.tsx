@@ -27,7 +27,7 @@ export const SupportActionCardsSection: React.FC = () => {
             <div>
               <Link
                 to="/support/after-sales"
-                className="inline-flex items-center justify-center px-7 py-3.5 rounded-control bg-sudabelt-blue hover:bg-sudabelt-blue-hover text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+                className="inline-flex items-center justify-center px-7 py-3.5 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 shadow-xs"
               >
                 OPEN TICKET
               </Link>
@@ -54,7 +54,7 @@ export const SupportActionCardsSection: React.FC = () => {
             <div>
               <Link
                 to="/support/medical-training"
-                className="inline-flex items-center justify-center px-7 py-3.5 rounded-control bg-sudabelt-blue hover:bg-sudabelt-blue-hover text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+                className="inline-flex items-center justify-center px-7 py-3.5 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 shadow-xs"
               >
                 BOOK NOW
               </Link>

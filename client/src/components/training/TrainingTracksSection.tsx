@@ -76,7 +76,7 @@ const TrainingTracksSection: React.FC<TrainingTracksSectionProps> = ({ onSelectT
             TRAINING TRACKS
           </span>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-sudabelt-navy tracking-tight">
-            Choose the track for your team.
+            Choose the Track for Your Team.
           </h2>
         </div>
 

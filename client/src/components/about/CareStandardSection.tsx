@@ -22,7 +22,7 @@ const CareStandardSection: React.FC = () => {
 
           <HeaderTextReveal>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-sudabelt-navy tracking-tight">
-              The C.A.R.E. standard.
+              The C.A.R.E. Standard.
             </h2>
           </HeaderTextReveal>
         </div>

@@ -62,7 +62,7 @@ const ComparisonTeaserSection: React.FC = () => {
             <HeaderTextReveal>
               <span className="text-eyebrow text-sudabelt-green">WHY SUDABELT</span>
               <h2 className="text-section-heading text-sudabelt-navy mt-3">
-                A machine is only as good as the partner behind it.
+                A Machine Is Only as Good as the Partner Behind It.
               </h2>
             </HeaderTextReveal>
             <p className="text-[15.5px] leading-[25.5px] text-sudabelt-body mt-4">

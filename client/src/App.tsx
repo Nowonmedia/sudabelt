@@ -1,32 +1,45 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import { Routes, Route } from 'react-router'
 
 import RootLayout from './layout/RootLayout'
 import Homepage from './pages/Homepage'
-import AboutPage from './pages/AboutPage'
-import ProductsPage from './pages/ProductsPage'
-import ProductDetailPage from './pages/ProductDetailPage'
-import TurnkeyServicesPage from './pages/TurnkeyServicesPage'
-import ProjectsPage from './pages/ProjectsPage'
-import TrainingHubPage from './pages/TrainingHubPage'
-import TrainingRegisterPage from './pages/TrainingRegisterPage'
-import ComparePage from './pages/ComparePage'
-import NewslettersPage from './pages/NewslettersPage'
-import NewsletterDetailPage from './pages/NewsletterDetailPage'
-import BlogPage from './pages/BlogPage'
-import BlogDetailPage from './pages/BlogDetailPage'
-import SupportHubPage from './pages/SupportHubPage'
-import EmergencyBreakdownPage from './pages/EmergencyBreakdownPage'
-import MaintenanceCalibrationPage from './pages/MaintenanceCalibrationPage'
-import RFQPage from './pages/RFQPage'
-import ContactPage from './pages/ContactPage'
-import CareersPage from './pages/CareersPage'
-import AdminLoginPage from './pages/admin/AdminLoginPage'
-import AdminDashboardPage from './pages/admin/AdminDashboardPage'
+
+const AboutPage = lazy(() => import('./pages/AboutPage'))
+const ProductsPage = lazy(() => import('./pages/ProductsPage'))
+const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'))
+const TurnkeyServicesPage = lazy(() => import('./pages/TurnkeyServicesPage'))
+const ProjectsPage = lazy(() => import('./pages/ProjectsPage'))
+const TrainingHubPage = lazy(() => import('./pages/TrainingHubPage'))
+const TrainingRegisterPage = lazy(() => import('./pages/TrainingRegisterPage'))
+const ComparePage = lazy(() => import('./pages/ComparePage'))
+const NewslettersPage = lazy(() => import('./pages/NewslettersPage'))
+const NewsletterDetailPage = lazy(() => import('./pages/NewsletterDetailPage'))
+const BlogPage = lazy(() => import('./pages/BlogPage'))
+const BlogDetailPage = lazy(() => import('./pages/BlogDetailPage'))
+const SupportHubPage = lazy(() => import('./pages/SupportHubPage'))
+const EmergencyBreakdownPage = lazy(() => import('./pages/EmergencyBreakdownPage'))
+const MaintenanceCalibrationPage = lazy(() => import('./pages/MaintenanceCalibrationPage'))
+const RFQPage = lazy(() => import('./pages/RFQPage'))
+const ContactPage = lazy(() => import('./pages/ContactPage'))
+const CareersPage = lazy(() => import('./pages/CareersPage'))
+const AdminLoginPage = lazy(() => import('./pages/admin/AdminLoginPage'))
+const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'))
+
+const PageFallback: React.FC = () => (
+  <div className="min-h-[60vh] flex items-center justify-center bg-white">
+    <div className="flex flex-col items-center gap-3">
+      <div className="w-8 h-8 rounded-full border-2 border-sudabelt-green border-t-transparent animate-spin" />
+      <span className="text-xs font-semibold text-sudabelt-muted uppercase tracking-wider">
+        Loading...
+      </span>
+    </div>
+  </div>
+)
 
 const App: React.FC = () => {
   return (
-    <Routes>
+    <Suspense fallback={<PageFallback />}>
+      <Routes>
       {/* Dedicated Admin CRM & CMS Routes (Outside Public Layout) */}
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route path="/admin" element={<AdminDashboardPage />} />
@@ -59,7 +72,8 @@ const App: React.FC = () => {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/careers" element={<CareersPage />} />
       </Route>
-    </Routes>
+      </Routes>
+    </Suspense>
   )
 }
 

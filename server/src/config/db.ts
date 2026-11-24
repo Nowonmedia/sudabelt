@@ -30,7 +30,7 @@ export const getDbStatus = (): { mode: 'mongodb' | 'file'; connected: boolean } 
  * Binds our file-backed JSON engine to exported Mongoose models so all queries work
  * offline and in development without requiring a local mongod daemon.
  */
-const bindFileStorageAdapters = () => {
+export const bindFileStorageAdapters = () => {
   isUsingFileStorage = true;
   console.log('[Storage Engine] Binding persistent JSON database (server/data/db.json) to models...');
 
@@ -58,14 +58,26 @@ export const connectDB = async (): Promise<typeof mongoose | null> => {
   try {
     mongoose.set('strictQuery', true);
 
+    const isAtlas = mongoUri.startsWith('mongodb+srv://');
     const conn = await mongoose.connect(mongoUri, {
-      serverSelectionTimeoutMS: 2000,
+      serverSelectionTimeoutMS: isAtlas ? 5000 : 2500,
     });
+
+    if (conn.connection.db) {
+      await conn.connection.db.admin().ping();
+      // Verify primary write capability (catches Atlas IP whitelist TLS alert 80 on primary shard)
+      await conn.connection.db.collection('_healthcheck').deleteOne({ _id: new mongoose.Types.ObjectId() });
+    }
 
     console.log(`[MongoDB] Connected successfully: ${conn.connection.host} (${conn.connection.name})`);
     return conn;
-  } catch (_error) {
-    console.warn('[MongoDB] MongoDB server unreachable on', mongoUri);
+  } catch (error) {
+    try {
+      await mongoose.disconnect();
+    } catch {
+      // ignore
+    }
+    console.warn('[MongoDB] MongoDB server unreachable (check Atlas Network Access IP whitelist):', error instanceof Error ? error.message : error);
     console.log('[Database] Activating integrated persistent file storage engine...');
     bindFileStorageAdapters();
     return null;

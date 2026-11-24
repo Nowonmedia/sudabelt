@@ -17,7 +17,7 @@ const SupportHubPage: React.FC = () => {
       {/* 2. Action Cards: After Sales Support & Medical Training */}
       <SupportActionCardsSection />
 
-      {/* 3. Common questions FAQ with slow, smooth animations */}
+      {/* 3. Common Questions FAQ with slow, smooth animations */}
       <SupportFaqSection />
     </div>
   )

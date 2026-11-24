@@ -19,6 +19,7 @@ import {
 import { requireAdminAuth, requireSuperAdmin } from '../middleware/auth.middleware';
 import { hashPassword } from '../utils/auth.utils';
 import { AppError } from '../middleware/errorHandler';
+import { isCloudinaryConfigured, uploadToCloudinary } from '../services/cloudinaryService';
 
 const router = Router();
 
@@ -28,8 +29,8 @@ router.use(requireAdminAuth);
 /**
  * POST /api/v1/admin/upload
  * Accepts base64 data or data URL for images and documents (PDFs, brochures).
- * Writes file to server/uploads and client/public/uploads, returning the relative URL.
- * Storing only the URL in the database prevents bloat and ensures fast CDN capability.
+ * If Cloudinary is configured in .env, uploads directly to Cloudinary CDN with f_auto,q_auto optimization.
+ * Otherwise writes file to server/uploads and client/public/uploads, returning the relative URL.
  */
 router.post('/upload', async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -37,17 +38,46 @@ router.post('/upload', async (req: Request, res: Response, next: NextFunction) =
       fileName: z.string().min(1),
       fileData: z.string().min(1),
       mimeType: z.string().optional(),
+      folder: z.string().optional(),
     });
 
-    const { fileName, fileData, mimeType } = uploadSchema.parse(req.body);
+    const { fileName, fileData, mimeType, folder } = uploadSchema.parse(req.body);
+
+    const ext = path.extname(fileName) || (mimeType ? `.${mimeType.split('/')[1]}` : '.bin');
+    const cleanBase = path.basename(fileName, ext).replace(/[^a-zA-Z0-9_-]/g, '_');
+
+    if (isCloudinaryConfigured()) {
+      try {
+        const dataUri = fileData.startsWith('data:')
+          ? fileData
+          : `data:${mimeType || 'application/octet-stream'};base64,${fileData}`;
+        const isPdf = ext.toLowerCase() === '.pdf' || mimeType === 'application/pdf';
+        const cloudRes = await uploadToCloudinary({
+          fileSource: dataUri,
+          folder: folder || (isPdf ? 'sudabelt/documents' : 'sudabelt/media'),
+          publicId: `${cleanBase}_${Date.now()}`,
+          resourceType: isPdf ? 'raw' : 'image',
+        });
+
+        res.status(200).json({
+          success: true,
+          url: cloudRes.optimizedUrl,
+          secureUrl: cloudRes.secureUrl,
+          publicId: cloudRes.publicId,
+          provider: 'cloudinary',
+          fileName: `${cleanBase}${ext}`,
+        });
+        return;
+      } catch (cloudErr) {
+        console.warn('[Upload] Cloudinary upload failed, falling back to local storage:', cloudErr);
+      }
+    }
 
     const base64Content = fileData.includes(';base64,')
       ? fileData.split(';base64,')[1]
       : fileData;
 
     const buffer = Buffer.from(base64Content, 'base64');
-    const ext = path.extname(fileName) || (mimeType ? `.${mimeType.split('/')[1]}` : '.bin');
-    const cleanBase = path.basename(fileName, ext).replace(/[^a-zA-Z0-9_-]/g, '_');
     const uniqueFileName = `${cleanBase}_${Date.now()}${ext}`;
 
     const serverUploadDir = path.resolve(__dirname, '../../uploads');
@@ -68,6 +98,7 @@ router.post('/upload', async (req: Request, res: Response, next: NextFunction) =
     res.status(200).json({
       success: true,
       url: relativeUrl,
+      provider: 'local',
       fileName: uniqueFileName,
       sizeBytes: buffer.length,
     });
@@ -97,12 +128,17 @@ const buildIdOrSlugFilter = (idOrSlug: string): Record<string, unknown> => {
 const productCreateSchema = z.object({
   name: z.string({ required_error: 'Product name is required' }).trim().min(2),
   slug: z.string().trim().min(2).optional(),
-  modelNumber: z.string({ required_error: 'Model number is required' }).trim().min(1),
-  sku: z.string().trim().optional(),
-  brand: z.string({ required_error: 'Brand is required' }).trim().min(1),
+  modelNumber: z.string().trim().optional().default(''),
+  brand: z.string().trim().optional().default(''),
   category: z.string({ required_error: 'Category is required' }).trim().min(1),
-  shortDescription: z.string({ required_error: 'Short description is required' }).trim().min(5),
-  fullOverview: z.string({ required_error: 'Full overview is required' }).trim().min(10),
+  categoryLabel: z.string().trim().optional(),
+  productType: z.enum(['Technology', 'Consumable']).optional(),
+  shortDescription: z.string().trim().optional().default(''),
+  fullOverview: z.string().trim().optional().default(''),
+  productFeatures: z.array(z.string().trim()).optional(),
+  commonUses: z.array(z.string().trim()).optional(),
+  usps: z.string().trim().optional(),
+  otherInformation: z.array(z.string().trim()).optional(),
   specifications: z.record(z.unknown()).optional().default({}),
   keyFeatures: z
     .array(
@@ -113,7 +149,8 @@ const productCreateSchema = z.object({
     )
     .optional(),
   clinicalApplications: z.array(z.string().trim()).optional(),
-  complianceCertifications: z.array(z.string().trim()).optional(),
+  primaryImage: z.string().trim().optional(),
+  galleryImages: z.array(z.string().trim()).optional(),
   images: z
     .object({
       primaryCutout: z.string().trim().optional(),
@@ -123,18 +160,8 @@ const productCreateSchema = z.object({
     .optional(),
   isConsumable: z.boolean().optional().default(false),
   datasheetUrl: z.string().trim().optional().default(''),
-  pricingNotes: z.string().trim().optional(),
-  compatibleProductSlugs: z.array(z.string().trim()).optional(),
-  supportPackage: z
-    .object({
-      installationIncluded: z.boolean().optional(),
-      clinicalTrainingHours: z.number().optional(),
-      targetTrainees: z.array(z.string().trim()).optional(),
-      preventiveMaintenanceSLA: z.string().trim().optional(),
-      warrantyPeriod: z.string().trim().optional(),
-      localSparePartsStocked: z.boolean().optional(),
-    })
-    .optional(),
+  brochureUrl: z.string().trim().optional().default(''),
+  videoUrl: z.string().trim().optional().default(''),
   faqs: z
     .array(
       z.object({
@@ -142,13 +169,6 @@ const productCreateSchema = z.object({
         answer: z.string().trim(),
       })
     )
-    .optional(),
-  seoMeta: z
-    .object({
-      metaTitle: z.string().trim().optional(),
-      metaDescription: z.string().trim().optional(),
-      keywords: z.array(z.string().trim()).optional(),
-    })
     .optional(),
   published: z.boolean().optional().default(true),
 });
@@ -163,10 +183,12 @@ const articleCreateSchema = z.object({
   quarter: z.enum(['Q1', 'Q2', 'Q3', 'Q4']).optional(),
   year: z.coerce.number().int().min(2000).max(2100).optional(),
   category: z.string({ required_error: 'Category is required' }).trim().min(2),
-  summary: z.string({ required_error: 'Summary is required' }).trim().min(5),
-  content: z.string({ required_error: 'Article content is required' }).min(10),
+  summary: z.string().trim().optional().default(''),
+  content: z.string().optional().default(''),
+  author: z.string().trim().optional().default(''),
   takeaways: z.array(z.string().trim()).optional().default([]),
   coverImage: z.string().trim().optional().default(''),
+  galleryImages: z.array(z.string().trim()).optional().default([]),
   pdfUrl: z.string().trim().optional(),
   readTimeMinutes: z.coerce.number().int().positive().optional().default(5),
   featuredProductSlugs: z.array(z.string().trim()).optional().default([]),

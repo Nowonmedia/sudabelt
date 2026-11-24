@@ -6,7 +6,7 @@ import { api } from '../../api/api'
 
 const AdminLoginPage: React.FC = () => {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('admin@sudabelt.com')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -71,7 +71,7 @@ const AdminLoginPage: React.FC = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="admin@sudabelt.com"
+                    placeholder="name@sudabelt.com"
                     className="block w-full pl-11 pr-4 py-3 rounded-xl border border-sudabelt-border focus:ring-2 focus:ring-sudabelt-green focus:border-sudabelt-green text-sm text-sudabelt-navy transition-all"
                   />
                 </div>
@@ -96,9 +96,8 @@ const AdminLoginPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-sudabelt-muted">Default: <code className="text-sudabelt-navy font-bold">SudabeltAdmin2026!</code></span>
-                <span className="text-sudabelt-green font-semibold">Superadmin Access</span>
+              <div className="flex items-center justify-end text-xs">
+                <span className="text-sudabelt-green font-semibold">Authorized Personnel Only</span>
               </div>
 
               <div>

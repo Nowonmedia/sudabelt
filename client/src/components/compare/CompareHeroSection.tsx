@@ -15,15 +15,15 @@ export const CompareHeroSection: React.FC<CompareHeroSectionProps> = ({
   return (
     <div className="w-full">
       {/* Hero Visual Section */}
-      <section className="relative text-white overflow-hidden min-h-[380px] sm:min-h-[440px] flex items-center bg-sudabelt-navy">
-        {/* Background photo with clinical treatment room */}
+      <section className="relative text-white overflow-hidden min-h-95 sm:min-h-110 flex items-center bg-sudabelt-navy">
+        {/* Background photo with actual Sudabelt installation & transparent overlay for text contrast */}
         <div className="absolute inset-0 z-0">
           <img
-            src="/images/projects/projects-hero.webp"
-            alt="Sudabelt Turnkey Hospital Ward"
-            className="w-full h-full object-cover object-center opacity-40 mix-blend-luminosity"
+            src="/images/2 - Renal Equipment from Baxter Installed by Sudabelt.webp"
+            alt="Renal Equipment from Baxter Installed by Sudabelt"
+            className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-sudabelt-navy via-sudabelt-navy/85 to-sudabelt-navy/60" />
+          <div className="absolute inset-0 bg-[#06183d]/60" />
         </div>
 
         <div className="relative z-10 sudabelt-container py-14 sm:py-18 lg:py-22">

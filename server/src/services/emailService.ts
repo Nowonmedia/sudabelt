@@ -20,10 +20,13 @@ const getSalesEmail = (): string =>
   process.env.SALES_DESK_EMAIL || 'sales@sudabelt.com';
 
 const getBiomedicalEmail = (): string =>
-  process.env.BIOMEDICAL_DESK_EMAIL || 'support@sudabelt.com';
+  process.env.AFTER_SALES_EMAIL || process.env.BIOMEDICAL_DESK_EMAIL || 'support@sudabelt.com';
 
 const getTrainingEmail = (): string =>
-  process.env.TRAINING_DESK_EMAIL || 'training@sudabelt.com';
+  process.env.TRAINING_EMAIL || process.env.TRAINING_DESK_EMAIL || 'training@sudabelt.com';
+
+const getContactEmail = (): string =>
+  process.env.CONTACT_EMAIL || process.env.GENERAL_DESK_EMAIL || getSalesEmail();
 
 const getFrontendUrl = (): string =>
   process.env.FRONTEND_URL || 'https://www.sudabelt.com';
@@ -311,12 +314,45 @@ export const sendSupportTicketAlert = async (
     bodyHtml,
   });
 
-  await dispatchEmail({
-    to: getBiomedicalEmail(),
-    subject: `${isCritical ? '[URGENT CRITICAL] ' : ''}[${ticketData.ticketId}] ${ticketData.hospitalName} — ${ticketData.equipmentModel} (${ticketData.serialNumber})`,
-    html,
-    replyTo: ticketData.email,
-  });
+  const emailTasks: Promise<unknown>[] = [
+    dispatchEmail({
+      to: getBiomedicalEmail(),
+      subject: `${isCritical ? '[URGENT CRITICAL] ' : ''}[${ticketData.ticketId}] ${ticketData.hospitalName} — ${ticketData.equipmentModel} (${ticketData.serialNumber})`,
+      html,
+      replyTo: ticketData.email,
+    }),
+  ];
+
+  if (ticketData.email) {
+    const userBodyHtml = `
+      <p style="margin-top:0;">Dear <strong>${escapeHtml(ticketData.contactName)}</strong>,</p>
+      <p>Thank you for contacting <strong>Sudabelt Medical After-Sales &amp; Biomedical Support</strong>. Your support request has been received and logged with our engineering dispatch desk.</p>
+      <div style="background-color:#F8FAFC;border-left:4px solid #006837;padding:14px 16px;border-radius:5.5px;margin:20px 0;">
+        <strong>Ticket Reference:</strong> <span style="font-family:monospace;font-weight:700;color:#006837;">${escapeHtml(ticketData.ticketId)}</span><br />
+        <strong>Hospital / Facility:</strong> ${escapeHtml(ticketData.hospitalName)}<br />
+        <strong>Equipment Model:</strong> ${escapeHtml(ticketData.equipmentModel)} (S/N: ${escapeHtml(ticketData.serialNumber)})<br />
+        <strong>Issue Type:</strong> ${escapeHtml(ticketData.issueType.replace(/_/g, ' ').toUpperCase())}
+      </div>
+      <p style="margin-bottom:0;">A certified Sudabelt biomedical engineer will review your ticket and get back to you as soon as possible.</p>
+    `;
+
+    const userHtml = wrapSudabeltEmailLayout({
+      badgeText: `Support Ticket Received • ${ticketData.ticketId}`,
+      headerTitle: 'We Have Received Your Support Request',
+      headerSubtitle: `${ticketData.hospitalName} • ${ticketData.equipmentModel}`,
+      bodyHtml: userBodyHtml,
+    });
+
+    emailTasks.push(
+      dispatchEmail({
+        to: ticketData.email,
+        subject: `[${ticketData.ticketId}] Support Request Received | Sudabelt Medical`,
+        html: userHtml,
+      })
+    );
+  }
+
+  await Promise.allSettled(emailTasks);
 };
 
 /**
@@ -368,12 +404,38 @@ export const sendTrainingBookingAlert = async (
     bodyHtml,
   });
 
-  await dispatchEmail({
-    to: getTrainingEmail(),
-    subject: `[TRAINING ${trainingData.registrationId}] ${trainingData.institutionName} — ${trainingData.courseTrack}`,
-    html,
-    replyTo: trainingData.email,
+  const userBodyHtml = `
+    <p style="margin-top:0;">Dear <strong>${escapeHtml(trainingData.contactName)}</strong>,</p>
+    <p>Thank you for submitting a clinical &amp; biomedical training request with the <strong>Sudabelt Medical Training Hub</strong>. We have received your cohort registration for <strong>${escapeHtml(trainingData.institutionName)}</strong>.</p>
+    <div style="background-color:#F8FAFC;border-left:4px solid #006837;padding:14px 16px;border-radius:5.5px;margin:20px 0;">
+      <strong>Registration ID:</strong> <span style="font-family:monospace;font-weight:700;color:#006837;">${escapeHtml(trainingData.registrationId)}</span><br />
+      <strong>Course Track:</strong> ${escapeHtml(trainingData.courseTrack)}<br />
+      <strong>Number of Trainees:</strong> ${trainingData.numberOfTrainees}<br />
+      <strong>Target State:</strong> ${escapeHtml(trainingData.targetHospitalState)}
+    </div>
+    <p style="margin-bottom:0;">Our Training Coordinator will review your schedule preferences and get back to you as soon as possible.</p>
+  `;
+
+  const userHtml = wrapSudabeltEmailLayout({
+    badgeText: `Training Request Received • ${trainingData.registrationId}`,
+    headerTitle: 'We Have Received Your Training Request',
+    headerSubtitle: `${trainingData.institutionName} • ${trainingData.courseTrack}`,
+    bodyHtml: userBodyHtml,
   });
+
+  await Promise.allSettled([
+    dispatchEmail({
+      to: getTrainingEmail(),
+      subject: `[TRAINING ${trainingData.registrationId}] ${trainingData.institutionName} — ${trainingData.courseTrack}`,
+      html,
+      replyTo: trainingData.email,
+    }),
+    dispatchEmail({
+      to: trainingData.email,
+      subject: `[${trainingData.registrationId}] Training Request Received | Sudabelt Medical`,
+      html: userHtml,
+    }),
+  ]);
 };
 
 /**
@@ -447,13 +509,13 @@ export const sendContactInquiryAlert = async (
   >
 ): Promise<void> => {
   const departmentEmailMap: Record<IContactInquiry['department'], string> = {
-    sales: getSalesEmail(),
-    biomedical_sla: getBiomedicalEmail(),
-    training: getTrainingEmail(),
-    general: process.env.GENERAL_DESK_EMAIL || getSalesEmail(),
+    sales: process.env.CONTACT_EMAIL || getSalesEmail(),
+    biomedical_sla: process.env.CONTACT_EMAIL || getBiomedicalEmail(),
+    training: process.env.CONTACT_EMAIL || getTrainingEmail(),
+    general: getContactEmail(),
   };
 
-  const targetEmail = departmentEmailMap[inquiryData.department] || getSalesEmail();
+  const targetEmail = departmentEmailMap[inquiryData.department] || getContactEmail();
   const departmentLabel = inquiryData.department.replace(/_/g, ' ').toUpperCase();
 
   const bodyHtml = `
@@ -480,11 +542,35 @@ export const sendContactInquiryAlert = async (
     bodyHtml,
   });
 
-  await dispatchEmail({
-    to: targetEmail,
-    subject: `[INQUIRY - ${departmentLabel}] ${inquiryData.name}${inquiryData.facilityName ? ` (${inquiryData.facilityName})` : ''}`,
-    html,
-    replyTo: inquiryData.email,
+  const userBodyHtml = `
+    <p style="margin-top:0;">Dear <strong>${escapeHtml(inquiryData.name)}</strong>,</p>
+    <p>Thank you for reaching out to <strong>Sudabelt Medical</strong>. We have received your inquiry and routed it to our <strong>${escapeHtml(departmentLabel)}</strong> team.</p>
+    <div style="background-color:#F8FAFC;border-left:4px solid #006837;padding:14px 16px;border-radius:5.5px;margin:20px 0;">
+      <strong>Your Message:</strong><br />
+      <span style="color:#334155;">${escapeHtml(inquiryData.message)}</span>
+    </div>
+    <p style="margin-bottom:0;">A member of our team will review your request and get back to you as soon as possible.</p>
+  `;
+
+  const userHtml = wrapSudabeltEmailLayout({
+    badgeText: 'Inquiry Received',
+    headerTitle: 'We Have Received Your Message',
+    headerSubtitle: 'Sudabelt Medical Customer Desk',
+    bodyHtml: userBodyHtml,
   });
+
+  await Promise.allSettled([
+    dispatchEmail({
+      to: targetEmail,
+      subject: `[INQUIRY - ${departmentLabel}] ${inquiryData.name}${inquiryData.facilityName ? ` (${inquiryData.facilityName})` : ''}`,
+      html,
+      replyTo: inquiryData.email,
+    }),
+    dispatchEmail({
+      to: inquiryData.email,
+      subject: 'We Received Your Inquiry | Sudabelt Medical',
+      html: userHtml,
+    }),
+  ]);
 };
 

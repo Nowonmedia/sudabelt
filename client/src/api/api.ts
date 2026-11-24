@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from '@tanstack/react-query'
 
 export const API_BASE_URL: string =
-  import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'
+  import.meta.env.VITE_API_URL || '/api/v1'
 
 // ============================================================================
 // SHARED API TYPES
@@ -11,16 +11,24 @@ export interface ApiProduct {
   _id: string
   name: string
   slug: string
-  modelNumber: string
+  modelNumber?: string
   sku?: string
   brand: string
   category: string
+  categoryLabel?: string
+  productType?: 'Technology' | 'Consumable'
   shortDescription: string
   fullOverview: string
-  specifications: Record<string, unknown>
+  productFeatures?: string[]
+  commonUses?: string[]
+  usps?: string
+  otherInformation?: string[]
+  specifications?: Record<string, unknown>
   keyFeatures?: { title: string; description: string }[]
   clinicalApplications?: string[]
   complianceCertifications?: string[]
+  primaryImage?: string
+  galleryImages?: string[]
   images?: {
     primaryCutout?: string
     contextualGallery?: string[]
@@ -29,17 +37,11 @@ export interface ApiProduct {
   isConsumable: boolean
   datasheetUrl?: string
   brochureUrl?: string
-  primaryImage?: string
+  videoUrl?: string
   pricingNotes?: string
   compatibleProductSlugs?: string[]
-  supportPackage?: {
-    installationIncluded?: boolean
-    clinicalTrainingHours?: number
-    targetTrainees?: string[]
-    preventiveMaintenanceSLA?: string
-    warrantyPeriod?: string
-    localSparePartsStocked?: boolean
-  }
+  compatibleConsumables?: ApiProduct[]
+  availableConsumables?: ApiProduct[]
   faqs?: { question: string; answer: string }[]
   published: boolean
   createdAt?: string
@@ -55,9 +57,11 @@ export interface ApiArticle {
   quarter?: 'Q1' | 'Q2' | 'Q3' | 'Q4'
   year?: number
   category: string
+  author?: string
   summary: string
   content: string
   coverImage?: string
+  galleryImages?: string[]
   pdfUrl?: string
   readTimeMinutes?: number
   publishedDate?: string
@@ -281,12 +285,14 @@ export const api = {
     category?: string
     brand?: string
     isConsumable?: boolean
+    productType?: 'Technology' | 'Consumable'
     search?: string
   }) => {
     const query = new URLSearchParams()
     if (params?.category) query.set('category', params.category)
     if (params?.brand) query.set('brand', params.brand)
     if (params?.isConsumable !== undefined) query.set('isConsumable', String(params.isConsumable))
+    if (params?.productType) query.set('productType', params.productType)
     if (params?.search) query.set('search', params.search)
     const qs = query.toString()
     return request<{ success: boolean; count: number; data: ApiProduct[] }>(
@@ -494,6 +500,9 @@ export const api = {
       method: 'POST',
     }),
 
+  adminGetLeads: () =>
+    request<{ success: boolean; count: number; data: ApiLeadMagnet[] }>('/admin/leads'),
+
   // Admin Users (Super Admin Only)
   adminGetUsers: () =>
     request<{ success: boolean; count: number; data: ApiAdminUser[] }>('/admin/users'),
@@ -544,7 +553,29 @@ export const api = {
     }),
 }
 
-// React Query hooks for public projects
+// React Query hooks for public products & projects
+export function useProducts(params?: {
+  category?: string
+  brand?: string
+  isConsumable?: boolean
+  productType?: 'Technology' | 'Consumable'
+  search?: string
+}) {
+  return useQuery({
+    queryKey: ['products', params],
+    queryFn: () => api.getProducts(params),
+    staleTime: 2 * 60 * 1000,
+  })
+}
+
+export function useProductDetail(slug: string) {
+  return useQuery({
+    queryKey: ['product', slug],
+    queryFn: () => api.getProductBySlug(slug),
+    enabled: Boolean(slug),
+  })
+}
+
 export function useProjects(params?: { category?: string; year?: number; featured?: boolean; search?: string }) {
   return useQuery({
     queryKey: ['projects', params],
@@ -561,6 +592,28 @@ export function useProjectDetail(slug: string) {
   })
 }
 
+export function useArticles(params?: {
+  type?: 'blog' | 'newsletter'
+  category?: string
+  year?: number
+  quarter?: string
+  search?: string
+}) {
+  return useQuery({
+    queryKey: ['articles', params],
+    queryFn: () => api.getArticles(params),
+    staleTime: 2 * 60 * 1000,
+  })
+}
+
+export function useArticleDetail(slug: string) {
+  return useQuery({
+    queryKey: ['article', slug],
+    queryFn: () => api.getArticleBySlug(slug),
+    enabled: Boolean(slug),
+  })
+}
+
 export interface LeadCapturePayload {
   name: string
   workEmail: string
@@ -569,6 +622,20 @@ export interface LeadCapturePayload {
   assetSlug: string
   assetTitle?: string
   assetUrl?: string
+  leadSource?: string
+}
+
+export interface ApiLeadMagnet {
+  _id: string
+  name: string
+  workEmail: string
+  phone?: string
+  facilityName: string
+  downloadedAssetSlug: string
+  downloadedAssetTitle?: string
+  downloadedAssetUrl?: string
+  leadSource?: string
+  downloadedAt: string
 }
 
 export interface LeadCaptureResponse {

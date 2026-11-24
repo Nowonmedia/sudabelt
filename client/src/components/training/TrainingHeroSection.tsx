@@ -11,17 +11,15 @@ const TrainingHeroSection: React.FC<TrainingHeroSectionProps> = ({
   onExploreTracksClick,
 }) => {
   return (
-    <section className="relative min-h-[560px] lg:min-h-[640px] flex items-center bg-black overflow-hidden">
-      {/* Background Image: Hospital clinical ward & medical equipment - NO blue background */}
+    <section className="relative min-h-140 lg:min-h-160 flex items-center bg-black overflow-hidden">
+      {/* Background Image: Actual Sudabelt training & clinical team photo with transparent overlay */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=2000&q=85"
+          src="/images/training-hero.webp"
           alt="Clinical and biomedical hands-on hospital training"
-          className="w-full h-full object-cover object-center opacity-45"
+          className="w-full h-full object-cover object-center"
         />
-        {/* Dark radial and directional overlay for maximum contrast and zero blue tint */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/40" />
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-[#06183d]/65" />
       </div>
 
       <div className="sudabelt-container relative z-10 py-16 lg:py-24">
@@ -35,8 +33,8 @@ const TrainingHeroSection: React.FC<TrainingHeroSectionProps> = ({
           >
             {/* Red brand accent line & Eyebrow */}
             <div className="flex items-center gap-3 mb-4">
-              <span className="w-8 h-1 bg-sudabelt-red rounded-full" />
-              <span className="text-[12px] font-bold tracking-[0.14em] uppercase text-emerald-400">
+              <span className="w-8 sm:w-10 h-0.75 bg-sudabelt-red rounded-xs" />
+              <span className="inline-block px-3.5 py-1 rounded-control bg-sudabelt-blue text-white text-[12px] sm:text-[13px] font-extrabold uppercase tracking-[0.14em] shadow-sm">
                 CLINICAL &amp; BIOMEDICAL TRAINING HUB
               </span>
             </div>

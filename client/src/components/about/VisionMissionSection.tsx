@@ -19,7 +19,7 @@ const VisionMissionSection: React.FC = () => {
 
                 <HeaderTextReveal className="mb-4">
                   <h2 className="text-2xl sm:text-3xl font-extrabold text-sudabelt-navy group-hover:text-white leading-tight tracking-tight transition-colors">
-                    Quality care, within reach.
+                    Quality Care, Within Reach.
                   </h2>
                 </HeaderTextReveal>
 
@@ -50,7 +50,7 @@ const VisionMissionSection: React.FC = () => {
 
                 <HeaderTextReveal className="mb-4">
                   <h2 className="text-2xl sm:text-3xl font-extrabold text-sudabelt-navy group-hover:text-white leading-tight tracking-tight transition-colors">
-                    The region's integrated leader.
+                    The Region's Integrated Leader.
                   </h2>
                 </HeaderTextReveal>
 

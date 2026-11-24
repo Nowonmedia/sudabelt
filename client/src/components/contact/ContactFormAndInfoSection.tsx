@@ -119,7 +119,7 @@ export const ContactFormAndInfoSection: React.FC = () => {
           {/* Form Left Side (60%) */}
           <div className="lg:col-span-7">
             <h2 className="text-2xl sm:text-3xl lg:text-[32px] font-bold text-sudabelt-navy mb-8">
-              Send us a message
+              Send Us a Message
             </h2>
 
             {submitted ? (
@@ -299,7 +299,7 @@ export const ContactFormAndInfoSection: React.FC = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-control bg-sudabelt-blue hover:bg-sudabelt-blue-hover text-white font-bold text-xs uppercase tracking-wider transition-colors disabled:opacity-60 cursor-pointer shadow-xs"
+                    className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 disabled:opacity-60 cursor-pointer shadow-xs"
                   >
                     {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                     <span>SUBMIT</span>

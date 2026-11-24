@@ -16,7 +16,7 @@ export interface ProjectItem {
   fullScope?: string[]
 }
 
-const ALL_PROJECTS: ProjectItem[] = [
+export const ALL_PROJECTS: ProjectItem[] = [
   {
     id: 'gbagada-oxygen',
     title: 'Gbagada General Hospital oxygen plant',
@@ -199,7 +199,7 @@ const ProjectsGridWithFilters: React.FC = () => {
   const [activeModalProject, setActiveModalProject] = useState<ProjectItem | null>(null)
 
   const allProjectsList: ProjectItem[] = useMemo(() => {
-    if (apiData?.data && apiData.data.length > 0) {
+    if (apiData && Array.isArray(apiData.data)) {
       return apiData.data.map((p) => ({
         id: p.slug || p._id,
         title: p.title,
@@ -213,7 +213,7 @@ const ProjectsGridWithFilters: React.FC = () => {
         fullScope: p.scopeOfWork || [],
       }))
     }
-    return ALL_PROJECTS
+    return []
   }, [apiData])
 
   // Filter logic
@@ -328,20 +328,26 @@ const ProjectsGridWithFilters: React.FC = () => {
         {/* 3-Column Grid */}
         {filteredProjects.length === 0 ? (
           <div className="py-16 text-center border border-dashed border-sudabelt-border rounded-card bg-sudabelt-surface">
-            <h3 className="text-lg font-bold text-sudabelt-navy">No projects found</h3>
+            <h3 className="text-lg font-bold text-sudabelt-navy">
+              {allProjectsList.length === 0 ? 'No projects published yet' : 'No projects found'}
+            </h3>
             <p className="text-xs sm:text-sm text-sudabelt-muted mt-1">
-              Try adjusting your category or year filters.
+              {allProjectsList.length === 0
+                ? 'Published hospital installations and turnkey healthcare projects will appear here once added in the CMS.'
+                : 'Try adjusting your category or year filters.'}
             </p>
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedCategory('All projects')
-                setSelectedYear('All')
-              }}
-              className="mt-4 px-5 py-2 rounded-control bg-sudabelt-navy text-white text-xs font-bold uppercase cursor-pointer"
-            >
-              Clear Filters
-            </button>
+            {allProjectsList.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCategory('All projects')
+                  setSelectedYear('All')
+                }}
+                className="mt-4 px-5 py-2 rounded-control bg-sudabelt-navy text-white text-xs font-bold uppercase cursor-pointer"
+              >
+                Clear Filters
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">

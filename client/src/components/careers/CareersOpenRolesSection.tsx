@@ -54,7 +54,7 @@ export const CareersOpenRolesSection: React.FC = () => {
             <div className="pt-4">
               <a
                 href="mailto:connect@sudabelt.com?subject=Job%20Application%20-%20Sudabelt%20Medical"
-                className="inline-flex items-center justify-center px-8 py-3.5 rounded-[6px] bg-sudabelt-blue hover:bg-blue-400 text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                className="inline-flex items-center justify-center px-8 py-3.5 rounded-[6px] bg-sudabelt-blue hover:bg-sudabelt-green text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer"
               >
                 EMAIL YOUR CV
               </a>

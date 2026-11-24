@@ -1,9 +1,53 @@
 import React, { useState } from 'react'
 import { HeaderTextReveal, SectionReveal } from '../common/Reveal'
 import { X, CheckCircle2 } from 'lucide-react'
+import { useProjects, type ApiProject } from '../../api/api'
 
-const FeaturedProjectCard: React.FC = () => {
+interface FeaturedProjectCardProps {
+  project?: ApiProject
+}
+
+const FeaturedProjectCard: React.FC<FeaturedProjectCardProps> = ({ project: propProject }) => {
+  const { data: apiData, isLoading } = useProjects()
   const [showDetailModal, setShowDetailModal] = useState<boolean>(false)
+
+  // Get most recent project from DB:
+  // If prop provided, use it; otherwise pick the first/most recent from API
+  const project: ApiProject | null = React.useMemo(() => {
+    if (propProject) return propProject
+    if (apiData && Array.isArray(apiData.data) && apiData.data.length > 0) {
+      // Return the most recent project (sorted by completionYear / createdAt)
+      return apiData.data[0]
+    }
+    return null
+  }, [propProject, apiData])
+
+  if (isLoading) {
+    return (
+      <section className="py-12 bg-white border-b border-sudabelt-border">
+        <div className="sudabelt-container">
+          <div className="h-64 rounded-card bg-slate-100 animate-pulse" />
+        </div>
+      </section>
+    )
+  }
+
+  // If there are no projects in the database, do not render a hardcoded placeholder
+  if (!project) {
+    return null
+  }
+
+  const locationLabel = [project.city, project.locationState].filter(Boolean).join(', ') || 'Nigeria'
+  const scopeItems = Array.isArray(project.scopeOfWork) && project.scopeOfWork.length > 0
+    ? project.scopeOfWork
+    : [
+        'Turnkey equipment delivery and biomedical installation.',
+        'On-site clinical application specialist staff training.',
+        'Continuous preventive maintenance and local SLA warranty.',
+      ]
+
+  const tileOne = scopeItems[0] || project.category
+  const tileTwo = scopeItems[1] || 'Preventive Maintenance SLA'
 
   return (
     <>
@@ -14,11 +58,14 @@ const FeaturedProjectCard: React.FC = () => {
             <div className="lg:col-span-6">
               <SectionReveal direction="right" delay={0.1}>
                 <div className="relative rounded-card overflow-hidden shadow-md aspect-16/11 flex flex-col justify-end p-6 sm:p-8 text-white">
-                  {/* Photo */}
+                  {/* Photo from DB */}
                   <img
-                    src="/images/projects/featured-adeboye.webp"
-                    alt="Enoch & Folu Adeboye Dialysis Centre"
+                    src={project.heroImage || '/images/projects/project-adeboye.webp'}
+                    alt={project.title}
                     className="absolute inset-0 w-full h-full object-cover object-center"
+                    onError={(e) => {
+                      e.currentTarget.src = '/images/projects/project-adeboye.webp'
+                    }}
                   />
                   {/* Dark gradient wash */}
                   <div className="absolute inset-0 bg-linear-to-t from-sudabelt-navy/95 via-sudabelt-navy/60 to-transparent" />
@@ -26,25 +73,25 @@ const FeaturedProjectCard: React.FC = () => {
                   {/* Overlay Content */}
                   <div className="relative z-10">
                     <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-sudabelt-blue mb-2">
-                      Dialysis Centre - Abuja
+                      {project.category} {locationLabel ? `- ${locationLabel}` : ''}
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-extrabold text-white leading-tight mb-5">
-                      Clinical equipment. Water purification.
+                    <h3 className="text-xl sm:text-2xl font-extrabold text-white leading-tight mb-5 line-clamp-2">
+                      {project.title}
                     </h3>
 
                     {/* 2 Tiles */}
                     <div className="grid grid-cols-2 gap-3">
                       <div className="p-3 rounded-control bg-sudabelt-navy/80 backdrop-blur-xs border border-white/20">
                         <div className="text-xs font-mono font-bold text-sudabelt-blue">01</div>
-                        <div className="text-xs sm:text-sm font-bold text-white mt-0.5">
-                          Dialysis machines
+                        <div className="text-xs sm:text-sm font-bold text-white mt-0.5 line-clamp-2">
+                          {tileOne}
                         </div>
                       </div>
 
                       <div className="p-3 rounded-control bg-sudabelt-navy/80 backdrop-blur-xs border border-white/20">
                         <div className="text-xs font-mono font-bold text-sudabelt-blue">02</div>
-                        <div className="text-xs sm:text-sm font-bold text-white mt-0.5">
-                          Reverse osmosis
+                        <div className="text-xs sm:text-sm font-bold text-white mt-0.5 line-clamp-2">
+                          {tileTwo}
                         </div>
                       </div>
                     </div>
@@ -62,31 +109,37 @@ const FeaturedProjectCard: React.FC = () => {
 
                 <HeaderTextReveal className="mb-4">
                   <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-sudabelt-navy tracking-tight leading-tight">
-                    Enoch & Folu Adeboye Dialysis Centre, Abuja
+                    {project.facilityName || project.title}
                   </h2>
                 </HeaderTextReveal>
 
                 <p className="text-sudabelt-body text-base sm:text-[17px] leading-relaxed mb-6">
-                  Eight dialysis machines and a medical-grade reverse osmosis water purification system, supplied through Sudabelt Medical.
+                  {project.shortDescription || project.fullDescription}
                 </p>
 
                 {/* Tags */}
                 <div className="flex flex-wrap items-center gap-2 mb-8">
-                  <span className="px-3 py-1 rounded-control bg-sudabelt-surface text-sudabelt-navy text-xs font-semibold border border-sudabelt-border">
-                    Commissioned 2022
-                  </span>
-                  <span className="px-3 py-1 rounded-control bg-sudabelt-surface text-sudabelt-navy text-xs font-semibold border border-sudabelt-border">
-                    Abuja
-                  </span>
-                  <span className="px-3 py-1 rounded-control bg-sudabelt-surface text-sudabelt-navy text-xs font-semibold border border-sudabelt-border">
-                    Renal
-                  </span>
+                  {project.completionYear && (
+                    <span className="px-3 py-1 rounded-control bg-sudabelt-surface text-sudabelt-navy text-xs font-semibold border border-sudabelt-border">
+                      Commissioned {project.completionYear}
+                    </span>
+                  )}
+                  {locationLabel && (
+                    <span className="px-3 py-1 rounded-control bg-sudabelt-surface text-sudabelt-navy text-xs font-semibold border border-sudabelt-border">
+                      {locationLabel}
+                    </span>
+                  )}
+                  {project.category && (
+                    <span className="px-3 py-1 rounded-control bg-sudabelt-surface text-sudabelt-navy text-xs font-semibold border border-sudabelt-border">
+                      {project.category}
+                    </span>
+                  )}
                 </div>
 
                 <button
                   type="button"
                   onClick={() => setShowDetailModal(true)}
-                  className="h-12 px-7 rounded-control bg-sudabelt-blue hover:bg-sudabelt-blue-hover text-sudabelt-navy font-extrabold text-[13px] tracking-wider uppercase transition-colors shadow-xs cursor-pointer inline-flex items-center justify-center"
+                  className="h-12 px-7 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-sudabelt-navy hover:text-white font-extrabold text-[13px] tracking-wider uppercase transition-all duration-200 shadow-xs cursor-pointer inline-flex items-center justify-center"
                 >
                   View Project
                 </button>
@@ -110,7 +163,7 @@ const FeaturedProjectCard: React.FC = () => {
                   Project Case Study
                 </span>
                 <h3 className="text-lg sm:text-xl font-bold text-white mt-0.5">
-                  Enoch & Folu Adeboye Dialysis Centre
+                  {project.facilityName || project.title}
                 </h3>
               </div>
               <button
@@ -125,8 +178,8 @@ const FeaturedProjectCard: React.FC = () => {
             <div className="p-6 sm:p-8 overflow-y-auto space-y-6">
               <div className="rounded-control overflow-hidden aspect-video shadow-sm">
                 <img
-                  src="/images/projects/featured-adeboye.webp"
-                  alt="Enoch & Folu Adeboye Dialysis Suite"
+                  src={project.heroImage || '/images/projects/project-adeboye.webp'}
+                  alt={project.title}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -134,40 +187,41 @@ const FeaturedProjectCard: React.FC = () => {
               <div className="grid grid-cols-3 gap-4 p-4 rounded-control bg-sudabelt-surface border border-sudabelt-border text-center">
                 <div>
                   <div className="text-xs text-sudabelt-muted">Location</div>
-                  <div className="text-sm font-bold text-sudabelt-navy mt-0.5">Abuja, FCT</div>
+                  <div className="text-sm font-bold text-sudabelt-navy mt-0.5 truncate">{locationLabel}</div>
                 </div>
                 <div>
                   <div className="text-xs text-sudabelt-muted">Year</div>
-                  <div className="text-sm font-bold text-sudabelt-navy mt-0.5">2022</div>
+                  <div className="text-sm font-bold text-sudabelt-navy mt-0.5">{project.completionYear || 'Recent'}</div>
                 </div>
                 <div>
                   <div className="text-xs text-sudabelt-muted">Category</div>
-                  <div className="text-sm font-bold text-sudabelt-navy mt-0.5">Renal Care</div>
+                  <div className="text-sm font-bold text-sudabelt-navy mt-0.5 truncate">{project.category}</div>
                 </div>
               </div>
 
               <div>
                 <h4 className="text-sm font-bold text-sudabelt-navy uppercase tracking-wider mb-2">
-                  Scope of Delivery
+                  Project Overview
                 </h4>
-                <ul className="space-y-2 text-sm text-sudabelt-body">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-sudabelt-green shrink-0" />
-                    <span>8 High-Efficiency Hemodialysis Machines with automated monitoring.</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-sudabelt-green shrink-0" />
-                    <span>Double-pass Reverse Osmosis (RO) medical water treatment plant.</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-sudabelt-green shrink-0" />
-                    <span>Complete plumbing, stainless steel distribution loop & clinical testing.</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-sudabelt-green shrink-0" />
-                    <span>Full on-site nephrology nursing & biomedical technician certification.</span>
-                  </li>
-                </ul>
+                <p className="text-sm text-sudabelt-body leading-relaxed mb-4">
+                  {project.fullDescription || project.shortDescription}
+                </p>
+
+                {scopeItems.length > 0 && (
+                  <>
+                    <h4 className="text-sm font-bold text-sudabelt-navy uppercase tracking-wider mb-2">
+                      Scope of Delivery
+                    </h4>
+                    <ul className="space-y-2 text-sm text-sudabelt-body">
+                      {scopeItems.map((item, idx) => (
+                        <li key={idx} className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-sudabelt-green shrink-0" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
               </div>
             </div>
 

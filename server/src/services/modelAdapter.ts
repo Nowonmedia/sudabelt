@@ -70,6 +70,8 @@ export function createModelAdapter<T extends Record<string, unknown>>(
   const makeQuery = <R>(data: R) => ({
     sort: (_sortObj?: Record<string, number>) => makeQuery(data),
     select: (_fields?: string) => makeQuery(data),
+    limit: (n: number) =>
+      makeQuery(Array.isArray(data) ? (data.slice(0, n) as unknown as R) : data),
     lean: () => ({
       exec: async () => data,
     }),

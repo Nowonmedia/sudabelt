@@ -10,6 +10,7 @@ interface LeadMagnetModalProps {
   directDownloadUrl: string
   description?: string
   buttonLabel?: string
+  leadSource?: string
 }
 
 export const LeadMagnetModal: React.FC<LeadMagnetModalProps> = ({
@@ -20,6 +21,7 @@ export const LeadMagnetModal: React.FC<LeadMagnetModalProps> = ({
   directDownloadUrl,
   description = 'Please provide your contact information to immediately download this document.',
   buttonLabel = 'Download Document',
+  leadSource,
 }) => {
   const [name, setName] = useState('')
   const [workEmail, setWorkEmail] = useState('')
@@ -49,6 +51,7 @@ export const LeadMagnetModal: React.FC<LeadMagnetModalProps> = ({
         assetSlug,
         assetTitle,
         assetUrl: directDownloadUrl,
+        leadSource,
       })
     } catch {
       // Non-blocking: even if the API backend is starting up or in sandbox mode, proceed to deliver the asset
@@ -63,7 +66,9 @@ export const LeadMagnetModal: React.FC<LeadMagnetModalProps> = ({
       link.href = directDownloadUrl
       link.target = '_blank'
       link.rel = 'noopener noreferrer'
-      link.download = `${assetSlug}.pdf`
+      const extMatch = directDownloadUrl.split('?')[0].match(/\.(pdf|pptx|docx|ppt|doc)$/i)
+      const ext = extMatch ? extMatch[1].toLowerCase() : 'pdf'
+      link.download = `${assetSlug}.${ext}`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)

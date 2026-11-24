@@ -40,7 +40,7 @@ const HowTrainingRunsSection: React.FC = () => {
             HOW TRAINING RUNS
           </span>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-sudabelt-navy tracking-tight">
-            From booking to recertification.
+            From Booking to Recertification.
           </h2>
         </div>
 

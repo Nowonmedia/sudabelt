@@ -45,17 +45,14 @@ const AnimatedCounter: React.FC<AnimatedCounterProps> = ({ value, duration = 1.8
 const AboutHeroSection: React.FC = () => {
   return (
     <section className="relative bg-sudabelt-navy text-white overflow-hidden">
-      {/* Background Clinical Photo anchored to the right side */}
-      <div className="absolute right-0 top-0 bottom-0 w-full sm:w-[70%] lg:w-[55%] h-full z-0 overflow-hidden pointer-events-none">
+      {/* Background Clinical Photo with transparent blue overlay (no gradient) */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <img
-          src="https://media.milanote.com/p/resized/1Wxi8l1yDc8cdZ/1Wxi8l1yDc8cdZ-IDXhW-regular.png?w=display"
+          src="/images/about/about-hero.webp"
           alt="Sudabelt Medical Clinical Operations"
           className="w-full h-full object-cover object-center"
         />
-        {/* Horizontal Gradient Fade: Deep Navy on the left fading out so the photo on the right is prominently visible */}
-        <div className="absolute inset-0 bg-linear-to-r from-sudabelt-navy via-sudabelt-navy/70 via-30% to-transparent" />
-        {/* Vertical subtle gradient to anchor seamlessly into green stat bar */}
-        <div className="absolute inset-0 bg-linear-to-t from-sudabelt-navy via-transparent to-transparent opacity-80" />
+        <div className="absolute inset-0 bg-[#06183d]/55" />
       </div>
 
       <div className="relative z-10 sudabelt-container pt-16 sm:pt-20 lg:pt-26 pb-16 lg:pb-22">
@@ -64,7 +61,7 @@ const AboutHeroSection: React.FC = () => {
           <SectionReveal direction="up" delay={0.1}>
             <div className="flex items-center gap-3 mb-4">
               <span className="w-8 sm:w-10 h-0.75 bg-sudabelt-red rounded-xs" />
-              <span className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.14em] text-sudabelt-blue">
+              <span className="inline-block px-3.5 py-1 rounded-control bg-sudabelt-blue text-white text-[12px] sm:text-[13px] font-extrabold uppercase tracking-[0.14em] shadow-sm">
                 About Sudabelt
               </span>
             </div>

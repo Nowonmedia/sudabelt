@@ -5,13 +5,14 @@ import { HeaderTextReveal, SectionReveal } from '../common/Reveal'
 const ServicesHeroSection: React.FC = () => {
   return (
     <section className="relative text-white overflow-hidden min-h-120 sm:min-h-135   flex items-center">
-      {/* Full Background Clinical Image (100% clear and visible, no dark or blue overlay) */}
+      {/* Full Background Clinical Image with subtle dark transparent overlay so text is clearly visible */}
       <div className="absolute inset-0 z-0">
         <img
           src="/images/services/services-hero.webp"
           alt="Biomedical Specialist Operating Diagnostic Technology"
           className="w-full h-full object-cover object-center"
         />
+        <div className="absolute inset-0 bg-[#06183d]/55" />
       </div>
 
       <div className="relative z-10 sudabelt-container py-16 sm:py-20 lg:py-24">
@@ -44,7 +45,7 @@ const ServicesHeroSection: React.FC = () => {
             <div className="flex flex-wrap items-center gap-4">
               <Link
                 to="/rfq"
-                className="h-12 px-7 rounded-control bg-sudabelt-blue hover:bg-sudabelt-blue-hover text-sudabelt-navy font-extrabold text-[13px] tracking-wider uppercase transition-colors inline-flex items-center justify-center shadow-lg cursor-pointer"
+                className="h-12 px-7 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-sudabelt-navy hover:text-white font-extrabold text-[13px] tracking-wider uppercase transition-all duration-200 inline-flex items-center justify-center shadow-lg cursor-pointer"
               >
                 Request a Quote
               </Link>

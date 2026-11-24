@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ZoomIn, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { HeaderTextReveal, SectionReveal } from '../common/Reveal'
 
 interface OemPartnerItem {
@@ -72,7 +72,7 @@ const BrandMilestonesSection: React.FC = () => {
 
             <HeaderTextReveal className="mb-4">
               <h2 className="text-3xl sm:text-4xl lg:text-[40px] font-extrabold text-sudabelt-navy tracking-tight leading-[1.15]">
-                From one global brand to eight.
+                From One Global Brand to Eight.
               </h2>
             </HeaderTextReveal>
 
@@ -150,7 +150,7 @@ const BrandMilestonesSection: React.FC = () => {
             <SectionReveal direction="up" delay={0.25}>
               <div className="group bg-white rounded-2xl border border-sudabelt-border p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300">
                 <div
-                  className="relative cursor-pointer overflow-hidden rounded-xl bg-sudabelt-surface border border-sudabelt-border aspect-[3/4] flex items-center justify-center"
+                  className="relative cursor-pointer overflow-hidden rounded-xl bg-sudabelt-surface border border-sudabelt-border aspect-3/4 flex items-center justify-center"
                   onClick={() => setActiveCertModal('/images/about/iso-9001-certificate.png')}
                 >
                   <img
@@ -158,11 +158,6 @@ const BrandMilestonesSection: React.FC = () => {
                     alt="ISO 9001:2015 Certificate of Registration - Sudabelt Medical Company Limited"
                     className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 bg-sudabelt-navy/0 group-hover:bg-sudabelt-navy/20 transition-colors flex items-center justify-center">
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-sudabelt-navy font-bold text-xs px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
-                      <ZoomIn className="w-4 h-4 text-sudabelt-green" /> View Full Certificate
-                    </span>
-                  </div>
                 </div>
                 <div className="mt-4 pt-3 border-t border-sudabelt-border text-center">
                   <h4 className="text-sm sm:text-base font-bold text-sudabelt-navy">
@@ -179,7 +174,7 @@ const BrandMilestonesSection: React.FC = () => {
             <SectionReveal direction="up" delay={0.35}>
               <div className="group bg-white rounded-2xl border border-sudabelt-border p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300">
                 <div
-                  className="relative cursor-pointer overflow-hidden rounded-xl bg-sudabelt-surface border border-sudabelt-border aspect-[3/4] flex items-center justify-center"
+                  className="relative cursor-pointer overflow-hidden rounded-xl bg-sudabelt-surface border border-sudabelt-border aspect-3/4  flex items-center justify-center"
                   onClick={() => setActiveCertModal('/images/about/iso-audit-confirmation.png')}
                 >
                   <img
@@ -187,11 +182,6 @@ const BrandMilestonesSection: React.FC = () => {
                     alt="ISO Continual Improvement & Surveillance Confirmation Letter - Sudabelt Medical"
                     className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 bg-sudabelt-navy/0 group-hover:bg-sudabelt-navy/20 transition-colors flex items-center justify-center">
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-sudabelt-navy font-bold text-xs px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
-                      <ZoomIn className="w-4 h-4 text-sudabelt-green" /> View Full Document
-                    </span>
-                  </div>
                 </div>
                 <div className="mt-4 pt-3 border-t border-sudabelt-border text-center">
                   <h4 className="text-sm sm:text-base font-bold text-sudabelt-navy">

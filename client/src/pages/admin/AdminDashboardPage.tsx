@@ -22,15 +22,20 @@ import {
   ShieldAlert,
   UserPlus,
   Upload,
+  Download,
 } from 'lucide-react'
 import { toast } from 'react-toastify'
+import ReactQuill from 'react-quill-new'
+import 'react-quill-new/dist/quill.snow.css'
 import { api } from '../../api/api'
+import { exportToCSV, exportToPDF } from '../../utils/exportUtils'
 import type {
   ApiProject,
   ApiProduct,
   ApiArticle,
   ApiNewsletterSubscriber,
   ApiNewsletterCampaign,
+  ApiLeadMagnet,
   ApiRfq,
   ApiSupportTicket,
   ApiAdminUser,
@@ -42,9 +47,35 @@ type TabType =
   | 'products'
   | 'articles'
   | 'newsletters'
+  | 'leads'
   | 'rfqs'
   | 'tickets'
   | 'team'
+
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['blockquote', 'code-block'],
+    ['link', 'image'],
+    ['clean'],
+  ],
+}
+
+const quillFormats = [
+  'header',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'list',
+  'bullet',
+  'blockquote',
+  'code-block',
+  'link',
+  'image',
+]
 
 const AdminDashboardPage: React.FC = () => {
   const navigate = useNavigate()
@@ -62,6 +93,8 @@ const AdminDashboardPage: React.FC = () => {
   const [articles, setArticles] = useState<ApiArticle[]>([])
   const [subscribers, setSubscribers] = useState<ApiNewsletterSubscriber[]>([])
   const [campaigns, setCampaigns] = useState<ApiNewsletterCampaign[]>([])
+  const [leads, setLeads] = useState<ApiLeadMagnet[]>([])
+  const [leadSourceFilter, setLeadSourceFilter] = useState<string>('All')
   const [rfqs, setRfqs] = useState<ApiRfq[]>([])
   const [tickets, setTickets] = useState<ApiSupportTicket[]>([])
   const [adminUsers, setAdminUsers] = useState<ApiAdminUser[]>([])
@@ -76,6 +109,9 @@ const AdminDashboardPage: React.FC = () => {
 
   const [showArticleModal, setShowArticleModal] = useState(false)
   const [editingArticle, setEditingArticle] = useState<ApiArticle | null>(null)
+  const [articleContent, setArticleContent] = useState('')
+  const [articleType, setArticleType] = useState<'blog' | 'newsletter'>('blog')
+  const [isSavingArticle, setIsSavingArticle] = useState(false)
 
   const [showCampaignModal, setShowCampaignModal] = useState(false)
   const [showAdminUserModal, setShowAdminUserModal] = useState(false)
@@ -117,6 +153,7 @@ const AdminDashboardPage: React.FC = () => {
         artsRes,
         subsRes,
         campsRes,
+        leadsRes,
         rfqsRes,
         ticksRes,
       ] = await Promise.all([
@@ -125,6 +162,7 @@ const AdminDashboardPage: React.FC = () => {
         api.adminGetArticles().catch(() => ({ data: [] })),
         api.adminGetSubscribers().catch(() => ({ data: [] })),
         api.adminGetCampaigns().catch(() => ({ data: [] })),
+        api.adminGetLeads().catch(() => ({ data: [] })),
         api.adminGetRfqs().catch(() => ({ data: [] })),
         api.adminGetTickets().catch(() => ({ data: [] })),
       ])
@@ -134,6 +172,7 @@ const AdminDashboardPage: React.FC = () => {
       setArticles(artsRes.data || [])
       setSubscribers(subsRes.data || [])
       setCampaigns(campsRes.data || [])
+      setLeads(leadsRes.data || [])
       setRfqs(rfqsRes.data || [])
       setTickets(ticksRes.data || [])
 
@@ -226,6 +265,19 @@ const AdminDashboardPage: React.FC = () => {
     const form = e.currentTarget
     const formData = new FormData(form)
 
+    const isConsumable = formData.get('isConsumable') === 'on'
+    const primaryImg = String(formData.get('primaryImage') || '/images/services/service-1-tech.jpg').trim()
+    const rawGallery = String(formData.get('galleryImages') || '')
+      .split('\n')
+      .map((s) => s.trim())
+      .filter(Boolean)
+    const galleryImages = rawGallery.length > 0 ? rawGallery : [primaryImg]
+    const compatibleSlugs = String(formData.get('compatibleProductSlugs') || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+    const brochure = String(formData.get('brochureUrl') || '').trim()
+
     const payload: Partial<ApiProduct> = {
       name: String(formData.get('name')),
       modelNumber: String(formData.get('modelNumber')),
@@ -233,10 +285,16 @@ const AdminDashboardPage: React.FC = () => {
       category: String(formData.get('category')),
       shortDescription: String(formData.get('shortDescription')),
       fullOverview: String(formData.get('fullOverview')),
-      isConsumable: formData.get('isConsumable') === 'on',
-      datasheetUrl: String(formData.get('datasheetUrl') || ''),
+      isConsumable,
+      productType: isConsumable ? 'Consumable' : 'Technology',
+      primaryImage: primaryImg,
+      galleryImages,
+      datasheetUrl: brochure,
+      brochureUrl: brochure,
+      compatibleProductSlugs: compatibleSlugs,
       images: {
-        primaryCutout: String(formData.get('primaryCutout') || '/images/products/baxter-artis-physio-cutout.webp'),
+        primaryCutout: primaryImg,
+        contextualGallery: galleryImages,
         altText: String(formData.get('name')),
       },
       published: true,
@@ -274,34 +332,68 @@ const AdminDashboardPage: React.FC = () => {
   // ============================================================================
   const handleSaveArticle = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (isSavingArticle) return
     const form = e.currentTarget
     const formData = new FormData(form)
 
+    const title = String(formData.get('title') || '').trim()
+    const resolvedType = (formData.get('type') || articleType) as 'blog' | 'newsletter'
+    const summaryInput = String(formData.get('summary') || '').trim()
+    const summary = summaryInput || title
+    const rawContent = articleContent.trim() || String(formData.get('content') || '').trim()
+    const content =
+      resolvedType === 'newsletter'
+        ? rawContent || summary || title
+        : rawContent || summary
+    const pdfUrl = String(formData.get('pdfUrl') || '').trim() || undefined
+    const issueNumber = formData.get('issueNumber') ? Number(formData.get('issueNumber')) : undefined
+    const quarter = (formData.get('quarter') as 'Q1' | 'Q2' | 'Q3' | 'Q4') || undefined
+    const year = formData.get('year') ? Number(formData.get('year')) : undefined
+
+    const rawGallery = String(formData.get('galleryImages') || '')
+    const galleryImages = rawGallery
+      .split(/\r?\n|,/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+    const author = String(formData.get('author') || '').trim() || undefined
+
     const payload: Partial<ApiArticle> = {
-      title: String(formData.get('title')),
-      type: formData.get('type') as 'blog' | 'newsletter',
-      category: String(formData.get('category')),
-      summary: String(formData.get('summary')),
-      content: String(formData.get('content')),
-      coverImage: String(formData.get('coverImage') || '/images/services/service-1-tech.jpg'),
+      title,
+      type: resolvedType,
+      category: String(formData.get('category') || 'Clinical Insights').trim(),
+      author,
+      summary,
+      content,
+      coverImage: String(formData.get('coverImage') || '/images/services/service-1-tech.jpg').trim(),
+      galleryImages,
+      pdfUrl,
+      issueNumber,
+      quarter,
+      year,
       readTimeMinutes: Number(formData.get('readTimeMinutes') || 5),
       published: true,
-      publishedDate: new Date().toISOString(),
+      publishedDate: formData.get('publishedDate')
+        ? new Date(String(formData.get('publishedDate'))).toISOString()
+        : (editingArticle?.publishedDate || new Date().toISOString()),
     }
 
+    setIsSavingArticle(true)
     try {
       if (editingArticle) {
         await api.adminUpdateArticle(editingArticle._id, payload)
-        toast.success('Article updated.')
+        toast.success(resolvedType === 'newsletter' ? 'Newsletter updated.' : 'Article updated.')
       } else {
         await api.adminCreateArticle(payload)
-        toast.success('Article published.')
+        toast.success(resolvedType === 'newsletter' ? 'Newsletter published.' : 'Article published.')
       }
       setShowArticleModal(false)
       setEditingArticle(null)
+      setArticleContent('')
       fetchAllData()
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Error saving article')
+    } finally {
+      setIsSavingArticle(false)
     }
   }
 
@@ -612,10 +704,27 @@ const AdminDashboardPage: React.FC = () => {
             >
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4" />
-                <span>Newsletters & Leads</span>
+                <span>Newsletter Subscribers</span>
               </div>
               <span className="text-[11px] font-mono bg-sudabelt-surface px-2 py-0.5 rounded-full text-sudabelt-muted">
                 {subscribers.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('leads')}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+                activeTab === 'leads'
+                  ? 'bg-sudabelt-green-tint text-sudabelt-green'
+                  : 'text-sudabelt-navy hover:bg-sudabelt-surface'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Download className="w-4 h-4" />
+                <span>Generated Leads</span>
+              </div>
+              <span className="text-[11px] font-mono bg-sudabelt-surface px-2 py-0.5 rounded-full text-sudabelt-muted">
+                {leads.length}
               </span>
             </button>
 
@@ -827,6 +936,8 @@ const AdminDashboardPage: React.FC = () => {
                     <button
                       onClick={() => {
                         setEditingArticle(null)
+                        setArticleContent('')
+                        setArticleType('blog')
                         setShowArticleModal(true)
                       }}
                       className="w-full flex items-center justify-between p-3 rounded-xl bg-sudabelt-surface hover:bg-sudabelt-green-tint/60 text-xs font-bold text-sudabelt-navy transition-colors text-left"
@@ -1066,6 +1177,8 @@ const AdminDashboardPage: React.FC = () => {
                 <button
                   onClick={() => {
                     setEditingArticle(null)
+                    setArticleContent('')
+                    setArticleType('blog')
                     setShowArticleModal(true)
                   }}
                   className="inline-flex items-center gap-2 px-4 py-2.5 bg-sudabelt-green hover:bg-sudabelt-green-dark text-white rounded-xl text-xs font-bold shadow-xs transition-colors shrink-0"
@@ -1105,6 +1218,8 @@ const AdminDashboardPage: React.FC = () => {
                             <button
                               onClick={() => {
                                 setEditingArticle(a)
+                                setArticleContent(a.content || '')
+                                setArticleType(a.type || 'blog')
                                 setShowArticleModal(true)
                               }}
                               className="p-1.5 text-sudabelt-navy hover:bg-slate-100 rounded-lg transition-colors"
@@ -1128,17 +1243,17 @@ const AdminDashboardPage: React.FC = () => {
           )}
 
           {/* ================================================================= */}
-          {/* TAB 5: NEWSLETTERS & SUBSCRIBERS */}
+          {/* TAB 5: NEWSLETTER SUBSCRIBERS */}
           {/* ================================================================= */}
           {activeTab === 'newsletters' && (
             <div className="space-y-8">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h1 className="text-xl font-extrabold text-sudabelt-navy">
-                    Newsletter & Lead Subscriptions
+                    Newsletter Subscribers &amp; Broadcasts
                   </h1>
                   <p className="text-xs text-sudabelt-muted mt-0.5">
-                    Subscribers captured through the website footer, RFQ tray, and whitepapers.
+                    Subscribers captured through the website footer and newsletter archive.
                   </p>
                 </div>
                 <button
@@ -1190,38 +1305,232 @@ const AdminDashboardPage: React.FC = () => {
 
               {/* Subscriber Roster */}
               <div>
-                <h2 className="text-sm font-bold uppercase tracking-wider text-sudabelt-navy mb-3">
-                  Registered Subscribers ({subscribers.length})
-                </h2>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-sudabelt-navy">
+                    Registered Subscribers ({subscribers.length})
+                  </h2>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        exportToCSV(
+                          'sudabelt-newsletter-subscribers.csv',
+                          ['Email Address', 'Source', 'Date Subscribed'],
+                          subscribers.map((s) => [
+                            s.email,
+                            s.source || 'website_footer',
+                            s.subscribedAt ? new Date(s.subscribedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-',
+                          ])
+                        )
+                      }
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-sudabelt-border hover:border-sudabelt-navy text-xs font-bold text-sudabelt-navy transition-colors cursor-pointer"
+                    >
+                      <Download className="w-3.5 h-3.5 text-sudabelt-green" /> Export CSV
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        exportToPDF(
+                          'sudabelt-newsletter-subscribers.pdf',
+                          'Newsletter Subscribers Report',
+                          'Registered website & campaign subscribers',
+                          ['Email Address', 'Source', 'Date Subscribed'],
+                          subscribers.map((s) => [
+                            s.email,
+                            s.source || 'website_footer',
+                            s.subscribedAt ? new Date(s.subscribedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-',
+                          ])
+                        )
+                      }
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sudabelt-navy hover:bg-sudabelt-green text-xs font-bold text-white transition-colors cursor-pointer"
+                    >
+                      <Download className="w-3.5 h-3.5" /> Export PDF
+                    </button>
+                  </div>
+                </div>
                 <div className="bg-white rounded-2xl border border-sudabelt-border shadow-xs overflow-hidden">
                   <table className="w-full text-left text-xs">
                     <thead className="bg-slate-50 border-b border-sudabelt-border text-gray-500 font-bold uppercase tracking-wider text-[11px]">
                       <tr>
                         <th className="py-3 px-4">Email Address</th>
-                        <th className="py-3 px-4">Name / Title</th>
-                        <th className="py-3 px-4">Institution</th>
                         <th className="py-3 px-4">Source</th>
+                        <th className="py-3 px-4">Date Subscribed</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-sudabelt-border">
-                      {subscribers.map((s) => (
-                        <tr key={s._id} className="hover:bg-slate-50/50">
-                          <td className="py-3 px-4 font-mono font-semibold text-sudabelt-navy">
-                            {s.email}
-                          </td>
-                          <td className="py-3 px-4 text-sudabelt-body">
-                            {s.name || 'Healthcare Professional'}
-                          </td>
-                          <td className="py-3 px-4 text-sudabelt-muted">
-                            {s.institution || 'Nigeria Healthcare Institution'}
-                          </td>
-                          <td className="py-3 px-4">
-                            <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full text-[10px]">
-                              {s.source}
-                            </span>
+                      {subscribers.length === 0 ? (
+                        <tr>
+                          <td colSpan={3} className="py-8 px-4 text-center text-sudabelt-muted">
+                            No newsletter subscribers yet.
                           </td>
                         </tr>
-                      ))}
+                      ) : (
+                        subscribers.map((s) => (
+                          <tr key={s._id} className="hover:bg-slate-50/50">
+                            <td className="py-3 px-4 font-mono font-semibold text-sudabelt-navy">
+                              {s.email}
+                            </td>
+                            <td className="py-3 px-4">
+                              <span className="bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full text-[10px] font-medium">
+                                {s.source || 'website_footer'}
+                              </span>
+                            </td>
+                            <td className="py-3 px-4 text-sudabelt-muted">
+                              {s.subscribedAt
+                                ? new Date(s.subscribedAt).toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    year: 'numeric',
+                                  })
+                                : '-'}
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================================================================= */}
+          {/* TAB 5B: GENERATED LEADS (LEAD MAGNET CAPTURES) */}
+          {/* ================================================================= */}
+          {activeTab === 'leads' && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl font-extrabold text-sudabelt-navy">
+                  Generated Leads
+                </h1>
+                <p className="text-xs text-sudabelt-muted mt-0.5">
+                  Tracks exact origin (Company Handbook, Product Datasheet, Newsletter) for targeted outreach.
+                </p>
+              </div>
+
+              {/* Lead Magnet Captures (Gated Document Downloads for Targeted Cold Emails) */}
+              <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                  <div>
+                    <h2 className="text-sm font-bold uppercase tracking-wider text-sudabelt-navy">
+                      Lead Magnet Captures ({leads.filter((l) => leadSourceFilter === 'All' || (l.leadSource || 'Technical Document') === leadSourceFilter).length})
+                    </h2>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <select
+                      value={leadSourceFilter}
+                      onChange={(e) => setLeadSourceFilter(e.target.value)}
+                      className="text-xs font-bold px-3 py-1.5 rounded-lg border border-sudabelt-border bg-white text-sudabelt-navy"
+                    >
+                      <option value="All">All Lead Sources</option>
+                      <option value="Company Handbook">Company Handbook</option>
+                      <option value="Product Datasheet">Product Datasheet</option>
+                      <option value="Newsletter">Newsletter</option>
+                      <option value="Technical Document">Technical Document</option>
+                    </select>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const filtered = leads.filter(
+                          (l) => leadSourceFilter === 'All' || (l.leadSource || 'Technical Document') === leadSourceFilter
+                        )
+                        exportToCSV(
+                          'sudabelt-lead-magnets.csv',
+                          ['Work Email', 'Name', 'Organization', 'Lead Source', 'Downloaded Document', 'Date'],
+                          filtered.map((l) => [
+                            l.workEmail,
+                            l.name,
+                            l.facilityName,
+                            l.leadSource || 'Technical Document',
+                            l.downloadedAssetTitle || l.downloadedAssetSlug,
+                            l.downloadedAt ? new Date(l.downloadedAt).toLocaleDateString('en-GB') : '',
+                          ])
+                        )
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-sudabelt-border hover:border-sudabelt-navy text-xs font-bold text-sudabelt-navy transition-colors cursor-pointer"
+                    >
+                      <Download className="w-3.5 h-3.5 text-sudabelt-green" /> Export CSV
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const filtered = leads.filter(
+                          (l) => leadSourceFilter === 'All' || (l.leadSource || 'Technical Document') === leadSourceFilter
+                        )
+                        exportToPDF(
+                          'sudabelt-lead-magnets.pdf',
+                          'Lead Magnet Captures Report',
+                          `Source Filter: ${leadSourceFilter}`,
+                          ['Work Email', 'Name', 'Organization', 'Lead Source', 'Downloaded Document', 'Date'],
+                          filtered.map((l) => [
+                            l.workEmail,
+                            l.name,
+                            l.facilityName,
+                            l.leadSource || 'Technical Document',
+                            l.downloadedAssetTitle || l.downloadedAssetSlug,
+                            l.downloadedAt ? new Date(l.downloadedAt).toLocaleDateString('en-GB') : '',
+                          ])
+                        )
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sudabelt-navy hover:bg-sudabelt-green text-xs font-bold text-white transition-colors cursor-pointer"
+                    >
+                      <Download className="w-3.5 h-3.5" /> Export PDF
+                    </button>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl border border-sudabelt-border shadow-xs overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-sudabelt-border text-gray-500 font-bold uppercase tracking-wider text-[11px]">
+                      <tr>
+                        <th className="py-3 px-4">Contact</th>
+                        <th className="py-3 px-4">Organization</th>
+                        <th className="py-3 px-4">Lead Magnet Source</th>
+                        <th className="py-3 px-4">Exact Document / Item</th>
+                        <th className="py-3 px-4">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-sudabelt-border">
+                      {leads
+                        .filter((l) => leadSourceFilter === 'All' || (l.leadSource || 'Technical Document') === leadSourceFilter)
+                        .map((l) => (
+                          <tr key={l._id} className="hover:bg-slate-50/50">
+                            <td className="py-3 px-4">
+                              <div className="font-bold text-sudabelt-navy">{l.name}</div>
+                              <div className="font-mono text-[11px] text-sudabelt-blue">{l.workEmail}</div>
+                            </td>
+                            <td className="py-3 px-4 text-sudabelt-body font-medium">{l.facilityName}</td>
+                            <td className="py-3 px-4">
+                              <span
+                                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                  l.leadSource === 'Company Handbook'
+                                    ? 'bg-purple-100 text-purple-800'
+                                    : l.leadSource === 'Newsletter'
+                                      ? 'bg-blue-100 text-blue-800'
+                                      : 'bg-emerald-100 text-emerald-800'
+                                }`}
+                              >
+                                {l.leadSource || 'Product Datasheet'}
+                              </span>
+                            </td>
+                            <td className="py-3 px-4 text-sudabelt-navy font-semibold">
+                              {l.downloadedAssetTitle || l.downloadedAssetSlug}
+                            </td>
+                            <td className="py-3 px-4 text-sudabelt-muted font-mono text-[11px]">
+                              {l.downloadedAt ? new Date(l.downloadedAt).toLocaleDateString('en-GB') : '-'}
+                            </td>
+                          </tr>
+                        ))}
+                      {leads.length === 0 && (
+                        <tr>
+                          <td colSpan={5} className="py-8 text-center text-sudabelt-muted">
+                            No gated document downloads captured yet.
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -1234,13 +1543,66 @@ const AdminDashboardPage: React.FC = () => {
           {/* ================================================================= */}
           {activeTab === 'rfqs' && (
             <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-extrabold text-sudabelt-navy">
-                  RFQ Quotation Stream
-                </h1>
-                <p className="text-xs text-sudabelt-muted mt-0.5">
-                  Procurement bids and equipment line items submitted by clinics and hospitals.
-                </p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h1 className="text-xl font-extrabold text-sudabelt-navy">
+                    RFQ Quotation Stream
+                  </h1>
+                  <p className="text-xs text-sudabelt-muted mt-0.5">
+                    Procurement bids and equipment line items submitted by clinics and hospitals.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      exportToCSV(
+                        'sudabelt-rfq-quotations.csv',
+                        ['Reference ID', 'Facility Name', 'Facility Type', 'Location', 'Urgency', 'Status', 'Contact Name', 'Role', 'Email', 'Phone', 'Requested Items'],
+                        rfqs.map((r) => [
+                          r.referenceId,
+                          r.facilityName,
+                          r.facilityType,
+                          `${r.location.city}, ${r.location.state}`,
+                          r.urgency,
+                          r.status,
+                          r.contact.name,
+                          r.contact.role,
+                          r.contact.email,
+                          r.contact.phone,
+                          r.selectedItems?.map((it) => `${it.quantity}x ${it.name}`).join('; ') || '',
+                        ])
+                      )
+                    }
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-sudabelt-border hover:border-sudabelt-navy text-xs font-bold text-sudabelt-navy transition-colors cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5 text-sudabelt-green" /> Export CSV
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      exportToPDF(
+                        'sudabelt-rfq-quotations.pdf',
+                        'RFQ Quotations Report',
+                        'Institutional Request for Quote submissions',
+                        ['Reference ID', 'Facility', 'Location', 'Urgency', 'Status', 'Contact', 'Requested Items'],
+                        rfqs.map((r) => [
+                          r.referenceId,
+                          `${r.facilityName} (${r.facilityType})`,
+                          `${r.location.city}, ${r.location.state}`,
+                          r.urgency,
+                          r.status,
+                          `${r.contact.name} - ${r.contact.phone} - ${r.contact.email}`,
+                          r.selectedItems?.map((it) => `${it.quantity}x ${it.name}`).join('; ') || '',
+                        ])
+                      )
+                    }
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-sudabelt-navy hover:bg-sudabelt-green text-xs font-bold text-white transition-colors cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" /> Export PDF
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-4">
@@ -1304,6 +1666,66 @@ const AdminDashboardPage: React.FC = () => {
                   <p className="text-xs text-sudabelt-muted mt-0.5">
                     Differentiated after-sales repairs, biomedical training bookings, and contact inquiries.
                   </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const filteredTickets = tickets.filter((t) => {
+                        if (ticketCategory === 'all') return true
+                        if (ticketCategory === 'after_sales') return t.ticketType === 'after_sales' || !t.ticketType
+                        return t.ticketType === ticketCategory
+                      })
+                      exportToCSV(
+                        'sudabelt-support-tickets.csv',
+                        ['Ticket ID', 'Type', 'Institution / Hospital', 'Subject / Model', 'Status', 'Urgency', 'Contact Name', 'Email', 'Phone', 'Description'],
+                        filteredTickets.map((t) => [
+                          t.ticketId,
+                          t.ticketType || 'after_sales',
+                          t.hospitalName,
+                          t.equipmentModel,
+                          t.status,
+                          t.urgencyLevel,
+                          t.contactName,
+                          t.email || '',
+                          t.phone,
+                          t.description,
+                        ])
+                      )
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-sudabelt-border hover:border-sudabelt-navy text-xs font-bold text-sudabelt-navy transition-colors cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5 text-sudabelt-green" /> Export CSV
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const filteredTickets = tickets.filter((t) => {
+                        if (ticketCategory === 'all') return true
+                        if (ticketCategory === 'after_sales') return t.ticketType === 'after_sales' || !t.ticketType
+                        return t.ticketType === ticketCategory
+                      })
+                      exportToPDF(
+                        'sudabelt-support-tickets.pdf',
+                        'Support, Training & Contact Inquiries Report',
+                        `Filter: ${ticketCategory}`,
+                        ['Ticket ID', 'Type', 'Institution', 'Subject / Model', 'Status', 'Contact', 'Details'],
+                        filteredTickets.map((t) => [
+                          t.ticketId,
+                          t.ticketType || 'after_sales',
+                          t.hospitalName,
+                          t.equipmentModel,
+                          t.status,
+                          `${t.contactName} (${t.phone}${t.email ? `, ${t.email}` : ''})`,
+                          t.description,
+                        ])
+                      )
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-sudabelt-navy hover:bg-sudabelt-green text-xs font-bold text-white transition-colors cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" /> Export PDF
+                  </button>
                 </div>
               </div>
 
@@ -1771,15 +2193,15 @@ const AdminDashboardPage: React.FC = () => {
                 <label className="block font-bold text-sudabelt-navy mb-1">Category</label>
                 <select
                   name="category"
-                  defaultValue={editingProduct?.category || 'renal-care'}
+                  defaultValue={editingProduct?.category || 'renal-and-critical-care'}
                   className="w-full p-2.5 rounded-xl border border-sudabelt-border"
                 >
-                  <option value="renal-care">Renal Care & Dialysis</option>
-                  <option value="diagnostic-imaging">Diagnostic Imaging</option>
-                  <option value="respiratory-critical-care">Respiratory & Critical Care</option>
-                  <option value="blood-banking-apheresis">Blood Banking & Apheresis</option>
-                  <option value="consumables-reagents">Consumables & Reagents</option>
-                  <option value="surgical-laparoscopy">Minimally Invasive Surgery</option>
+                  <option value="imaging-and-life-care">Imaging &amp; Life Care (GE Healthcare)</option>
+                  <option value="renal-and-critical-care">Renal &amp; Critical Care (Baxter, SWS Medical)</option>
+                  <option value="blood-management-cell-technologies">Blood Management &amp; Cell Technologies (Terumo BCT)</option>
+                  <option value="laboratory-and-diagnostics">Laboratory &amp; Diagnostics (Abbott, Maccura)</option>
+                  <option value="respiratory-and-neonatal-care">Respiratory &amp; Neonatal Care (Fisher &amp; Paykel)</option>
+                  <option value="minimally-invasive-surgery">Minimally Invasive Surgery - MIS (Ezisurg Medical)</option>
                 </select>
               </div>
 
@@ -1809,7 +2231,7 @@ const AdminDashboardPage: React.FC = () => {
 
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-bold text-sudabelt-navy">Product Image (URL or Upload)</label>
+                  <label className="font-bold text-sudabelt-navy">Primary Product Image (URL or Upload)</label>
                   <label className="text-[11px] font-bold text-sudabelt-blue hover:underline cursor-pointer flex items-center gap-1">
                     <Upload className="w-3 h-3" />
                     {uploadingField === 'product-img' ? 'Uploading...' : 'Upload Image File'}
@@ -1824,9 +2246,37 @@ const AdminDashboardPage: React.FC = () => {
                 <input
                   id="product-img-input"
                   name="primaryImage"
-                  defaultValue={editingProduct?.primaryImage || '/images/services/service-1-tech.jpg'}
+                  defaultValue={editingProduct?.primaryImage || editingProduct?.images?.primaryCutout || '/images/services/service-1-tech.jpg'}
                   placeholder="URL to primary image or upload above"
                   className="w-full p-2.5 rounded-xl border border-sudabelt-border"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-sudabelt-navy mb-1">
+                  All Product Gallery Image URLs (One URL per line for multi-image carousel)
+                </label>
+                <textarea
+                  name="galleryImages"
+                  rows={3}
+                  defaultValue={
+                    (editingProduct?.galleryImages || editingProduct?.images?.contextualGallery || [])
+                      .join('\n')
+                  }
+                  placeholder="https://res.cloudinary.com/.../image1.png&#10;https://res.cloudinary.com/.../image2.png"
+                  className="w-full p-2.5 rounded-xl border border-sudabelt-border font-mono text-[11px]"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-sudabelt-navy mb-1">
+                  Compatible Consumable / Product Slugs (Comma-separated)
+                </label>
+                <input
+                  name="compatibleProductSlugs"
+                  defaultValue={(editingProduct?.compatibleProductSlugs || []).join(', ')}
+                  placeholder="e.g. high-flux-dialyzers, blood-tubing-lines, av-fistula-needles"
+                  className="w-full p-2.5 rounded-xl border border-sudabelt-border font-mono text-[11px]"
                 />
               </div>
 
@@ -1847,7 +2297,7 @@ const AdminDashboardPage: React.FC = () => {
                 <input
                   id="product-brochure-input"
                   name="brochureUrl"
-                  defaultValue={editingProduct?.brochureUrl || ''}
+                  defaultValue={editingProduct?.brochureUrl || editingProduct?.datasheetUrl || ''}
                   placeholder="URL to technical brochure PDF or upload above"
                   className="w-full p-2.5 rounded-xl border border-sudabelt-border"
                 />
@@ -1891,12 +2341,25 @@ const AdminDashboardPage: React.FC = () => {
       {/* ===================================================================== */}
       {showArticleModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6">
+          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl p-6 sm:p-7">
             <div className="flex items-center justify-between pb-4 border-b border-sudabelt-border mb-4">
               <h3 className="text-base font-bold text-sudabelt-navy">
-                {editingArticle ? 'Edit Article' : 'Publish New Article'}
+                {editingArticle
+                  ? articleType === 'newsletter'
+                    ? 'Edit Newsletter Issue'
+                    : 'Edit Blog Article'
+                  : articleType === 'newsletter'
+                  ? 'Publish New Newsletter Issue'
+                  : 'Publish New Blog Article'}
               </h3>
-              <button onClick={() => setShowArticleModal(false)} className="p-1 text-gray-400 hover:text-sudabelt-navy">
+              <button
+                onClick={() => {
+                  setShowArticleModal(false)
+                  setEditingArticle(null)
+                  setArticleContent('')
+                }}
+                className="p-1 text-gray-400 hover:text-sudabelt-navy cursor-pointer"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -1909,37 +2372,114 @@ const AdminDashboardPage: React.FC = () => {
                   defaultValue={editingArticle?.title}
                   required
                   placeholder="e.g. Mitigating Dialysis Machine Downtime in West Africa"
-                  className="w-full p-2.5 rounded-xl border border-sudabelt-border"
+                  className="w-full p-2.5 rounded-xl border border-sudabelt-border text-sm"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-bold text-sudabelt-navy mb-1">Type</label>
+                  <label className="block font-bold text-sudabelt-navy mb-1">Publication Type</label>
                   <select
                     name="type"
-                    defaultValue={editingArticle?.type || 'blog'}
-                    className="w-full p-2.5 rounded-xl border border-sudabelt-border"
+                    value={articleType}
+                    onChange={(e) => setArticleType(e.target.value as 'blog' | 'newsletter')}
+                    className="w-full p-2.5 rounded-xl border border-sudabelt-border font-bold text-sudabelt-navy bg-white cursor-pointer"
                   >
-                    <option value="blog">Blog / Case Study</option>
-                    <option value="newsletter">Newsletter Issue</option>
+                    <option value="blog">Clinical Blog / Case Study</option>
+                    <option value="newsletter">Quarterly Newsletter Issue</option>
                   </select>
                 </div>
                 <div>
                   <label className="block font-bold text-sudabelt-navy mb-1">Category</label>
                   <input
                     name="category"
-                    defaultValue={editingArticle?.category || 'Renal Care'}
+                    defaultValue={editingArticle?.category || (articleType === 'newsletter' ? 'Clinical Insights' : 'Renal Care')}
                     required
-                    placeholder="e.g. Healthcare Infrastructure"
+                    placeholder="e.g. Healthcare Infrastructure, Renal Care"
                     className="w-full p-2.5 rounded-xl border border-sudabelt-border"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-sudabelt-navy mb-1">Publication Date</label>
+                  <input
+                    type="date"
+                    name="publishedDate"
+                    defaultValue={editingArticle?.publishedDate ? editingArticle.publishedDate.slice(0, 10) : ''}
+                    className="w-full p-2.5 rounded-xl border border-sudabelt-border bg-white text-sudabelt-navy"
                   />
                 </div>
               </div>
 
+              {/* Newsletter Specific Fields: Issue #, Quarter, Year, and PDF Document */}
+              {articleType === 'newsletter' && (
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <label className="block font-bold text-sudabelt-navy mb-1">Issue #</label>
+                      <input
+                        type="number"
+                        name="issueNumber"
+                        defaultValue={editingArticle?.issueNumber || articles.filter((a) => a.type === 'newsletter').length + 1}
+                        placeholder="e.g. 1"
+                        className="w-full p-2 rounded-lg border border-slate-300 bg-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-bold text-sudabelt-navy mb-1">Quarter</label>
+                      <select
+                        name="quarter"
+                        defaultValue={editingArticle?.quarter || 'Q2'}
+                        className="w-full p-2 rounded-lg border border-slate-300 bg-white"
+                      >
+                        <option value="Q1">Q1</option>
+                        <option value="Q2">Q2</option>
+                        <option value="Q3">Q3</option>
+                        <option value="Q4">Q4</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block font-bold text-sudabelt-navy mb-1">Year</label>
+                      <input
+                        type="number"
+                        name="year"
+                        defaultValue={editingArticle?.year || new Date().getFullYear()}
+                        placeholder="2026"
+                        className="w-full p-2 rounded-lg border border-slate-300 bg-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="font-bold text-sudabelt-navy">
+                        Actual Newsletter Document (PDF for Client Download)
+                      </label>
+                      <label className="text-[11px] font-bold text-sudabelt-blue hover:underline cursor-pointer flex items-center gap-1">
+                        <Upload className="w-3 h-3" />
+                        {uploadingField === 'article-pdf' ? 'Uploading PDF...' : 'Upload PDF Document'}
+                        <input
+                          type="file"
+                          accept="application/pdf"
+                          className="hidden"
+                          onChange={(e) => handleUploadMediaFile(e, 'article-pdf-input', 'article-pdf')}
+                        />
+                      </label>
+                    </div>
+                    <input
+                      id="article-pdf-input"
+                      name="pdfUrl"
+                      defaultValue={editingArticle?.pdfUrl}
+                      placeholder="Paste PDF URL or click 'Upload PDF Document' to upload the actual newsletter"
+                      className="w-full p-2.5 rounded-lg border border-slate-300 bg-white font-mono text-[11px]"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Cover Preview Image */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="font-bold text-sudabelt-navy">Cover Image (URL or Upload)</label>
+                  <label className="font-bold text-sudabelt-navy">Preview Cover Image (URL or Upload)</label>
                   <label className="text-[11px] font-bold text-sudabelt-blue hover:underline cursor-pointer flex items-center gap-1">
                     <Upload className="w-3 h-3" />
                     {uploadingField === 'article-cover' ? 'Uploading...' : 'Upload Image'}
@@ -1955,46 +2495,102 @@ const AdminDashboardPage: React.FC = () => {
                   id="article-cover-input"
                   name="coverImage"
                   defaultValue={editingArticle?.coverImage || '/images/services/service-1-tech.jpg'}
-                  placeholder="URL to cover image or upload above"
+                  placeholder="URL to cover preview image or upload above"
                   className="w-full p-2.5 rounded-xl border border-sudabelt-border"
                 />
               </div>
 
+              {articleType === 'blog' && (
+                <div className="space-y-3">
+                  <div>
+                    <label className="block font-bold text-sudabelt-navy mb-1">Author Name</label>
+                    <input
+                      name="author"
+                      defaultValue={editingArticle?.author || 'Sudabelt Medical'}
+                      placeholder="e.g. Alero Yemiete"
+                      className="w-full p-2.5 rounded-xl border border-sudabelt-border"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-sudabelt-navy mb-1">
+                      Blog Gallery Images (One URL per line)
+                    </label>
+                    <textarea
+                      id="article-gallery-input"
+                      name="galleryImages"
+                      rows={3}
+                      defaultValue={(editingArticle?.galleryImages || []).join('\n')}
+                      placeholder="Paste additional image URLs (one per line) to display in the gallery below the blog post..."
+                      className="w-full p-2.5 rounded-xl border border-sudabelt-border font-mono text-[11px]"
+                    />
+                  </div>
+                </div>
+              )}
+
               <div>
-                <label className="block font-bold text-sudabelt-navy mb-1">Summary / Excerpt</label>
+                <label className="block font-bold text-sudabelt-navy mb-1">
+                  {articleType === 'newsletter' ? 'Summary / Excerpt (Optional)' : 'Summary / Excerpt'}
+                </label>
                 <textarea
                   name="summary"
                   rows={2}
                   defaultValue={editingArticle?.summary}
-                  required
+                  required={articleType !== 'newsletter'}
+                  placeholder={
+                    articleType === 'newsletter'
+                      ? 'Optional brief description of this newsletter issue...'
+                      : 'Short briefing or executive summary...'
+                  }
                   className="w-full p-2.5 rounded-xl border border-sudabelt-border"
                 />
               </div>
 
-              <div>
-                <label className="block font-bold text-sudabelt-navy mb-1">Full Content (Markdown / Text)</label>
-                <textarea
-                  name="content"
-                  rows={6}
-                  defaultValue={editingArticle?.content}
-                  required
-                  className="w-full p-2.5 rounded-xl border border-sudabelt-border font-mono text-[11px]"
-                />
-              </div>
+              {/* React Quill Rich Text Editor (Blogs only; Newsletters use downloadable PDF) */}
+              {articleType !== 'newsletter' && (
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="font-bold text-sudabelt-navy">
+                      Article Body Content (Visual Rich Text Editor)
+                    </label>
+                    <span className="text-[10px] text-sudabelt-muted">
+                      Format with headings, lists, bold text, links, and quotes
+                    </span>
+                  </div>
+                  <div className="bg-white rounded-xl overflow-hidden border border-sudabelt-border">
+                    <ReactQuill
+                      theme="snow"
+                      value={articleContent}
+                      onChange={setArticleContent}
+                      modules={quillModules}
+                      formats={quillFormats}
+                      placeholder="Write and visually format your article or clinical briefing with headings, bullet points, numbered lists, quotes, and links..."
+                    />
+                  </div>
+                </div>
+              )}
 
               <div className="flex justify-end gap-3 pt-4 border-t border-sudabelt-border">
                 <button
                   type="button"
-                  onClick={() => setShowArticleModal(false)}
-                  className="px-4 py-2 rounded-xl border border-sudabelt-border text-sudabelt-navy font-semibold"
+                  onClick={() => {
+                    setShowArticleModal(false)
+                    setEditingArticle(null)
+                    setArticleContent('')
+                  }}
+                  className="px-4 py-2 rounded-xl border border-sudabelt-border text-sudabelt-navy font-semibold hover:bg-slate-50 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-sudabelt-green hover:bg-sudabelt-green-dark text-white font-bold"
+                  disabled={isSavingArticle || uploadingField !== null}
+                  className="px-5 py-2 rounded-xl bg-sudabelt-green hover:bg-sudabelt-green-dark text-white font-bold transition-colors cursor-pointer shadow-xs disabled:opacity-50"
                 >
-                  Save & Publish
+                  {isSavingArticle
+                    ? 'Saving...'
+                    : uploadingField
+                      ? 'Uploading File...'
+                      : 'Save & Publish'}
                 </button>
               </div>
             </form>

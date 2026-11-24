@@ -62,7 +62,7 @@ const PreFooterCTA: React.FC<PreFooterCTAProps> = ({
           {/* Button 1: Light Blue (bg-sudabelt-blue) Background and Dark (text-sudabelt-navy) Text */}
           <Link
             to={primaryTo}
-            className="h-12 px-6 rounded-control bg-sudabelt-blue hover:bg-sudabelt-blue-hover text-sudabelt-navy font-extrabold text-[12.5px] tracking-[0.06em] uppercase inline-flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 shadow-xs"
+            className="h-12 px-6 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-sudabelt-navy hover:text-white font-extrabold text-[12.5px] tracking-[0.06em] uppercase inline-flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 shadow-xs"
           >
             {primaryLabel}
           </Link>

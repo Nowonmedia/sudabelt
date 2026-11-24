@@ -82,7 +82,7 @@ const Footer: React.FC = () => {
             {/* Social Media Icons: Instagram, Facebook, LinkedIn */}
             <div className="flex items-center gap-2.5 mt-5">
               <a
-                href="https://www.instagram.com/sudabeltmedical"
+                href="https://www.instagram.com/sudabeltmedical.ng/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Sudabelt Instagram"
@@ -91,7 +91,7 @@ const Footer: React.FC = () => {
                 <FaInstagram className="w-3.5 h-3.5" />
               </a>
               <a
-                href="https://www.facebook.com/sudabeltmedical"
+                href="https://www.facebook.com/sudabelt/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Sudabelt Facebook"
@@ -244,7 +244,7 @@ const Footer: React.FC = () => {
         {/* Bottom Copyright & C.A.R.E. Bar */}
         <div className="pt-7 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-white/70">
           <p>Commitment • Accountability • Reliability • Efficiency</p>
-          <p>© 2026 Sudabelt Medical Ltd. ISO 9001:2015 &amp; NAFDAC Certified.</p>
+          <p>© 2026 Sudabelt Medical Ltd. <a href='https://nowon.media' target='_blank'>Powered by Now On Media</a> </p>
         </div>
       </div>
     </footer>

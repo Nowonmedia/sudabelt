@@ -29,16 +29,14 @@ const RECOGNITIONS: RecognitionCardData[] = [
 const AboutRecognitionSection: React.FC = () => {
   return (
     <section className="relative text-white py-20 lg:py-28 overflow-hidden">
-      {/* Background Clinical Ward Photo with High Transparency Glass Tint */}
+      {/* Background Clinical Ward Photo with Light Transparent Blue Overlay (No Gradient) */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://media.milanote.com/p/resized/1Wxi8l1yDc8cdZ/1Wxi8l1yDc8cdZ-IDXhW-regular.png?w=display"
+          src="/images/about/recognition.webp"
           alt="Clinical ward backdrop"
           className="w-full h-full object-cover object-center"
         />
-        {/* Transparent Blue Glass Overlay - highly visible ward imagery behind */}
-        <div className="absolute inset-0 bg-[#06183d]/70 backdrop-blur-[1.5px]" />
-        <div className="absolute inset-0 bg-linear-to-r from-sudabelt/85 via-[#06183d]/65 to-[#06183d]/75" />
+        <div className="absolute inset-0 bg-[#06183d]/55" />
       </div>
 
       <div className="relative z-10 sudabelt-container">
@@ -53,7 +51,7 @@ const AboutRecognitionSection: React.FC = () => {
 
             <HeaderTextReveal>
               <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-white tracking-tight leading-[1.15]">
-                Recognized by partners and government.
+                Recognized by Partners and Government.
               </h2>
             </HeaderTextReveal>
           </div>

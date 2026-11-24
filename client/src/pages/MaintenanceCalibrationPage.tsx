@@ -162,7 +162,7 @@ export const MaintenanceCalibrationPage: React.FC = () => {
             <div className="lg:col-span-8">
               <div className="bg-white border border-sudabelt-border rounded-card p-7 sm:p-10 shadow-xs">
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-sudabelt-navy mb-8">
-                  Request training
+                  Request Training
                 </h2>
 
                 {submitted ? (
@@ -427,7 +427,7 @@ export const MaintenanceCalibrationPage: React.FC = () => {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-control bg-sudabelt-blue hover:bg-sudabelt-blue-hover text-white font-bold text-xs uppercase tracking-wider transition-colors disabled:opacity-60 cursor-pointer shadow-xs"
+                        className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 disabled:opacity-60 cursor-pointer shadow-xs"
                       >
                         {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                         <span>BOOK TRAINING</span>

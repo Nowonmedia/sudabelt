@@ -4,7 +4,7 @@ import { SectionReveal } from '../common/Reveal'
 import LeadMagnetModal from '../common/LeadMagnetModal'
 
 const COMPANY_PROFILE_PDF_URL =
-  'https://media.milanote.com/p/files/1WYxA01oRhl26L/ud6/updated_Company%20profile%20Copy.docx.pdf'
+  'https://res.cloudinary.com/ajgpbpap/image/upload/v1795512004/Sudabelt_Business_Profile.pdf'
 
 const CompanyProfileCtaBar: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -35,7 +35,7 @@ const CompanyProfileCtaBar: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowModal(true)}
-                className="inline-flex items-center justify-center gap-2.5 h-12.5 px-7 rounded-control bg-sudabelt-blue hover:bg-sudabelt-blue-hover text-sudabelt-navy font-extrabold text-[13px] tracking-wider uppercase transition-colors shadow-xs cursor-pointer"
+                className="inline-flex items-center justify-center gap-2.5 h-12.5 px-7 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-sudabelt-navy hover:text-white font-extrabold text-[13px] tracking-wider uppercase transition-all duration-200 shadow-xs cursor-pointer"
               >
                 <Download className="w-4 h-4" />
                 <span>Download Company Profile</span>
@@ -54,6 +54,7 @@ const CompanyProfileCtaBar: React.FC = () => {
         directDownloadUrl={COMPANY_PROFILE_PDF_URL}
         description="Please provide your professional email to download the official Sudabelt Medical company profile, turnkey engineering portfolio, and clinical capabilities overview."
         buttonLabel="Download Company Profile"
+        leadSource="Company Handbook"
       />
     </>
   )

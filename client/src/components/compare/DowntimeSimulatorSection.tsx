@@ -77,7 +77,7 @@ export const DowntimeSimulatorSection: React.FC = () => {
 
           <HeaderTextReveal>
             <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-sudabelt-navy tracking-tight leading-tight">
-              What does unplanned downtime look like for your facility?
+              What Does Unplanned Downtime Look Like for Your Facility?
             </h2>
           </HeaderTextReveal>
         </div>
@@ -223,7 +223,7 @@ export const DowntimeSimulatorSection: React.FC = () => {
             <div className="pt-8">
               <Link
                 to="/rfq"
-                className="inline-flex items-center justify-center px-7 py-3.5 rounded-control bg-sudabelt-blue hover:bg-sudabelt-blue-hover text-sudabelt-navy font-extrabold text-xs uppercase tracking-wider transition-all duration-200 hover:-translate-y-0.5 cursor-pointer shadow-md"
+                className="inline-flex items-center justify-center px-7 py-3.5 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-sudabelt-navy hover:text-white font-extrabold text-xs uppercase tracking-wider transition-all duration-200 hover:-translate-y-0.5 cursor-pointer shadow-md"
               >
                 REQUEST THIS PLAN
               </Link>

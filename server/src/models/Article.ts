@@ -12,8 +12,10 @@ export interface IArticle extends Document {
   category: string;
   summary: string;
   content: string;
+  author?: string;
   takeaways?: string[];
   coverImage: string;
+  galleryImages?: string[];
   pdfUrl?: string;
   readTimeMinutes?: number;
   featuredProductSlugs?: string[];
@@ -38,10 +40,12 @@ const ArticleSchema = new Schema<IArticle>(
     quarter: { type: String, enum: ['Q1', 'Q2', 'Q3', 'Q4'] },
     year: { type: Number, index: true },
     category: { type: String, required: true, trim: true, index: true },
-    summary: { type: String, required: true, trim: true },
-    content: { type: String, required: true },
+    summary: { type: String, trim: true, default: '' },
+    content: { type: String, default: '' },
+    author: { type: String, trim: true, default: '' },
     takeaways: [{ type: String, trim: true }],
     coverImage: { type: String, trim: true, default: '' },
+    galleryImages: [{ type: String, trim: true }],
     pdfUrl: { type: String, trim: true },
     readTimeMinutes: { type: Number, default: 5 },
     featuredProductSlugs: [{ type: String, trim: true }],

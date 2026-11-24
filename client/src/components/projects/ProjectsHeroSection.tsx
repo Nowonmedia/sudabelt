@@ -15,6 +15,7 @@ const ProjectsHeroSection: React.FC = () => {
           alt="Hospitals Built and Equipped by Sudabelt"
           className="w-full h-full object-cover object-center"
         />
+        <div className="absolute inset-0 bg-[#06183d]/55" />
       </div>
 
       <div className="relative z-10 sudabelt-container w-full">

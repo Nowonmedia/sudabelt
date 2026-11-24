@@ -78,7 +78,7 @@ export const SupportFaqSection: React.FC = () => {
               FAQ
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-sudabelt-navy leading-tight">
-              Common questions
+              Common Questions
             </h2>
             <p className="mt-3 text-sm sm:text-base text-sudabelt-body leading-relaxed max-w-md">
               Answers to the most frequently asked questions regarding our medical technology, warranty, after-sales biomedical support, and clinical training.

@@ -84,12 +84,13 @@ const HeroSection: React.FC = () => {
           {/* Left Column: Headline, Approved Milanote Copy & Dual CTAs (7 cols) */}
           <div className="lg:col-span-7">
             <HeaderTextReveal>
-              {/* Brand Red Small Highlight Bar */}
-              <div className="w-5.5 h-0.75 bg-sudabelt-red rounded-mark mb-3.5" />
-
-              <p className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[1.82px] text-white">
-                TURNKEY HEALTHCARE INFRASTRUCTURE
-              </p>
+              {/* Brand Red Small Highlight Bar & Eyebrow */}
+              <div className="flex items-center gap-3 mb-3.5">
+                <span className="w-5.5 h-0.75 bg-sudabelt-red rounded-mark" />
+                <p className="inline-block px-3.5 py-1 rounded-control bg-sudabelt-blue text-white text-[12px] sm:text-[13px] font-extrabold uppercase tracking-[1.82px] shadow-sm">
+                  TURNKEY HEALTHCARE INFRASTRUCTURE
+                </p>
+              </div>
 
               <h1 className="text-[36px] sm:text-[44px] lg:text-[52px] leading-[1.16] lg:leading-15.5 font-extrabold tracking-[-0.03em] text-white mt-3.5 drop-shadow-xs">
                 Advancing Healthcare
@@ -106,7 +107,7 @@ const HeroSection: React.FC = () => {
             <div className="mt-8 flex flex-wrap items-center gap-3.5">
               <Link
                 to="/products"
-                className="h-12.5 px-6.5 rounded-control bg-sudabelt-blue hover:bg-sudabelt-blue-hover text-sudabelt-navy font-extrabold text-[13px] tracking-[0.06em] uppercase inline-flex items-center justify-center transition-colors"
+                className="h-12.5 px-6.5 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-sudabelt-navy hover:text-white font-extrabold text-[13px] tracking-[0.06em] uppercase inline-flex items-center justify-center transition-all duration-200"
               >
                 EXPLORE PORTFOLIO
               </Link>

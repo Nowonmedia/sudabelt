@@ -7,6 +7,8 @@ interface ChannelPartnerLogo {
   name: string
   logoUrl: string
   websiteUrl: string
+  containerClass?: string
+  imgClass?: string
 }
 
 const CHANNEL_PARTNER_LOGOS: ChannelPartnerLogo[] = [
@@ -31,32 +33,39 @@ const CHANNEL_PARTNER_LOGOS: ChannelPartnerLogo[] = [
   {
     name: 'GE HealthCare',
     logoUrl:
-      'https://app.milanote.com/media/p/images/1WUc7X1wvLq65k/9ZB/GEHC_DSTBTR_RGB-Gray.png?w=400',
+      'https://app.milanote.com/media/p/images/1WUc7X1wvLq65k/9ZB/GEHC_DSTBTR_RGB-Gray.png?w=800',
     websiteUrl: 'https://www.gehealthcare.com',
+    imgClass: 'h-22 sm:h-26 max-w-72 scale-135',
   },
   {
     name: 'Ezisurg Medical',
     logoUrl:
       'https://app.milanote.com/media/p/images/1WUc811wvLq65l/cxf/Ezisurg%20logo.png?w=display',
     websiteUrl: 'https://www.ezisurg.com',
+    // Ezisurg logo is white, so render on a Sudabelt navy pill for crisp contrast
+    containerClass: 'bg-sudabelt-navy hover:bg-sudabelt-navy/90 px-6 shadow-xs',
+    imgClass: 'h-12 sm:h-14',
   },
   {
     name: 'Terumo BCT',
     logoUrl:
-      'https://app.milanote.com/media/p/images/1WUc7m1wvLq65h/uil/KAYODE%20MICHAEL%20%2821%29.png?w=400',
+      'https://app.milanote.com/media/p/images/1WUc7m1wvLq65h/uil/KAYODE%20MICHAEL%20%2821%29.png?w=800',
     websiteUrl: 'https://www.terumobct.com',
+    imgClass: 'h-24 sm:h-28 max-w-80 scale-175',
   },
   {
-    name: 'Global Medical Partner',
+    name: 'SWS Hemodialysis',
     logoUrl:
-      'https://app.milanote.com/media/p/images/1X111Z1oXzD42r/xoX/image.png?w=400',
+      'https://app.milanote.com/media/p/images/1X111Z1oXzD42r/xoX/image.png?w=800',
     websiteUrl: 'https://www.sudabelt.com/products',
+    imgClass: 'h-22 sm:h-26 max-w-72 scale-150',
   },
   {
-    name: 'Clinical Technology Partner',
+    name: 'Maccura Biotechnology',
     logoUrl:
-      'https://app.milanote.com/media/p/images/1X10Vd1oXzD42q/dOK/image.png?w=400',
+      'https://app.milanote.com/media/p/images/1X10Vd1oXzD42q/dOK/image.png?w=800',
     websiteUrl: 'https://www.sudabelt.com/products',
+    imgClass: 'h-22 sm:h-26 max-w-72 scale-150',
   },
 ]
 
@@ -76,7 +85,7 @@ const PartnerSlider: React.FC = () => {
 
         {/* Center Smooth Infinite Logo Slider with Large, Full-Color Partner Logos */}
         <div
-          className="relative flex-1 w-full overflow-hidden py-2"
+          className="relative flex-1 w-full overflow-hidden py-3"
           style={{
             maskImage:
               'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)',
@@ -100,13 +109,17 @@ const PartnerSlider: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 title={`Visit ${partner.name}`}
-                className="inline-flex items-center justify-center h-18.5 sm:h-22.5 px-4 rounded-tray bg-white hover:bg-sudabelt-surface transition-all duration-300 shrink-0"
+                className={`inline-flex items-center justify-center h-24 sm:h-28 px-6 rounded-tray transition-all duration-300 hover:scale-105 shrink-0 ${
+                  partner.containerClass || 'bg-white hover:bg-sudabelt-surface'
+                }`}
               >
                 <img
                   src={partner.logoUrl}
                   alt={partner.name}
                   loading="lazy"
-                  className="h-15.5 sm:h-19.5 w-auto max-w-55 object-contain"
+                  className={`w-auto object-contain ${
+                    partner.imgClass || 'h-16 sm:h-20 max-w-60'
+                  }`}
                 />
               </a>
             ))}

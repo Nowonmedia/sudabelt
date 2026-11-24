@@ -6,8 +6,8 @@ import SudabeltLogo from '../components/common/SudabeltLogo'
 import { useQuote } from '../context/QuoteContext'
 
 const INSIGHTS_DROPDOWN_LINKS = [
-  { label: 'Blogs', path: '/blog' },
-  { label: 'Insights', path: '/resources/newsletters' },
+  { label: 'Blog', path: '/blog' },
+  { label: 'Newsletters', path: '/resources/newsletters' },
 ]
 
 const MORE_DROPDOWN_LINKS = [
@@ -19,8 +19,8 @@ const MORE_DROPDOWN_LINKS = [
 ]
 
 const SOCIAL_LINKS = [
-  { label: 'Instagram', href: 'https://www.instagram.com/sudabeltmedical', icon: FaInstagram },
-  { label: 'Facebook', href: 'https://www.facebook.com/sudabeltmedical', icon: FaFacebookF },
+  { label: 'Instagram', href: 'https://www.instagram.com/sudabeltmedical.ng/', icon: FaInstagram },
+  { label: 'Facebook', href: 'https://www.facebook.com/sudabelt/', icon: FaFacebookF },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/sudabelt-medical', icon: FaLinkedinIn },
 ]
 
@@ -248,14 +248,14 @@ const Header: React.FC = () => {
             </div>
           </nav>
 
-          {/* Measured RFQ Cart Button with Solid Blue (bg-sudabelt-blue) Background and Dark Navy Badge */}
+          {/* Measured RFQ Tray Button with Solid Blue (bg-sudabelt-blue) Background and Dark Navy Badge */}
           <Link
             to="/rfq"
             onClick={closeAllMenus}
-            aria-label={`RFQ Cart with ${itemCount} items`}
-            className="h-11.5 lg:h-13.5 px-4 rounded-tray bg-sudabelt-blue hover:bg-sudabelt-blue-hover text-sudabelt-navy font-extrabold text-[13px] tracking-[0.04em] uppercase inline-flex items-center gap-2.5 transition-colors shrink-0 shadow-xs"
+            aria-label={`RFQ Tray with ${itemCount} items`}
+            className="h-11.5 px-4 rounded-tray bg-sudabelt-blue hover:bg-sudabelt-green text-sudabelt-navy hover:text-white font-extrabold text-[13px] tracking-[0.04em] uppercase inline-flex items-center gap-2.5 transition-all duration-200 shrink-0 shadow-xs"
           >
-            <span>RFQ CART</span>
+            <span>RFQ TRAY</span>
             <span className="w-7.5 h-7.5 lg:w-8.5 lg:h-8.5 rounded-badge bg-sudabelt-navy text-white font-mono text-[13px] font-bold inline-flex items-center justify-center">
               {itemCount}
             </span>

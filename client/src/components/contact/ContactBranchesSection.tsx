@@ -57,7 +57,7 @@ export const ContactBranchesSection: React.FC = () => {
             BRANCHES
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-[40px] font-extrabold text-sudabelt-navy leading-tight">
-            Three offices. Engineers everywhere.
+            Three Offices. Engineers Everywhere.
           </h2>
           <p className="mt-3 text-sm sm:text-base text-gray-600 max-w-2xl leading-relaxed">
             Direct regional presence in Nigeria's key healthcare corridors, backed by mobile engineering teams deployed nationwide.

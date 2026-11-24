@@ -11,7 +11,7 @@ const ExecutiveMessageSection: React.FC = () => {
             <div className="w-5.5 h-0.75 bg-sudabelt-red rounded-mark mb-3" />
             <span className="text-eyebrow text-sudabelt-green">EXECUTIVE MESSAGE</span>
             <h2 className="text-section-heading text-sudabelt-navy mt-2.5 max-w-190">
-              Transforming healthcare delivery across Africa.
+              Transforming Healthcare Delivery Across Africa.
             </h2>
           </HeaderTextReveal>
 

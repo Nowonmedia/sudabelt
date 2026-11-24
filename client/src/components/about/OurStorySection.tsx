@@ -19,7 +19,7 @@ export const OurStorySection: React.FC = () => {
 
           <HeaderTextReveal>
             <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-sudabelt-navy tracking-tight leading-tight">
-              A legacy of healthcare transformation.
+              A Legacy of Healthcare Transformation.
             </h2>
           </HeaderTextReveal>
           <p className="mt-3 text-base sm:text-lg text-sudabelt-body leading-relaxed">
