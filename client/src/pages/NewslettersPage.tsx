@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useRef } from 'react'
-import { Link } from 'react-router'
+import React, { useState, useMemo, useRef, useEffect } from 'react'
+import { Link, useLocation } from 'react-router'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Mail, Calendar, Download, CheckCircle2, Award } from 'lucide-react'
 import { toast } from 'react-toastify'
@@ -145,7 +145,17 @@ const ScrollClosingBookMockup: React.FC<{ newsletter: ApiArticle }> = ({ newslet
 }
 
 const NewslettersPage: React.FC = () => {
+  const location = useLocation()
   const { data: apiData, isLoading } = useArticles({ type: 'newsletter' })
+
+  useEffect(() => {
+    if (location.hash === '#awards') {
+      const el = document.getElementById('awards')
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 150)
+      }
+    }
+  }, [location.hash])
   const [subscriberEmail, setSubscriberEmail] = useState<string>('')
   const [isSubscribing, setIsSubscribing] = useState<boolean>(false)
   const [subscribedSuccess, setSubscribedSuccess] = useState<boolean>(false)
@@ -428,7 +438,7 @@ const NewslettersPage: React.FC = () => {
       )}
 
       {/* 6. Awards & Recognition Section */}
-      <section className="py-16 sm:py-20 bg-slate-50 border-t border-sudabelt-border">
+      <section id="awards" className="py-16 sm:py-20 bg-slate-50 border-t border-sudabelt-border scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionReveal direction="up">
             <div className="max-w-2xl mb-10 sm:mb-12">

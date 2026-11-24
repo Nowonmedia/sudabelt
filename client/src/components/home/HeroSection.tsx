@@ -19,12 +19,12 @@ const HERO_STATS: HeroStatCard[] = [
     label: 'Regional hubs across Nigeria',
   },
   {
-    metric: '<24hr',
-    label: 'Emergency biomedical response',
+    metric: '24/7',
+    label: 'Technical Biomedical Support',
   },
   {
-    metric: '40-60h',
-    label: 'On-site clinical staff certification',
+    metric: 'ISO9001:2015',
+    label: 'Quality Management Certified',
   },
   {
     metric: '12mo',

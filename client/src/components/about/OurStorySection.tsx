@@ -1,6 +1,5 @@
 import React from 'react'
 import { HeaderTextReveal, SectionReveal } from '../common/Reveal'
-import { CheckCircle, Award } from 'lucide-react'
 
 export const OurStorySection: React.FC = () => {
   return (
@@ -69,34 +68,6 @@ export const OurStorySection: React.FC = () => {
           </div>
         </div>
 
-        {/* Concise Landmark Execution Banner */}
-        <div className="p-6 sm:p-8 rounded-card bg-white border border-sudabelt-border flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-sudabelt-green-tint border border-sudabelt-green/30 flex items-center justify-center shrink-0">
-              <Award className="w-6 h-6 text-sudabelt-green" />
-            </div>
-            <div>
-              <h4 className="text-base font-bold text-sudabelt-navy">
-                Proven Hospital Track Record
-              </h4>
-              <p className="text-xs sm:text-sm text-sudabelt-muted mt-0.5">
-                Dialysis centres, oxygen plants, imaging suites, and intensive care installations delivered across Nigeria.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2.5">
-            {['Enoch & Folu Adeboye Dialysis', 'Reference Hospital Okene', 'NNPC Multi-Specialist Abuja'].map((proj) => (
-              <span
-                key={proj}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-control bg-sudabelt-surface text-xs font-semibold text-sudabelt-navy border border-sudabelt-border font-mono"
-              >
-                <CheckCircle className="w-3.5 h-3.5 text-sudabelt-green" />
-                {proj}
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   )

@@ -11,7 +11,7 @@ const SudaBotWidget: React.FC = () => {
       {isOpen && (
         <div
           role="dialog"
-          aria-label="Suda Bot Assistant"
+          aria-label="Sudabot Assistant"
           className="mb-3 w-77.5 sm:w-85 rounded-card bg-white border border-sudabelt-sage shadow-sudabot overflow-hidden"
         >
           <div className="bg-sudabelt-navy text-white px-5 py-4 flex items-center justify-between border-b border-white/15">
@@ -20,7 +20,7 @@ const SudaBotWidget: React.FC = () => {
                 <Bot className="w-4 h-4" strokeWidth={1.75} />
               </div>
               <div>
-                <div className="text-[14px] font-extrabold leading-tight">Suda Bot</div>
+                <div className="text-[14px] font-extrabold leading-tight">Sudabot</div>
                 <div className="text-[11px] font-mono text-sudabelt-blue">
                   Clinical &amp; Biomedical Concierge
                 </div>
@@ -29,7 +29,7 @@ const SudaBotWidget: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              aria-label="Close Suda Bot"
+              aria-label="Close Sudabot"
               className="w-7 h-7 rounded-control bg-white/10 hover:bg-white/20 text-white inline-flex items-center justify-center cursor-pointer"
             >
               <X className="w-4 h-4" />
@@ -102,7 +102,7 @@ const SudaBotWidget: React.FC = () => {
         </div>
       )}
 
-      {/* Permanently Suspended Bottom-Right Suda Bot Button */}
+      {/* Permanently Suspended Bottom-Right Sudabot Button */}
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -110,7 +110,7 @@ const SudaBotWidget: React.FC = () => {
         className="h-11 px-4 rounded-badge bg-sudabelt-navy hover:bg-sudabelt-navy-hover text-white border border-white/22 shadow-sudabot inline-flex items-center gap-2.5 text-[13px] font-bold tracking-[0.01em] transition-transform active:scale-95 cursor-pointer"
       >
         <Bot className="w-4 h-4 text-sudabelt-blue" strokeWidth={1.75} />
-        <span>Suda Bot</span>
+        <span>Sudabot</span>
       </button>
     </div>
   )

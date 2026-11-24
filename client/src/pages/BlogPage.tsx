@@ -66,7 +66,7 @@ const BlogPage: React.FC = () => {
             </div>
             <HeaderTextReveal className="mt-2 mb-3">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-sudabelt-navy tracking-tight">
-                Healthcare Infrastructure Articles &amp; Insights
+                Healthcare Infrastructure Articles &amp; Blogs
               </h1>
             </HeaderTextReveal>
             <p className="text-sudabelt-body text-base sm:text-lg max-w-2xl leading-relaxed">

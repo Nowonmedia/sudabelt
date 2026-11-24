@@ -39,10 +39,10 @@ const Footer: React.FC = () => {
         <div className="pb-12 mb-12 border-b border-white/18 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <span className="text-[11px] font-bold tracking-[0.14em] uppercase text-emerald-400 block mb-1">
-              CLINICAL DISPATCH &amp; INDUSTRY INSIGHTS
+              CLINICAL DISPATCH &amp; NEWSLETTER
             </span>
             <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-              Subscribe to Sudabelt Medical Insights.
+              Subscribe to Sudabelt Medical Newsletter.
             </h3>
             <p className="text-xs sm:text-sm text-white/70 mt-1 max-w-lg">
               Quarterly updates on hospital engineering standards, dialysis protocols, and biomedical maintenance across Nigeria.
