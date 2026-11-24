@@ -1,0 +1,40 @@
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: sudabelt-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - sudabelt_mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: sudabelt-api
+    restart: unless-stopped
+    ports:
+      - "${PORT:-5000}:5000"
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 5000
+      MONGODB_URI: ${MONGODB_URI:-mongodb://mongo:27017/sudabelt_medical}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      RESEND_API_KEY: ${RESEND_API_KEY:-re_your_api_key_here}
+      EMAIL_FROM: ${EMAIL_FROM:-Sudabelt Medical <notifications@sudabelt.com>}
+      SALES_DESK_EMAIL: ${SALES_DESK_EMAIL:-sales@sudabelt.com}
+      BIOMEDICAL_DESK_EMAIL: ${BIOMEDICAL_DESK_EMAIL:-support@sudabelt.com}
+      TRAINING_DESK_EMAIL: ${TRAINING_DESK_EMAIL:-training@sudabelt.com}
+      ADMIN_API_KEY: ${ADMIN_API_KEY:-sbm_admin_secret_key_change_me}
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+volumes:
+  sudabelt_mongo_data:

@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   TAILWIND CSS v4 DESIGN TOKENS - SUDABELT MEDICAL (FIGMA FOUNDATIONS 01-04)
+   ========================================================================== */
+@theme {
+  /* Font Families */
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Brand & Action Colors (02 / FOUNDATIONS) */
+  --color-sudabelt-navy: #001142;
+  --color-sudabelt-navy-hover: #001b66;
+  --color-sudabelt-green: #006837;
+  --color-sudabelt-green-dark: #004d28;
+  --color-sudabelt-green-tint: #EAF3EC;
+  --color-sudabelt-blue: #3FA9F5;
+  --color-sudabelt-blue-hover: #2b99eb;
+  --color-sudabelt-blue-accessible: #0A6FC0;
+  --color-sudabelt-red: #E30000;
+  --color-sudabelt-sage: #99C1A1;
+  --color-sudabelt-white: #FFFFFF;
+
+  /* Text & Surface Colors (02 / FOUNDATIONS) */
+  --color-sudabelt-body: #3B4468;
+  --color-sudabelt-label: #4A5478;
+  --color-sudabelt-muted: #5A6385;
+  --color-sudabelt-grey: #B3B3B3;
+  --color-sudabelt-border: #DCE1EB;
+  --color-sudabelt-header-border: #E3E7EF;
+  --color-sudabelt-surface: #F4F6F9;
+  --color-sudabelt-tint: #F8FAFC;
+
+  /* Measured Corner Radii (03 / IMPLEMENTATION) */
+  --radius-card: 22px;
+  --radius-tray: 12px;
+  --radius-badge: 8px;
+  --radius-control: 5.5px;
+  --radius-mark: 2px;
+
+  /* Measured Shadows (03 / IMPLEMENTATION) */
+  --shadow-sudabot: 0 12px 32px 0 rgba(0, 17, 66, 0.28);
+  --shadow-dropdown: 0 12px 32px 0 rgba(0, 17, 66, 0.14);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    color: var(--color-sudabelt-navy);
+    background-color: var(--color-sudabelt-white);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    font-size: 16px;
+    line-height: 26.4px;
+    color: var(--color-sudabelt-navy);
+    background-color: var(--color-sudabelt-white);
+  }
+
+  code,
+  pre,
+  .font-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Reusable Measured Figma Utilities */
+@layer utilities {
+  /* Asymmetric Leaf Corner: 22px top-left & bottom-right */
+  .rounded-sudabelt-leaf {
+    border-top-left-radius: 22px;
+    border-bottom-right-radius: 22px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+
+  /* Standard 22px Card Corner */
+  .rounded-sudabelt-card {
+    border-radius: 22px;
+  }
+
+  /* 5.5px Control / Input / Button Radius */
+  .rounded-sudabelt-control {
+    border-radius: 5.5px;
+  }
+
+  /* 12px RFQ Tray Radius */
+  .rounded-sudabelt-tray {
+    border-radius: 12px;
+  }
+
+  /* Measured Typography Classes from 01 / FOUNDATIONS */
+  .text-hero-display {
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    line-height: 1.19;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+  }
+
+  .text-section-heading {
+    font-size: clamp(1.875rem, 3.2vw, 2.75rem);
+    line-height: 1.12;
+    letter-spacing: -0.88px;
+    font-weight: 800;
+  }
+
+  .text-card-title {
+    font-size: 24px;
+    line-height: 30px;
+    letter-spacing: 0px;
+    font-weight: 700;
+  }
+
+  .text-eyebrow {
+    font-size: 13px;
+    line-height: 13px;
+    letter-spacing: 1.82px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .text-tech-mono {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Measured Header Inner Container: 1280px max-width with 40px horizontal padding on desktop */
+  .sudabelt-container {
+    width: 100%;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  @media (min-width: 1024px) {
+    .sudabelt-container {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+  }
+
+  /* Hide scrollbar across all browsers */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Quill Rich Text Editor Custom Styling */
+.ql-toolbar.ql-snow {
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  border-color: #e2e8f0 !important;
+  background-color: #f8fafc;
+}
+.ql-container.ql-snow {
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  border-color: #e2e8f0 !important;
+  min-height: 220px;
+  font-family: inherit;
+  font-size: 14px;
+}
+.ql-editor {
+  min-height: 220px;
+}
+
+/* Rich text rendered article formatting */
+.rich-text-content h1,
+.rich-text-content h2,
+.rich-text-content h3,
+.rich-text-content h4 {
+  color: #07172B;
+  font-weight: 800;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.25;
+}
+.rich-text-content h1 { font-size: 1.85rem; }
+.rich-text-content h2 { font-size: 1.45rem; }
+.rich-text-content h3 { font-size: 1.25rem; }
+.rich-text-content h4 { font-size: 1.1rem; }
+.rich-text-content p {
+  margin-bottom: 1.25em;
+  line-height: 1.75;
+}
+.rich-text-content ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+  margin-bottom: 1.25em;
+}
+.rich-text-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+  margin-bottom: 1.25em;
+}
+.rich-text-content li {
+  margin-bottom: 0.35em;
+}
+.rich-text-content blockquote {
+  border-left: 4px solid #00A859;
+  padding-left: 1rem;
+  font-style: italic;
+  margin: 1.5em 0;
+  color: #334155;
+  background-color: #f8fafc;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.rich-text-content a {
+  color: #0072CE;
+  text-decoration: underline;
+  font-weight: 600;
+}
+.rich-text-content a:hover {
+  color: #00A859;
+}
+.rich-text-content img {
+  border-radius: 0.5rem;
+  margin: 1.5em 0;
+  max-width: 100%;
+}
