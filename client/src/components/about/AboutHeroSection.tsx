@@ -50,7 +50,7 @@ const AboutHeroSection: React.FC = () => {
         <img
           src="/images/about/about-hero.webp"
           alt="Sudabelt Medical Clinical Operations"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-cover object-top"
         />
         <div className="absolute inset-0 bg-[#06183d]/55" />
       </div>

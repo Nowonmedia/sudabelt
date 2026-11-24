@@ -305,7 +305,7 @@ const ProductsPage: React.FC = () => {
               <h1 className="text-4xl sm:text-5xl lg:text-[52px] font-extrabold text-sudabelt-navy leading-[1.06] tracking-tight mt-2">
                 Technology &amp;
                 <br />
-                consumables
+                Consumables
               </h1>
 
               <p className="text-sm sm:text-base text-sudabelt-body mt-4 max-w-lg leading-relaxed">

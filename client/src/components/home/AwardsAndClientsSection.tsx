@@ -100,10 +100,10 @@ const AwardsAndClientsSection: React.FC = () => {
             </HeaderTextReveal>
 
             <Link
-              to="/resources/newsletters"
+              to="/resources/newsletters#awards"
               className="h-11 px-5 rounded-control border border-sudabelt-border bg-white hover:border-sudabelt-navy text-sudabelt-navy font-bold text-[12px] tracking-[0.06em] uppercase inline-flex items-center justify-center self-start sm:self-auto transition-colors"
             >
-              SEE ALL AWARDS &amp; INSIGHTS
+              SEE ALL AWARDS
             </Link>
           </div>
 
@@ -141,7 +141,7 @@ const AwardsAndClientsSection: React.FC = () => {
           <HeaderTextReveal className="text-center mb-8">
             <span className="text-eyebrow text-sudabelt-green">OUR CLIENTS</span>
             <h3 className="text-[24px] sm:text-[30px] font-extrabold text-sudabelt-navy mt-2">
-              Trusted by leading teaching hospitals, specialist centres &amp; diagnostic labs
+              Trusted by leading healthcare institutions
             </h3>
           </HeaderTextReveal>
 

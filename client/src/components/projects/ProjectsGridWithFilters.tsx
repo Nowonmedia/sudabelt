@@ -190,17 +190,62 @@ const YEAR_FILTERS = ['All', '2022', '2020'] as const
 
 const ITEMS_PER_PAGE = 6
 
+const ADDITIONAL_PROJECTS_NO_IMAGES = [
+  {
+    facility: 'Kwara State Government, Kwara State, Nigeria',
+    timeline: 'April 2026 (Ongoing)',
+    scope: 'Supply and Installation of Medical Equipment to Civil Service Hospital, GRA, Ilorin (Multi-Modality)',
+  },
+  {
+    facility: 'Federal Teaching Hospital, Birnin Kebbi, Kebbi State, Nigeria',
+    timeline: 'April 2026 (Ongoing)',
+    scope: 'Procurement and Installation of Medical Equipment for Intensive Care Unit (Multi-Modality Equipment and Furniture)',
+  },
+  {
+    facility: 'Federal Medical Centre, Abeokuta, Ogun State, Nigeria',
+    timeline: 'February 2025 (Ongoing)',
+    scope: 'Construction and Equipping of 1.5 Tesla Magnetic Resonance Imaging Equipment with Accessories, Training and 3 Years Warranty (Radiology)',
+  },
+  {
+    facility: 'Federal Medical Centre Keffi, Nasarawa State, Nigeria',
+    timeline: 'February 2025 (Ongoing)',
+    scope: 'Construction, Rehabilitation, Equipping & Procurement of a 64-Slice Computed Tomography (CT) Scanning Machine (Radiology)',
+  },
+  {
+    facility: 'University of Uyo Teaching Hospital, Akwa Ibom State, Nigeria',
+    timeline: 'February 2025 (Ongoing)',
+    scope: 'Construction and Equipping of 1.5T MRI Building (Radiology)',
+  },
+  {
+    facility: 'Abubakar Tafawa Balewa University Teaching Hospital, Bauchi State, Nigeria',
+    timeline: 'March 2025 (Ongoing)',
+    scope: 'Rehabilitation and Equipping of 64-Slice CT Scan Building for Provision of Radio Diagnostic Centre (Radiology)',
+  },
+  {
+    facility: 'National Primary Healthcare Development Agency (NPHCDA)',
+    timeline: 'October 2024',
+    scope: 'Supply of Medical Equipment: Portable Ultrasound with Fetal Doppler (2D USS)',
+  },
+  {
+    facility: 'Jos University Teaching Hospital, Jos, Plateau State, Nigeria',
+    timeline: 'March 2021',
+    scope: 'Equipping of 10-Bedded Intensive Care Unit (COVID-19 Intervention Project)',
+  },
+]
+
 const ProjectsGridWithFilters: React.FC = () => {
   const { data: apiData } = useProjects()
 
   const [selectedCategory, setSelectedCategory] = useState<string>('All projects')
   const [selectedYear, setSelectedYear] = useState<string>('All')
   const [displayCount, setDisplayCount] = useState<number>(ITEMS_PER_PAGE)
+  const [showAdditionalProjects, setShowAdditionalProjects] = useState<boolean>(false)
   const [activeModalProject, setActiveModalProject] = useState<ProjectItem | null>(null)
 
   const allProjectsList: ProjectItem[] = useMemo(() => {
     if (apiData && Array.isArray(apiData.data)) {
-      return apiData.data.map((p) => ({
+      // Exclude the featured project (index 0) shown in FeaturedProjectCard above
+      return apiData.data.slice(1).map((p) => ({
         id: p.slug || p._id,
         title: p.title,
         category: p.category as ProjectItem['category'],
@@ -413,9 +458,9 @@ const ProjectsGridWithFilters: React.FC = () => {
           </div>
         )}
 
-        {/* Load More Button & Pagination Indicator */}
-        {hasMore && (
-          <div className="mt-12 text-center">
+        {/* Load More Button & Additional Projects Directory */}
+        <div className="mt-12 flex flex-col items-center gap-4">
+          {hasMore && (
             <button
               type="button"
               onClick={handleLoadMore}
@@ -423,6 +468,53 @@ const ProjectsGridWithFilters: React.FC = () => {
             >
               Load More Projects
             </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setShowAdditionalProjects((prev) => !prev)}
+            className="inline-flex items-center justify-center h-11 px-7 rounded-control bg-sudabelt-navy hover:bg-sudabelt-green text-white font-extrabold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-xs"
+          >
+            {showAdditionalProjects ? 'Hide Additional Projects' : 'See More Completed & Ongoing Projects'}
+          </button>
+        </div>
+
+        {showAdditionalProjects && (
+          <div className="mt-10 rounded-card border border-sudabelt-border bg-white p-6 sm:p-8 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 mb-5 border-b border-sudabelt-border">
+              <div>
+                <h3 className="text-lg sm:text-xl font-extrabold text-sudabelt-navy">
+                  Additional Institutional Installations &amp; Ongoing Projects
+                </h3>
+                <p className="text-xs sm:text-sm text-sudabelt-muted mt-0.5">
+                  Verified federal, state, and tertiary hospital turnkey engagements across Nigeria.
+                </p>
+              </div>
+              <span className="text-xs font-mono font-bold text-sudabelt-green">
+                {ADDITIONAL_PROJECTS_NO_IMAGES.length} PROJECTS
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {ADDITIONAL_PROJECTS_NO_IMAGES.map((item) => (
+                <div
+                  key={item.facility}
+                  className="rounded-xl border border-sudabelt-border bg-sudabelt-surface/50 p-4 sm:p-5 hover:border-sudabelt-green transition-colors"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <h4 className="text-sm font-bold text-sudabelt-navy leading-snug">
+                      {item.facility}
+                    </h4>
+                    <span className="shrink-0 px-2.5 py-0.5 rounded-control bg-sudabelt-navy text-white text-[10px] font-mono font-bold">
+                      {item.timeline}
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-sudabelt-body mt-2 leading-relaxed">
+                    {item.scope}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

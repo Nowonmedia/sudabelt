@@ -251,9 +251,9 @@ const RFQPage: React.FC = () => {
 
   // Form State
   const [facilityType, setFacilityType] = useState<string>('Teaching hospital')
-  const [stateLocation, setStateLocation] = useState<string>('Lagos')
-  const [cityTown, setCityTown] = useState<string>('Victoria Island')
-  const [timeline, setTimeline] = useState<string>('1-3 months')
+  const [stateLocation, setStateLocation] = useState<string>('')
+  const [cityTown, setCityTown] = useState<string>('')
+  const [timeline, setTimeline] = useState<string>('Immediate')
 
   // Contact State
   const [fullName, setFullName] = useState<string>('')
@@ -322,8 +322,8 @@ const RFQPage: React.FC = () => {
         facilityName: institution.trim() || facilityType,
         facilityType: facilityType,
         location: {
-          city: cityTown.trim() || 'Victoria Island',
-          state: stateLocation,
+          city: cityTown.trim() || 'Not specified',
+          state: stateLocation || 'Not specified',
           country: 'Nigeria',
         },
         urgency: timeline,
@@ -470,7 +470,7 @@ const RFQPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={clearTray}
-                    className="text-xs font-semibold text-slate-500 hover:text-red-600 transition cursor-pointer underline"
+                    className="px-3.5 py-1.5 rounded-control bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
                   >
                     Clear Tray
                   </button>
@@ -688,6 +688,7 @@ const RFQPage: React.FC = () => {
                     onChange={(e) => setStateLocation(e.target.value)}
                     className="w-full bg-white border border-slate-300 rounded px-3 py-2 text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600 cursor-pointer"
                   >
+                    <option value="">Select state...</option>
                     {NIGERIAN_STATES.map((st) => (
                       <option key={st} value={st}>
                         {st}
@@ -832,8 +833,15 @@ const RFQPage: React.FC = () => {
                   <input
                     id="contact-phone"
                     type="tel"
+                    inputMode="numeric"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => {
+                      const cleaned = e.target.value.replace(/[^0-9+]/g, '')
+                      const normalized = cleaned.startsWith('+')
+                        ? '+' + cleaned.slice(1).replace(/\+/g, '')
+                        : cleaned.replace(/\+/g, '')
+                      setPhone(normalized)
+                    }}
                     placeholder="+234"
                     className="w-full bg-white border border-slate-300 rounded px-3 py-2 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:border-blue-600"
                   />
@@ -903,7 +911,9 @@ const RFQPage: React.FC = () => {
                 <div className="flex items-center justify-between pt-3">
                   <span className="text-slate-400">Location</span>
                   <span className="font-medium text-white text-right max-w-[11rem] truncate">
-                    {cityTown ? `${cityTown}, ${stateLocation}` : stateLocation}
+                    {cityTown && stateLocation
+                      ? `${cityTown}, ${stateLocation}`
+                      : cityTown || stateLocation || 'Not selected'}
                   </span>
                 </div>
 
