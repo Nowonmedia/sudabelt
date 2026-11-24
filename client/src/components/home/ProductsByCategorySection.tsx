@@ -18,6 +18,7 @@ interface PortfolioCategoryCard {
   title: string
   description: string
   sampleProducts: string[]
+  previewImages: { name: string; img: string }[]
   icon: React.ElementType
   bentoSpan: string
 }
@@ -31,6 +32,20 @@ const PORTFOLIO_CATEGORIES: PortfolioCategoryCard[] = [
     description:
       "Advanced diagnostic imaging and patient care solutions designed to support disease detection, clinical decision-making, perioperative care, and improved patient outcomes across radiology, cardiology, women's health, intensive care, and primary healthcare settings.",
     sampleProducts: ['GE HealthCare CT & Ultrasound', 'Patient Monitors', 'Anesthesia Workstations'],
+    previewImages: [
+      {
+        name: 'Revolution Ascend CT Platform',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005837/sudabelt/products/imaging-and-life-care/ge-revolution-ascend-ct_1.png',
+      },
+      {
+        name: 'SIGNA Hero MRI',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005835/sudabelt/products/imaging-and-life-care/ge-signa-hero-1-5t-mri_1.jpg',
+      },
+      {
+        name: 'CARESCAPE B650 Patient Monitor',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005842/sudabelt/products/imaging-and-life-care/ge-carescape-b650-patient-monitor_1.png',
+      },
+    ],
     icon: ScanLine,
     bentoSpan: 'lg:col-span-7',
   },
@@ -42,6 +57,20 @@ const PORTFOLIO_CATEGORIES: PortfolioCategoryCard[] = [
     description:
       'Innovative blood management and cell technology solutions supporting therapeutic apheresis, blood collection, transfusion medicine, and advanced cellular therapies.',
     sampleProducts: ['Terumo Spectra Optia', 'Mirasol PRT System', 'Automated Blood Processing'],
+    previewImages: [
+      {
+        name: 'Spectra Optia Apheresis System',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005882/sudabelt/products/blood-management-cell-technologies/terumo-bct-spectra-optia_1.png',
+      },
+      {
+        name: 'Trima Accel Automated Blood Collection',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005879/sudabelt/products/blood-management-cell-technologies/terumo-trima-accel-automated-blood-collection-system_1.jpg',
+      },
+      {
+        name: 'Reveos Automated Blood Processing',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005874/sudabelt/products/blood-management-cell-technologies/terumo-bct-reveos_1.png',
+      },
+    ],
     icon: Droplets,
     bentoSpan: 'lg:col-span-5',
   },
@@ -53,6 +82,20 @@ const PORTFOLIO_CATEGORIES: PortfolioCategoryCard[] = [
     description:
       'Integrated technologies supporting chronic kidney disease, acute kidney injury, and critical care through advanced renal replacement systems, dialysis infrastructure, and supporting consumables.',
     sampleProducts: ['Baxter Artis Physio HD', 'AK 98 Hemodialysis', 'CleanCart & Revaclear'],
+    previewImages: [
+      {
+        name: 'Baxter AK 98 Hemodialysis System',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005852/sudabelt/products/renal-and-critical-care/baxter-phoenix-ak-98_1.png',
+      },
+      {
+        name: 'Artis Physio Hemodialysis System',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005849/sudabelt/products/renal-and-critical-care/baxter-artis-physio-hemodialysis-system_1.jpg',
+      },
+      {
+        name: 'PrisMax System',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005854/sudabelt/products/renal-and-critical-care/baxter-prismax-2_1.png',
+      },
+    ],
     icon: HeartPulse,
     bentoSpan: 'lg:col-span-5',
   },
@@ -64,6 +107,16 @@ const PORTFOLIO_CATEGORIES: PortfolioCategoryCard[] = [
     description:
       'Comprehensive laboratory and diagnostic solutions supporting clinical chemistry, hematology, immunoassay, coagulation, infectious disease testing, point-of-care diagnostics, and laboratory automation.',
     sampleProducts: ['Abbott Clinical Chemistry', 'Hematology Analyzers', 'Point-of-Care Diagnostics'],
+    previewImages: [
+      {
+        name: 'Maccura F Series Hematology Analyzer',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005895/sudabelt/products/laboratory-and-diagnostics/maccura-f580_1.png',
+      },
+      {
+        name: 'Maccura Chemiluminescence Analyzer',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005893/sudabelt/products/laboratory-and-diagnostics/maccura-is-1200_1.png',
+      },
+    ],
     icon: Microscope,
     bentoSpan: 'lg:col-span-7',
   },
@@ -75,6 +128,20 @@ const PORTFOLIO_CATEGORIES: PortfolioCategoryCard[] = [
     description:
       'Innovative respiratory care technologies designed to support oxygen therapy, humidification, non-invasive ventilation, and invasive ventilation across intensive care, emergency, and neonatal units.',
     sampleProducts: ['Fisher & Paykel Humidification', 'Optiflow High Flow', 'Neonatal Bubble CPAP'],
+    previewImages: [
+      {
+        name: 'AIRVO 2 High Flow System',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005905/sudabelt/products/respiratory-and-neonatal-care/fisher-paykel-airvo-2-high-flow_1.png',
+      },
+      {
+        name: 'F&P 950 System',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005903/sudabelt/products/respiratory-and-neonatal-care/fisher-paykel-optiflow-thrive_1.jpg',
+      },
+      {
+        name: 'MR850 Heated Humidifier',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005910/sudabelt/products/respiratory-and-neonatal-care/fisher-paykel-mr850-system_1.jpg',
+      },
+    ],
     icon: Wind,
     bentoSpan: 'lg:col-span-6',
   },
@@ -86,6 +153,20 @@ const PORTFOLIO_CATEGORIES: PortfolioCategoryCard[] = [
     description:
       'Minimally invasive surgical solutions supporting laparoscopic, bariatric, thoracic, colorectal, gynecological, and urological procedures through advanced surgical stapling, endoscopic imaging, and energy devices.',
     sampleProducts: ['Ezisurg Endo-Staplers', 'Ultrasonic Surgical Shears', 'Laparoscopic Trocars'],
+    previewImages: [
+      {
+        name: 'easyEndo Linear Cutting Stapler',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005920/sudabelt/products/minimally-invasive-surgery/ezisurg-easyendo-linear-cutting-stapler_1.png',
+      },
+      {
+        name: 'easyUS Ultrasonic Surgical System',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005924/sudabelt/products/minimally-invasive-surgery/ezisurg-easyus-ultrasonic-surgical-system_1.png',
+      },
+      {
+        name: 'Cam-Drive Laparoscopic System',
+        img: 'https://res.cloudinary.com/ajgpbpap/image/upload/v1795005918/sudabelt/products/minimally-invasive-surgery/ezisurg-cam-drive-laparoscopic-system_1.png',
+      },
+    ],
     icon: Scissors,
     bentoSpan: 'lg:col-span-6',
   },
@@ -154,22 +235,27 @@ const ProductsByCategorySection: React.FC = () => {
                       {category.description}
                     </p>
 
-                    {/* Selection of Products Linked to Portfolio */}
-                    <div className="mt-5 pt-4 border-t border-sudabelt-sage/40 group-hover:border-white/20 transition-colors duration-300">
-                      <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-sudabelt-label group-hover:text-white/80 mb-2 transition-colors duration-300">
-                        Featured Solutions:
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {category.sampleProducts.map((prod) => (
-                          <Link
-                            key={prod}
-                            to={`/products?category=${category.slug}`}
-                            className="px-2.5 py-1 rounded-control bg-sudabelt-surface group-hover:bg-white/15 hover:bg-white! text-sudabelt-navy group-hover:text-white hover:text-sudabelt-navy! border border-sudabelt-border group-hover:border-white/25 font-mono text-[11px] transition-colors duration-200"
-                          >
-                            {prod}
-                          </Link>
-                        ))}
-                      </div>
+                    {/* Category Product Preview Strip */}
+                    <div
+                      className={`grid gap-3 mt-6 ${
+                        category.previewImages.length === 2 ? 'grid-cols-2' : 'grid-cols-3'
+                      }`}
+                    >
+                      {category.previewImages.map((item) => (
+                        <Link
+                          key={item.name}
+                          to={`/products?category=${category.slug}`}
+                          title={item.name}
+                          className="h-36 sm:h-40 rounded-xl bg-sudabelt-surface group-hover:bg-white/95 border border-sudabelt-border/70 group-hover:border-white/30 p-3 flex items-center justify-center overflow-hidden transition-all duration-300"
+                        >
+                          <img
+                            src={item.img}
+                            alt={item.name}
+                            loading="lazy"
+                            className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </Link>
+                      ))}
                     </div>
                   </div>
 
