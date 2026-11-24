@@ -35,7 +35,7 @@ const AdminLoginPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-sudabelt-navy flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen bg-sudabelt-navy flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background patterns */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-sudabelt-green blur-3xl" />

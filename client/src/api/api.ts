@@ -1,7 +1,10 @@
 import { useQuery, useMutation } from '@tanstack/react-query'
 
 export const API_BASE_URL: string =
-  import.meta.env.VITE_API_URL || '/api/v1'
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD
+    ? 'https://sudabelt-api.fly.dev/api/v1'
+    : '/api/v1')
 
 // ============================================================================
 // SHARED API TYPES
