@@ -40,12 +40,14 @@ const TrainingHeroSection: React.FC<TrainingHeroSectionProps> = ({
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.12]">
-              Equipment is only as good as the people running it.
+              Clinical Applications Training and Biomedical Engineering Support
             </h1>
 
-            <p className="mt-5 text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed font-normal">
-              Structured, hands-on curricula delivered in your ward by OEM-certified clinical
-              application specialists.
+            <p className="mt-5 text-base sm:text-lg text-white/85 max-w-2xl leading-relaxed font-normal">
+              Maximizing the value of advanced medical technology requires both clinical confidence
+              and reliable technical upkeep. We provide tailored and comprehensive, hands-on
+              training across our portfolio of leading global healthcare brands, supporting both
+              your frontline clinical teams and your in-house biomedical engineering staff.
             </p>
 
             {/* CTAs */}
@@ -53,9 +55,9 @@ const TrainingHeroSection: React.FC<TrainingHeroSectionProps> = ({
               <button
                 type="button"
                 onClick={() => onBookClick()}
-                className="h-12 px-7 rounded-control bg-sudabelt-blue hover:bg-sudabelt-navy text-white text-[13px] font-bold tracking-[0.06em] uppercase shadow-lg shadow-sudabelt-blue/20 transition-all duration-300 hover:scale-[1.02] cursor-pointer inline-flex items-center justify-center"
+                className="h-12 px-7 rounded-control bg-sudabelt-blue hover:bg-sudabelt-green text-white text-[13px] font-bold tracking-[0.06em] uppercase shadow-lg shadow-sudabelt-blue/20 transition-all duration-300 hover:scale-[1.02] cursor-pointer inline-flex items-center justify-center"
               >
-                BOOK INSTITUTIONAL TRAINING
+                TRAINING ENQUIRY FORM
               </button>
 
               <button
@@ -63,12 +65,12 @@ const TrainingHeroSection: React.FC<TrainingHeroSectionProps> = ({
                 onClick={onExploreTracksClick}
                 className="h-12 px-7 rounded-control border border-white/40 hover:border-white hover:bg-white/10 text-white text-[13px] font-bold tracking-[0.06em] uppercase transition-all duration-300 cursor-pointer inline-flex items-center justify-center"
               >
-                VIEW TRAINING TRACKS
+                EXPLORE TRAINING FOCUS
               </button>
             </div>
           </motion.div>
 
-          {/* Right Column: Floating KPI Metrics Box matching screenshot */}
+          {/* Right Column: Floating KPI Metrics Box */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -79,10 +81,10 @@ const TrainingHeroSection: React.FC<TrainingHeroSectionProps> = ({
               {/* Metric 1 */}
               <div>
                 <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                  40–60h
+                  8 Brands
                 </div>
-                <div className="text-xs sm:text-sm text-white/70 mt-1 font-medium">
-                  On-site per installation
+                <div className="text-xs sm:text-sm text-white/75 mt-1 font-medium">
+                  Dedicated OEM-backed equipment training
                 </div>
               </div>
 
@@ -92,10 +94,10 @@ const TrainingHeroSection: React.FC<TrainingHeroSectionProps> = ({
               {/* Metric 2 */}
               <div>
                 <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                  4
+                  2 Core Pillars
                 </div>
-                <div className="text-xs sm:text-sm text-white/70 mt-1 font-medium">
-                  OEM-certified tracks
+                <div className="text-xs sm:text-sm text-white/75 mt-1 font-medium">
+                  Clinical Applications &amp; Biomedical Engineering
                 </div>
               </div>
             </div>

@@ -31,6 +31,16 @@ function getAllProductImages(product?: ApiProduct): string[] {
   return Array.from(new Set(raw))
 }
 
+// Extract model label from Cloudinary public ID for multi-model series (e.g. Maccura F Series)
+function getImageModelLabel(url: string): string | null {
+  const lower = url.toLowerCase()
+  if (lower.includes('maccura-f560')) return 'Maccura F560'
+  if (lower.includes('maccura-f600')) return 'Maccura F600'
+  if (lower.includes('maccura-f580')) return 'Maccura F580'
+  if (lower.includes('maccura-f880')) return 'Maccura F880'
+  return null
+}
+
 // Convert any YouTube URL (watch?v=, youtu.be, embed) or default to verified playable OEM video
 function getYouTubeEmbedUrl(url?: string, category?: string, brand?: string): string {
   if (url && url.trim()) {
@@ -352,15 +362,18 @@ const ProductDetailPage: React.FC = () => {
 
               {/* Thumbnails */}
               {images.length > 1 && (
-                <div className="mt-4 grid grid-cols-4 sm:grid-cols-5 gap-3">
+                <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {images.map((imgUrl, idx) => {
                     const isSelected = selectedImageIdx === idx
+                    const modelLabel = getImageModelLabel(imgUrl)
                     return (
                       <button
                         key={idx}
                         type="button"
                         onClick={() => setSelectedImageIdx(idx)}
-                        className={`h-20 rounded-xl bg-[#F6F8FA] p-2 flex items-center justify-center border-2 transition-all cursor-pointer overflow-hidden ${
+                        className={`rounded-xl bg-[#F6F8FA] p-2 flex flex-col items-center justify-center border-2 transition-all cursor-pointer overflow-hidden ${
+                          modelLabel ? 'h-24' : 'h-20'
+                        } ${
                           isSelected
                             ? 'border-sudabelt-blue bg-white shadow-xs ring-2 ring-sudabelt-blue/20'
                             : 'border-sudabelt-border hover:border-sudabelt-navy/40'
@@ -368,9 +381,14 @@ const ProductDetailPage: React.FC = () => {
                       >
                         <img
                           src={imgUrl}
-                          alt={`${product.name} thumbnail ${idx + 1}`}
+                          alt={modelLabel || `${product.name} thumbnail ${idx + 1}`}
                           className="max-h-14 w-auto object-contain"
                         />
+                        {modelLabel && (
+                          <span className="mt-1 text-[10px] font-bold text-sudabelt-navy truncate max-w-full">
+                            {modelLabel}
+                          </span>
+                        )}
                       </button>
                     )
                   })}
@@ -462,20 +480,6 @@ const ProductDetailPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Call us for Bulk Purchases (Konga Hotline Pill) */}
-                <a
-                  href="tel:+2349135733876"
-                  className="block p-3 rounded-xl border border-dashed border-sudabelt-blue/60 bg-sudabelt-blue/5 hover:bg-sudabelt-blue/10 text-center transition-colors group cursor-pointer"
-                >
-                  <span className="text-[10.5px] font-bold text-sudabelt-muted block">
-                    Call us for Hospital Tenders &amp; Bulk Procurement
-                  </span>
-                  <span className="text-xs sm:text-[13px] font-extrabold text-sudabelt-navy group-hover:text-sudabelt-blue transition-colors flex items-center justify-center gap-1.5 mt-0.5">
-                    <PhoneCall className="w-3.5 h-3.5 text-sudabelt-green" />
-                    <span>+234 (0) 913 573 3876 · 0901 123 5400</span>
-                  </span>
-                </a>
-
                 {/* Dual Action Buttons (Konga Style) */}
                 <div className="space-y-2.5 pt-1">
                   <button
@@ -484,7 +488,7 @@ const ProductDetailPage: React.FC = () => {
                     className={`w-full h-12 rounded-control font-extrabold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 shadow-xs ${
                       inTray
                         ? 'bg-sudabelt-green text-white hover:bg-sudabelt-green/95'
-                        : 'bg-sudabelt-blue hover:bg-sudabelt-navy text-white hover:shadow-md'
+                        : 'bg-sudabelt-blue hover:bg-sudabelt-green text-white hover:shadow-md'
                     }`}
                   >
                     <span>{inTray ? 'ADDED TO RFQ TRAY' : 'ADD TO RFQ TRAY'}</span>
@@ -492,8 +496,8 @@ const ProductDetailPage: React.FC = () => {
                   </button>
 
                   <Link
-                    to="/request-quote"
-                    className="w-full h-11 rounded-control bg-sudabelt-navy hover:bg-sudabelt-navy/90 text-white font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xs text-center"
+                    to="/rfq"
+                    className="w-full h-11 rounded-control bg-sudabelt-navy hover:bg-sudabelt-green text-white font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-xs text-center"
                   >
                     <span>REQUEST TURNKEY QUOTE</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -510,6 +514,20 @@ const ProductDetailPage: React.FC = () => {
                     </button>
                   )}
                 </div>
+
+                {/* Call us for Bulk Purchases (Moved below the 3 CTA buttons) */}
+                <a
+                  href="tel:+2349135733876"
+                  className="block p-3 rounded-xl border border-dashed border-sudabelt-blue/60 bg-sudabelt-blue/5 hover:bg-sudabelt-blue/10 text-center transition-colors group cursor-pointer"
+                >
+                  <span className="text-[10.5px] font-bold text-sudabelt-muted block">
+                    Call us for Hospital Tenders &amp; Bulk Procurement
+                  </span>
+                  <span className="text-xs sm:text-[13px] font-extrabold text-sudabelt-navy group-hover:text-sudabelt-blue transition-colors flex flex-wrap items-center justify-center gap-1.5 mt-0.5">
+                    <PhoneCall className="w-3.5 h-3.5 text-sudabelt-green shrink-0" />
+                    <span>+234 913 573 3876 · +234 906 411 1469</span>
+                  </span>
+                </a>
 
               </div>
 
@@ -642,7 +660,7 @@ const ProductDetailPage: React.FC = () => {
                       Turnkey Site Engineering &amp; Commissioning
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 p-3 bg-[#F6F8FA] border-b border-sudabelt-border">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 p-3 bg-[#F6F8FA] border-b border-sudabelt-border">
                     <span className="font-semibold text-sudabelt-muted">Consumables Availability</span>
                     <span className="font-bold text-sudabelt-navy">
                       Guaranteed Local Buffer Stock in Nigeria
@@ -651,85 +669,6 @@ const ProductDetailPage: React.FC = () => {
                 
                 </div>
               </div>
-
-              {/* Verified Working YouTube Video Demonstration */}
-              {!isConsumable && (
-                <div>
-                  <div className="flex items-center justify-between pb-2 border-b border-sudabelt-border mb-3">
-                    <h3 className="text-lg sm:text-xl font-extrabold text-sudabelt-navy">
-                      Product Video Demonstration
-                    </h3>
-                    <a
-                      href={videoEmbedUrl.replace('/embed/', '/watch?v=').replace('?autoplay=1&mute=0&rel=0', '')}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-bold text-sudabelt-blue hover:text-sudabelt-navy flex items-center gap-1"
-                    >
-                      <span>Open on YouTube</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-
-                  <p className="text-xs sm:text-sm text-sudabelt-body mb-4">
-                    Watch the clinical equipment overview, operational demonstration, and technology features in action.
-                  </p>
-
-                  <div className="rounded-2xl overflow-hidden bg-black aspect-video shadow-md border border-sudabelt-border relative">
-                    {isPlayingVideo ? (
-                      <iframe
-                        src={videoEmbedUrl}
-                        title={`${product.name} Clinical Equipment Demonstration`}
-                        className="w-full h-full"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                      />
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setIsPlayingVideo(true)}
-                        className="w-full h-full relative flex items-center justify-center group cursor-pointer bg-linear-to-br from-[#1E293B] to-[#0F172A]"
-                      >
-                        {activeImage && (
-                          <img
-                            src={activeImage}
-                            alt={product.name}
-                            className="max-h-56 w-auto object-contain opacity-75 group-hover:scale-105 transition-transform duration-300"
-                          />
-                        )}
-                        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors flex items-center justify-center">
-                          <div className="w-16 h-12 rounded-xl bg-[#FF0000] group-hover:bg-[#CC0000] text-white flex items-center justify-center shadow-2xl transition-transform group-hover:scale-110">
-                            <Play className="w-6 h-6 fill-white ml-0.5" />
-                          </div>
-                        </div>
-                        <span className="absolute bottom-4 left-4 right-4 text-center text-xs font-bold text-white bg-black/70 py-1.5 px-3 rounded-lg backdrop-blur-xs">
-                          Click to play clinical demonstration video
-                        </span>
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Other Information (from Milanote) */}
-              {otherInformation.length > 0 && (
-                <div>
-                  <h3 className="text-lg sm:text-xl font-extrabold text-sudabelt-navy mb-3 pb-2 border-b border-sudabelt-border">
-                    Other Information
-                  </h3>
-                  <ul className="space-y-2.5">
-                    {otherInformation.map((info, idx) => (
-                      <li
-                        key={idx}
-                        className="p-3.5 rounded-xl bg-[#F6F8FA] border border-sudabelt-border text-xs sm:text-sm text-sudabelt-body leading-relaxed flex items-start gap-2.5"
-                      >
-                        <span className="w-2 h-2 rounded-full bg-sudabelt-green shrink-0 mt-1.5" />
-                        <span>{info}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
 
             {/* RIGHT COLUMN (~35%): SELLER INFORMATION (KONGA STYLE) */}
@@ -828,7 +767,7 @@ const ProductDetailPage: React.FC = () => {
         {/* Modern hospital room background with exact duotone gradient */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-98 pointer-events-none"
-          style={{ backgroundImage: `url('/images/scratch_compare_hero.webp')` }}
+          style={{ backgroundImage: `url('/images/product-details.webp')` }}
         />
         <div className="absolute inset-0 bg-linear-to-r from-[#07172B] via-[#07172B]/90 to-[#07172B]/75 pointer-events-none" />
 
@@ -881,7 +820,167 @@ const ProductDetailPage: React.FC = () => {
       </section>
 
       {/* =====================================================================
-          SECTION 4: AVAILABLE CONSUMABLES (BIGGER IMAGES, FULL VISIBILITY)
+          SECTION 4 & 5: OTHER INFORMATION + PRODUCT VIDEO (SIDE-BY-SIDE)
+      ===================================================================== */}
+      {(otherInformation.length > 0 || !isConsumable) && (
+        <section className="py-14 sm:py-16 bg-white border-b border-sudabelt-border">
+          <div className="sudabelt-container">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+              {/* Left Column: Other Information */}
+              {otherInformation.length > 0 && (
+                <div className={!isConsumable ? 'lg:col-span-6' : 'lg:col-span-12'}>
+                  <div className="pb-3 border-b border-sudabelt-border mb-4">
+                    <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-sudabelt-green block">
+                      TECHNICAL DETAILS
+                    </span>
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-sudabelt-navy mt-1">
+                      Other Information
+                    </h2>
+                  </div>
+                  <ul className="space-y-3">
+                    {otherInformation.map((info, idx) => (
+                      <li
+                        key={idx}
+                        className="p-4 rounded-xl bg-[#F6F8FA] border border-sudabelt-border text-xs sm:text-sm text-sudabelt-body leading-relaxed flex items-start gap-2.5"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-sudabelt-green shrink-0 mt-1.5" />
+                        <span>{info}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Right Column: Product Video Demonstration */}
+              {!isConsumable && (
+                <div className={otherInformation.length > 0 ? 'lg:col-span-6' : 'lg:col-span-7'}>
+                  <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-sudabelt-border mb-4">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-sudabelt-green block">
+                        EQUIPMENT OVERVIEW
+                      </span>
+                      <h2 className="text-xl sm:text-2xl font-extrabold text-sudabelt-navy mt-1">
+                        Product Video Demonstration
+                      </h2>
+                    </div>
+                    <a
+                      href={videoEmbedUrl.replace('/embed/', '/watch?v=').replace('?autoplay=1&mute=0&rel=0', '')}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-bold text-sudabelt-blue hover:text-sudabelt-navy inline-flex items-center gap-1"
+                    >
+                      <span>Open on YouTube</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+
+                  <p className="text-xs sm:text-sm text-sudabelt-body mb-4">
+                    Watch the clinical equipment overview, operational demonstration, and technology features in action.
+                  </p>
+
+                  <div className="w-full rounded-2xl overflow-hidden bg-black aspect-video shadow-md border border-sudabelt-border relative">
+                    {isPlayingVideo ? (
+                      <iframe
+                        src={videoEmbedUrl}
+                        title={`${product.name} Clinical Equipment Demonstration`}
+                        className="w-full h-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setIsPlayingVideo(true)}
+                        className="w-full h-full relative flex items-center justify-center group cursor-pointer bg-linear-to-br from-[#1E293B] to-[#0F172A]"
+                      >
+                        {activeImage && (
+                          <img
+                            src={activeImage}
+                            alt={product.name}
+                            className="max-h-48 sm:max-h-56 w-auto object-contain opacity-75 group-hover:scale-105 transition-transform duration-300"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors flex items-center justify-center">
+                          <div className="w-16 h-12 rounded-xl bg-[#FF0000] group-hover:bg-[#CC0000] text-white flex items-center justify-center shadow-2xl transition-transform group-hover:scale-110">
+                            <Play className="w-6 h-6 fill-white ml-0.5" />
+                          </div>
+                        </div>
+                        <span className="absolute bottom-4 left-4 right-4 text-center text-xs font-bold text-white bg-black/70 py-1.5 px-3 rounded-lg backdrop-blur-xs">
+                          Click to play clinical demonstration video
+                        </span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* =====================================================================
+          SECTION 6: FREQUENTLY ASKED QUESTIONS (BEFORE AVAILABLE CONSUMABLES)
+      ===================================================================== */}
+      {faqsList.length > 0 && (
+        <section className="py-16 sm:py-20 bg-white border-b border-sudabelt-border">
+          <div className="sudabelt-container">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+              <div className="lg:col-span-4">
+                <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-sudabelt-green block">
+                  QUESTIONS
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-sudabelt-navy mt-1">
+                  Frequently Asked
+                </h2>
+              </div>
+
+              <div className="lg:col-span-8 divide-y divide-sudabelt-border">
+                {faqsList.map((faq, idx) => {
+                  const isOpen = openFaqIdx === idx
+                  return (
+                    <div key={idx} className="py-4 first:pt-0">
+                      <button
+                        type="button"
+                        onClick={() => setOpenFaqIdx(isOpen ? null : idx)}
+                        className="w-full flex items-center justify-between gap-4 text-left py-2 cursor-pointer group"
+                      >
+                        <span className="text-sm sm:text-base font-extrabold text-sudabelt-navy group-hover:text-sudabelt-green transition-colors">
+                          {faq.question}
+                        </span>
+                        <span
+                          className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${
+                            isOpen
+                              ? 'bg-sudabelt-navy text-white'
+                              : 'border border-sudabelt-border text-sudabelt-navy'
+                          }`}
+                        >
+                          {isOpen ? '-' : '+'}
+                        </span>
+                      </button>
+
+                      <div
+                        className={`grid transition-all duration-500 ease-in-out ${
+                          isOpen ? 'grid-rows-[1fr] opacity-100 mt-2' : 'grid-rows-[0fr] opacity-0'
+                        }`}
+                      >
+                        <div className="overflow-hidden">
+                          <p className="text-xs sm:text-sm text-sudabelt-body leading-relaxed pb-2 max-w-2xl">
+                            {faq.answer}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* =====================================================================
+          SECTION 7: AVAILABLE CONSUMABLES (AFTER FAQs)
       ===================================================================== */}
       {availableConsumables.length > 0 && (
         <section className="py-16 sm:py-20 bg-[#F4F7F9] border-b border-sudabelt-border">
@@ -970,67 +1069,7 @@ const ProductDetailPage: React.FC = () => {
       )}
 
       {/* =====================================================================
-          SECTION 5: FREQUENTLY ASKED QUESTIONS (ONLY IF PRESENT ON MILANOTE)
-      ===================================================================== */}
-      {faqsList.length > 0 && (
-        <section className="py-16 sm:py-20 bg-white">
-          <div className="sudabelt-container">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-              <div className="lg:col-span-4">
-                <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-sudabelt-green block">
-                  QUESTIONS
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-sudabelt-navy mt-1">
-                  Frequently Asked
-                </h2>
-              </div>
-
-              <div className="lg:col-span-8 divide-y divide-sudabelt-border">
-                {faqsList.map((faq, idx) => {
-                  const isOpen = openFaqIdx === idx
-                  return (
-                    <div key={idx} className="py-4 first:pt-0">
-                      <button
-                        type="button"
-                        onClick={() => setOpenFaqIdx(isOpen ? null : idx)}
-                        className="w-full flex items-center justify-between gap-4 text-left py-2 cursor-pointer group"
-                      >
-                        <span className="text-sm sm:text-base font-extrabold text-sudabelt-navy group-hover:text-sudabelt-green transition-colors">
-                          {faq.question}
-                        </span>
-                        <span
-                          className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${
-                            isOpen
-                              ? 'bg-sudabelt-navy text-white'
-                              : 'border border-sudabelt-border text-sudabelt-navy'
-                          }`}
-                        >
-                          {isOpen ? '-' : '+'}
-                        </span>
-                      </button>
-
-                      <div
-                        className={`grid transition-all duration-500 ease-in-out ${
-                          isOpen ? 'grid-rows-[1fr] opacity-100 mt-2' : 'grid-rows-[0fr] opacity-0'
-                        }`}
-                      >
-                        <div className="overflow-hidden">
-                          <p className="text-xs sm:text-sm text-sudabelt-body leading-relaxed pb-2 max-w-2xl">
-                            {faq.answer}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* =====================================================================
-          SECTION 6: SEE OTHER PRODUCT CATEGORIES (CATEGORY FILTER BAR)
+          SECTION 8: SEE OTHER PRODUCT CATEGORIES (CATEGORY FILTER BAR)
       ===================================================================== */}
       <section className="py-12 bg-white border-t border-sudabelt-border">
         <div className="sudabelt-container">

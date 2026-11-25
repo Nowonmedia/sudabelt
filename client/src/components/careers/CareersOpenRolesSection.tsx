@@ -42,10 +42,10 @@ export const CareersOpenRolesSection: React.FC = () => {
                 We will notify you about relevant positions and keep you in mind whenever interesting
                 opportunities become available. Kindly share your CV at{' '}
                 <a
-                  href="mailto:connect@sudabelt.com"
+                  href="mailto:hrdesk@sudabelt.com"
                   className="text-white font-semibold underline underline-offset-2 hover:text-emerald-200"
                 >
-                  connect@sudabelt.com
+                  hrdesk@sudabelt.com
                 </a>{' '}
                 and specify the job title you are interested in.
               </p>
@@ -53,7 +53,7 @@ export const CareersOpenRolesSection: React.FC = () => {
 
             <div className="pt-4">
               <a
-                href="mailto:connect@sudabelt.com?subject=Job%20Application%20-%20Sudabelt%20Medical"
+                href="mailto:hrdesk@sudabelt.com?subject=Job%20Application%20-%20Sudabelt%20Medical"
                 className="inline-flex items-center justify-center px-8 py-3.5 rounded-[6px] bg-sudabelt-blue hover:bg-sudabelt-green text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer"
               >
                 EMAIL YOUR CV
