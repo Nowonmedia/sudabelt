@@ -224,17 +224,36 @@ const Footer: React.FC = () => {
             <h3 className="text-[11px] font-bold uppercase tracking-[0.12em] text-sudabelt-blue mb-4">
               REGIONAL HUBS
             </h3>
-            <ul className="space-y-2.5 text-[13.5px] text-white/82">
-              <li>Lagos HQ: Victoria Island</li>
-              <li>Abuja: Maitama</li>
-              <li>Kano: Sharada</li>
-              <li>Teaching Hospital Satellites</li>
-              <li className="pt-1 font-mono text-[12.5px] text-sudabelt-blue">
-                <a href="tel:+2349011235400" className="hover:underline">
-                  +234 901 123 5400
+            <ul className="space-y-3 text-[13px] text-white/82">
+              <li>
+                <div className="font-semibold text-white">Lagos HQ: Victoria Island</div>
+                <a href="tel:+2349135733876" className="font-mono text-[12px] text-sudabelt-blue hover:underline">
+                  +234 913 573 3876 (Call &amp; WhatsApp)
                 </a>
               </li>
-              <li className="font-mono text-[12.5px] text-sudabelt-blue">
+              <li>
+                <div className="font-semibold text-white">Abuja: Maitama</div>
+                <div className="flex flex-col">
+                  <a href="tel:+2349064111469" className="font-mono text-[12px] text-sudabelt-blue hover:underline">
+                    +234 906 411 1469
+                  </a>
+                  <a
+                    href="https://wa.me/2347064939047"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono text-[11.5px] text-emerald-400 hover:underline"
+                  >
+                    WhatsApp: +234 706 493 9047
+                  </a>
+                </div>
+              </li>
+              <li>
+                <div className="font-semibold text-white">Kano: Sharada</div>
+                <a href="tel:+2348054353932" className="font-mono text-[12px] text-sudabelt-blue hover:underline">
+                  +234 805 435 3932
+                </a>
+              </li>
+              <li className="pt-1 font-mono text-[12.5px] text-sudabelt-blue">
                 <a href="mailto:info@sudabelt.com" className="hover:underline">
                   info@sudabelt.com
                 </a>

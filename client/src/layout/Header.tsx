@@ -81,11 +81,11 @@ const Header: React.FC = () => {
             <span className="hidden sm:inline text-white/25">|</span>
 
             <a
-              href="tel:+2349011235400"
+              href="tel:+2349135733876"
               className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-white/90 hover:text-sudabelt-blue transition-colors"
             >
               <PhoneCall className="w-3 h-3 text-sudabelt-blue" strokeWidth={1.75} />
-              <span>+234 901 123 5400</span>
+              <span>+234 913 573 3876</span>
             </a>
 
             <span className="text-white/25">|</span>

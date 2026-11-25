@@ -1,21 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import TrainingHeroSection from '../components/training/TrainingHeroSection'
-import TrainingTracksSection from '../components/training/TrainingTracksSection'
+import TrainingEnquirySection from '../components/training/TrainingEnquirySection'
 import HowTrainingRunsSection from '../components/training/HowTrainingRunsSection'
 import TrainingCtaBanner from '../components/training/TrainingCtaBanner'
-import TrainingBookingModal from '../components/training/TrainingBookingModal'
 
 const TrainingHubPage: React.FC = () => {
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
-  const [selectedTrack, setSelectedTrack] = useState<string | undefined>()
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    document.title = 'Clinical Applications Training & Biomedical Support | Sudabelt Medical'
+  }, [])
 
-  const handleOpenBooking = (track?: string) => {
-    setSelectedTrack(track)
-    setIsBookingModalOpen(true)
+  const scrollToEnquiry = () => {
+    const el = document.getElementById('training-enquiry-form')
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
-  const handleScrollToTracks = () => {
-    const el = document.getElementById('training-tracks')
+  const scrollToPillars = () => {
+    const el = document.getElementById('training-pillars')
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' })
     }
@@ -23,27 +26,20 @@ const TrainingHubPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* 1. Hero Section: Dark Clinical Image, Zero Blue Background, Headline, CTAs & KPI metrics */}
+      {/* 1. Hero Section */}
       <TrainingHeroSection
-        onBookClick={handleOpenBooking}
-        onExploreTracksClick={handleScrollToTracks}
+        onBookClick={scrollToEnquiry}
+        onExploreTracksClick={scrollToPillars}
       />
 
-      {/* 2. Training Tracks Grid: 4 Certification Tracks */}
-      <TrainingTracksSection onSelectTrack={handleOpenBooking} />
+      {/* 2. Two-Column Focus Highlight, 8 Global Brands & Training Enquiry Form */}
+      <TrainingEnquirySection />
 
       {/* 3. How Training Runs: 4-Step Process */}
       <HowTrainingRunsSection />
 
       {/* 4. Pre-Footer Emerald Green CTA Banner */}
-      <TrainingCtaBanner onBookClick={() => handleOpenBooking()} />
-
-      {/* 5. Institutional Training Booking Modal */}
-      <TrainingBookingModal
-        isOpen={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
-        selectedTrack={selectedTrack}
-      />
+      <TrainingCtaBanner onBookClick={scrollToEnquiry} />
     </div>
   )
 }

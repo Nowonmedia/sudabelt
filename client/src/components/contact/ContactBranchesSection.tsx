@@ -9,6 +9,7 @@ interface BranchOffice {
   embedUrl: string
   mapUrl: string
   phone?: string
+  whatsapp?: string
 }
 
 const BRANCHES: BranchOffice[] = [
@@ -21,7 +22,8 @@ const BRANCHES: BranchOffice[] = [
       'https://maps.google.com/maps?q=6.431173,3.447853&hl=en&z=15&output=embed',
     mapUrl:
       'https://maps.google.com/?q=11A+Oba+Idowu+Abiodun+Oniru+Street+Victoria+Island+Lagos',
-    phone: '+234 (0) 913 5733 876',
+    phone: '+234 913 573 3876',
+    whatsapp: '+234 913 573 3876',
   },
   {
     id: 'abuja',
@@ -32,7 +34,8 @@ const BRANCHES: BranchOffice[] = [
       'https://maps.google.com/maps?q=9.091176,7.495048&hl=en&z=15&output=embed',
     mapUrl:
       'https://maps.google.com/?q=8+Dep+Street+Off+Nikon+Lake+Street+Maitama+Abuja',
-    phone: '09011235400',
+    phone: '+234 906 411 1469',
+    whatsapp: '+234 706 493 9047',
   },
   {
     id: 'kano',
@@ -43,7 +46,7 @@ const BRANCHES: BranchOffice[] = [
       'https://maps.google.com/maps?q=11.970972,8.514816&hl=en&z=15&output=embed',
     mapUrl:
       'https://maps.google.com/?q=Plot+70+Sharada+Phase+3+Sharada+Road+Kano',
-    phone: '+234 (0) 913 5733 876',
+    phone: '+234 805 435 3932',
   },
 ]
 
@@ -135,12 +138,24 @@ export const ContactBranchesSection: React.FC = () => {
                     </a>
 
                     {branch.phone && (
-                      <a
-                        href={`tel:${branch.phone.replace(/[^0-9+]/g, '')}`}
-                        className="text-xs font-medium text-gray-500 hover:text-sudabelt-navy transition-colors"
-                      >
-                        {branch.phone}
-                      </a>
+                      <div className="text-right">
+                        <a
+                          href={`tel:${branch.phone.replace(/[^0-9+]/g, '')}`}
+                          className="text-xs font-semibold text-sudabelt-navy hover:text-sudabelt-green transition-colors block"
+                        >
+                          {branch.phone}
+                        </a>
+                        {branch.whatsapp && (
+                          <a
+                            href={`https://wa.me/${branch.whatsapp.replace(/[^0-9]/g, '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[11px] font-medium text-sudabelt-green hover:underline block"
+                          >
+                            WhatsApp: {branch.whatsapp}
+                          </a>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>

@@ -17,16 +17,16 @@ const getFromAddress = (): string =>
   process.env.EMAIL_FROM || 'Sudabelt Medical <notifications@sudabelt.com>';
 
 const getSalesEmail = (): string =>
-  process.env.SALES_DESK_EMAIL || 'sales@sudabelt.com';
+  process.env.SALES_DESK_EMAIL || 'contact@sudabelt.com';
 
 const getBiomedicalEmail = (): string =>
   process.env.AFTER_SALES_EMAIL || process.env.BIOMEDICAL_DESK_EMAIL || 'support@sudabelt.com';
 
 const getTrainingEmail = (): string =>
-  process.env.TRAINING_EMAIL || process.env.TRAINING_DESK_EMAIL || 'training@sudabelt.com';
+  process.env.TRAINING_EMAIL || process.env.TRAINING_DESK_EMAIL || 'contact@sudabelt.com';
 
 const getContactEmail = (): string =>
-  process.env.CONTACT_EMAIL || process.env.GENERAL_DESK_EMAIL || getSalesEmail();
+  process.env.CONTACT_EMAIL || process.env.GENERAL_DESK_EMAIL || 'info@sudabelt.com';
 
 const getFrontendUrl = (): string =>
   process.env.FRONTEND_URL || 'https://www.sudabelt.com';

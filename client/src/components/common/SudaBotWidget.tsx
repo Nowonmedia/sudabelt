@@ -84,7 +84,7 @@ const SudaBotWidget: React.FC = () => {
             </Link>
 
             <a
-              href="https://wa.me/2349011235400?text=Hello%20Sudabelt%20Medical%2C%20I%20would%20like%20to%20speak%20with%20a%20regional%20biomedical%20or%20sales%20engineer."
+              href="https://wa.me/2349135733876?text=Hello%20Sudabelt%20Medical%2C%20I%20would%20like%20to%20speak%20with%20a%20regional%20biomedical%20or%20sales%20engineer."
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setIsOpen(false)}
@@ -93,7 +93,7 @@ const SudaBotWidget: React.FC = () => {
               <div className="flex items-center gap-2.5">
                 <MessageSquare className="w-4 h-4 text-sudabelt-blue-accessible" strokeWidth={1.75} />
                 <span className="text-[13.5px] font-bold text-sudabelt-navy">
-                  Chat on WhatsApp (+234 901 123 5400)
+                  Chat on WhatsApp (+234 913 573 3876)
                 </span>
               </div>
               <ArrowUpRight className="w-4 h-4 text-sudabelt-muted group-hover:text-sudabelt-green" />

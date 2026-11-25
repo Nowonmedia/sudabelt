@@ -341,20 +341,43 @@ export const ContactFormAndInfoSection: React.FC = () => {
 
                 {/* Phone Section */}
                 <div>
-                  <span className="text-xs text-emerald-200 block mb-1">Phone</span>
-                  <div className="space-y-1">
-                    <a
-                      href="tel:+2349135733876"
-                      className="text-sm sm:text-base font-semibold text-white hover:underline block"
-                    >
-                      +234 (0) 913 5733 876
-                    </a>
-                    <a
-                      href="tel:09011235400"
-                      className="text-sm sm:text-base font-semibold text-white hover:underline block"
-                    >
-                      09011235400
-                    </a>
+                  <span className="text-xs text-emerald-200 block mb-1.5">Regional Office Lines</span>
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <span className="text-emerald-200 text-xs block">Lagos HQ (Call &amp; WhatsApp)</span>
+                      <a
+                        href="tel:+2349135733876"
+                        className="font-semibold text-white hover:underline block"
+                      >
+                        +234 913 573 3876
+                      </a>
+                    </div>
+                    <div>
+                      <span className="text-emerald-200 text-xs block">Abuja Office</span>
+                      <a
+                        href="tel:+2349064111469"
+                        className="font-semibold text-white hover:underline block"
+                      >
+                        +234 906 411 1469
+                      </a>
+                      <a
+                        href="https://wa.me/2347064939047"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-emerald-100 hover:underline block"
+                      >
+                        Abuja WhatsApp: +234 706 493 9047
+                      </a>
+                    </div>
+                    <div>
+                      <span className="text-emerald-200 text-xs block">Kano Office</span>
+                      <a
+                        href="tel:+2348054353932"
+                        className="font-semibold text-white hover:underline block"
+                      >
+                        +234 805 435 3932
+                      </a>
+                    </div>
                   </div>
                 </div>
 

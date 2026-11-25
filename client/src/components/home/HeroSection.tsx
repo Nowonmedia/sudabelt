@@ -23,7 +23,7 @@ const HERO_STATS: HeroStatCard[] = [
     label: 'Technical Biomedical Support',
   },
   {
-    metric: 'ISO9001:2015',
+    metric: 'ISO 9001:2015',
     label: 'Quality Management Certified',
   },
   {
@@ -183,19 +183,28 @@ const HeroSection: React.FC = () => {
           {/* Right Column: 2x2 Glassmorphic Stat Cards Grid (5 cols) */}
           <div className="lg:col-span-5">
             <div className="grid grid-cols-2 gap-3.5 sm:gap-4">
-              {HERO_STATS.map((stat) => (
-                <div
-                  key={stat.metric}
-                  className="p-5 sm:p-6 rounded-2xl bg-sudabelt-navy/45 backdrop-blur-md border border-white/30 flex flex-col justify-between min-h-33 sm:min-h-37"
-                >
-                  <div className="text-[28px] sm:text-[34px] lg:text-[38px] leading-none font-extrabold tracking-[-0.02em] text-white">
-                    {stat.metric}
+              {HERO_STATS.map((stat) => {
+                const isLongMetric = stat.metric.length > 6
+                return (
+                  <div
+                    key={stat.metric}
+                    className="p-4 sm:p-6 rounded-2xl bg-sudabelt-navy/45 backdrop-blur-md border border-white/30 flex flex-col justify-between min-h-33 sm:min-h-37 overflow-hidden min-w-0"
+                  >
+                    <div
+                      className={`font-extrabold tracking-[-0.02em] text-white wrap-break-words ${
+                        isLongMetric
+                          ? 'text-[17px] sm:text-[21px] lg:text-[22px] xl:text-[24px] leading-tight'
+                          : 'text-[28px] sm:text-[34px] lg:text-[38px] leading-none'
+                      }`}
+                    >
+                      {stat.metric}
+                    </div>
+                    <p className="text-[12.5px] sm:text-[13.5px] leading-[1.38] text-white/90 mt-4">
+                      {stat.label}
+                    </p>
                   </div>
-                  <p className="text-[12.5px] sm:text-[13.5px] leading-[1.38] text-white/90 mt-4">
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </div>
