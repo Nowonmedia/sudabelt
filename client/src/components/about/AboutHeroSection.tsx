@@ -1,6 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useInView } from 'framer-motion'
-import { HeaderTextReveal, SectionReveal } from '../common/Reveal'
+import { AnimatePresence, motion, useInView, type PanInfo } from 'framer-motion'
+import { SectionReveal } from '../common/Reveal'
+
+interface AboutHeroSlide {
+  id: string
+  title: string
+  paragraphs: string[]
+}
+
+const ABOUT_HERO_SLIDES: AboutHeroSlide[] = [
+  {
+    id: 'who-we-are',
+    title: 'Who We Are',
+    paragraphs: [
+      'Sudabelt Medical is a leading integrated healthcare solutions company dedicated to transforming healthcare delivery across Africa through innovative technologies, strategic partnerships, and end-to-end healthcare support services.',
+    ],
+  },
+  {
+    id: 'what-we-do',
+    title: 'What We Do',
+    paragraphs: [
+      'We provide comprehensive healthcare solutions spanning diagnostic imaging, renal and critical care, laboratory diagnostics, blood management technologies, minimally invasive surgery, respiratory care, healthcare infrastructure development, biomedical engineering services, and professional healthcare training.',
+      'By combining world-class medical technologies with local expertise and technical excellence, we support healthcare institutions in delivering safer, more efficient, and patient-centered care.',
+    ],
+  },
+  {
+    id: 'where-we-are',
+    title: 'Where We Are',
+    paragraphs: [
+      'Headquartered in Lagos, Nigeria, with regional offices in Abuja and Kano, Sudabelt serves healthcare institutions across all 36 states of Nigeria and the Federal Capital Territory, with a growing footprint across Sub-Saharan Africa.',
+      'To enhance accessibility and continuity of care, we have strategically located medical supply outlets within selected teaching and specialist hospitals across Nigeria, providing healthcare institutions and patients with convenient access to essential medical consumables.',
+      'Our extensive network, strategic partnerships, and highly skilled workforce enable us to provide timely support and sustainable healthcare solutions wherever they are needed.',
+    ],
+  },
+]
 
 interface AnimatedCounterProps {
   value: number
@@ -43,21 +76,67 @@ const AnimatedCounter: React.FC<AnimatedCounterProps> = ({ value, duration = 1.8
 }
 
 const AboutHeroSection: React.FC = () => {
+  const [activeSlide, setActiveSlide] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+
+  useEffect(() => {
+    if (isPaused) return
+    const timer = window.setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % ABOUT_HERO_SLIDES.length)
+    }, 5000)
+    return () => window.clearInterval(timer)
+  }, [isPaused, activeSlide])
+
+  const currentSlide = ABOUT_HERO_SLIDES[activeSlide]
+
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (info.offset.x < -45) {
+      setActiveSlide((prev) => (prev + 1) % ABOUT_HERO_SLIDES.length)
+    } else if (info.offset.x > 45) {
+      setActiveSlide((prev) => (prev - 1 + ABOUT_HERO_SLIDES.length) % ABOUT_HERO_SLIDES.length)
+    }
+  }
+
   return (
     <section className="relative bg-sudabelt-navy text-white overflow-hidden">
-      {/* Background Clinical Photo with transparent blue overlay (no gradient) */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      {/* Desktop (lg+): Full-bleed background team photo with navy overlay */}
+      <div className="hidden lg:block absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <img
           src="/images/about/about-hero.webp"
-          alt="Sudabelt Medical Clinical Operations"
+          alt="Sudabelt Medical Team"
+          fetchPriority="high"
+          decoding="async"
           className="w-full h-full object-cover object-top"
         />
-        <div className="absolute inset-0 bg-[#06183d]/55" />
+        <div className="absolute inset-0 bg-[#06183d]/62" />
       </div>
 
-      <div className="relative z-10 sudabelt-container pt-16 sm:pt-20 lg:pt-26 pb-16 lg:pb-22">
-        <div className="max-w-xl lg:max-w-2xl">
-          {/* Eyebrow with red highlight bar */}
+      {/* Mobile & Tablet (< lg): Full uncropped landscape team photo stacked above content */}
+      <div className="lg:hidden relative w-full bg-sudabelt-navy overflow-hidden">
+        <img
+          src="/images/about/about-hero.webp"
+          alt="Sudabelt Medical Team"
+          fetchPriority="high"
+          decoding="async"
+          className="w-full h-auto block"
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-14"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(0, 17, 66, 0) 0%, #001142 100%)',
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 sudabelt-container pt-6 sm:pt-8 lg:pt-18 pb-12 lg:pb-16">
+        <div
+          className="max-w-2xl lg:max-w-3xl"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onFocus={() => setIsPaused(true)}
+          onBlur={() => setIsPaused(false)}
+        >
+          {/* Static Eyebrow with red highlight bar */}
           <SectionReveal direction="up" delay={0.1}>
             <div className="flex items-center gap-3 mb-4">
               <span className="w-8 sm:w-10 h-0.75 bg-sudabelt-red rounded-xs" />
@@ -67,19 +146,47 @@ const AboutHeroSection: React.FC = () => {
             </div>
           </SectionReveal>
 
-          {/* Headline */}
-          <HeaderTextReveal className="mb-6">
-            <h1 className="text-3xl sm:text-4xl lg:text-[48px] font-extrabold text-white leading-[1.14] tracking-tight">
-              Building a healthier future across Sub-Saharan Africa.
-            </h1>
-          </HeaderTextReveal>
+          {/* Sliding Content Area Only (Who We Are -> What We Do -> Where We Are) */}
+          <div className="min-h-[205px] sm:min-h-[190px] flex flex-col justify-start overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide.id}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.18}
+                onDragEnd={handleDragEnd}
+                initial={{ opacity: 0, x: 24 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -24 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="cursor-grab active:cursor-grabbing select-none"
+              >
+                <h1 className="text-2xl sm:text-3xl lg:text-[42px] font-extrabold text-white leading-[1.12] tracking-tight mb-2.5">
+                  {currentSlide.title}
+                </h1>
+                <div className="space-y-2 text-[14.5px] sm:text-[15.5px] lg:text-[16px] text-white/92 leading-[1.48] font-normal">
+                  {currentSlide.paragraphs.map((paragraph, pIdx) => (
+                    <p key={pIdx}>{paragraph}</p>
+                  ))}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-          {/* Subtitle verbatim from approved copy */}
-          <SectionReveal direction="up" delay={0.25}>
-            <p className="text-base sm:text-lg lg:text-[18.5px] text-white/90 leading-[1.6] font-normal max-w-xl">
-              Sudabelt Medical is an integrated healthcare solutions provider committed to delivering world-class medical technologies, turnkey infrastructure, and dependable biomedical support across Nigeria.
-            </p>
-          </SectionReveal>
+          {/* Progress Dots */}
+          <div className="mt-4 flex items-center gap-2">
+            {ABOUT_HERO_SLIDES.map((slide, idx) => (
+              <button
+                key={slide.id}
+                type="button"
+                onClick={() => setActiveSlide(idx)}
+                aria-label={`Go to ${slide.title}`}
+                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                  idx === activeSlide ? 'w-8 bg-sudabelt-blue' : 'w-2 bg-white/40 hover:bg-white/70'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 

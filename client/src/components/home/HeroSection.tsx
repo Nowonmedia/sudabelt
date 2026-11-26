@@ -63,10 +63,12 @@ const HeroSection: React.FC = () => {
           ref={videoRef}
           src={MILANOTE_HERO_VIDEO_URL}
           poster={MILANOTE_HERO_POSTER_URL}
+          preload="metadata"
           autoPlay
           loop
           muted
           playsInline
+          aria-hidden="true"
           className="w-full h-full object-cover object-center opacity-85"
         />
         <div
@@ -131,6 +133,8 @@ const HeroSection: React.FC = () => {
                 <img
                   src={MILANOTE_HERO_POSTER_URL}
                   alt="Sudabelt Landmark Video Preview"
+                  fetchPriority="high"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
                 <span className="absolute inset-0 bg-sudabelt-navy/45 flex items-center justify-center">

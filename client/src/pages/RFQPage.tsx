@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router'
 import {
   Check,
@@ -13,6 +13,7 @@ import {
 import { FaWhatsapp } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { useQuote } from '../context/QuoteContext'
+import { API_BASE_URL } from '../api/api'
 import FormCaptcha from '../components/common/FormCaptcha'
 import { getEmailValidationError } from '../utils/validation'
 
@@ -246,22 +247,56 @@ const QUICK_CATALOG: QuickCatalogItem[] = [
   },
 ]
 
+const RFQ_DRAFT_STORAGE_KEY = 'sudabelt_rfq_form_draft_v1'
+
+const loadRfqDraft = () => {
+  try {
+    const raw = localStorage.getItem(RFQ_DRAFT_STORAGE_KEY)
+    return raw ? JSON.parse(raw) : {}
+  } catch {
+    return {}
+  }
+}
+
 const RFQPage: React.FC = () => {
   const { selectedItems, addItem, removeItem, updateQuantity, clearTray } = useQuote()
+  const initialDraft = React.useMemo(loadRfqDraft, [])
 
-  // Form State
-  const [facilityType, setFacilityType] = useState<string>('Teaching hospital')
-  const [stateLocation, setStateLocation] = useState<string>('')
-  const [cityTown, setCityTown] = useState<string>('')
-  const [timeline, setTimeline] = useState<string>('Immediate')
+  // Form State (persisted across page navigation)
+  const [facilityType, setFacilityType] = useState<string>(initialDraft.facilityType ?? 'Teaching hospital')
+  const [stateLocation, setStateLocation] = useState<string>(initialDraft.stateLocation ?? '')
+  const [cityTown, setCityTown] = useState<string>(initialDraft.cityTown ?? '')
+  const [timeline, setTimeline] = useState<string>(initialDraft.timeline ?? 'Immediate')
 
   // Contact State
-  const [fullName, setFullName] = useState<string>('')
-  const [role, setRole] = useState<string>('')
-  const [institution, setInstitution] = useState<string>('')
-  const [workEmail, setWorkEmail] = useState<string>('')
-  const [phone, setPhone] = useState<string>('+234')
-  const [notes, setNotes] = useState<string>('')
+  const [fullName, setFullName] = useState<string>(initialDraft.fullName ?? '')
+  const [role, setRole] = useState<string>(initialDraft.role ?? '')
+  const [institution, setInstitution] = useState<string>(initialDraft.institution ?? '')
+  const [workEmail, setWorkEmail] = useState<string>(initialDraft.workEmail ?? '')
+  const [phone, setPhone] = useState<string>(initialDraft.phone ?? '+234')
+  const [notes, setNotes] = useState<string>(initialDraft.notes ?? '')
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        RFQ_DRAFT_STORAGE_KEY,
+        JSON.stringify({
+          facilityType,
+          stateLocation,
+          cityTown,
+          timeline,
+          fullName,
+          role,
+          institution,
+          workEmail,
+          phone,
+          notes,
+        })
+      )
+    } catch {
+      // Ignore storage quota errors
+    }
+  }, [facilityType, stateLocation, cityTown, timeline, fullName, role, institution, workEmail, phone, notes])
 
   // UI state
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
@@ -343,7 +378,7 @@ const RFQPage: React.FC = () => {
         additionalNotes: notes.trim() || undefined,
       }
 
-      const res = await fetch('/api/v1/forms/rfq', {
+      const res = await fetch(`${API_BASE_URL}/forms/rfq`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -358,8 +393,27 @@ const RFQPage: React.FC = () => {
       }
 
       const refId = data.referenceId || `SBM-RFQ-${Date.now().toString().slice(-6)}`
+      const waUrl = data.whatsappUrl || buildWhatsAppLink(refId)
       setSubmittedRef(refId)
-      setWhatsappUrlFromApi(data.whatsappUrl || buildWhatsAppLink(refId))
+      setWhatsappUrlFromApi(waUrl)
+
+      // Clear form state, saved draft, and RFQ tray after successful submission
+      setFacilityType('Teaching hospital')
+      setStateLocation('')
+      setCityTown('')
+      setTimeline('Immediate')
+      setFullName('')
+      setRole('')
+      setInstitution('')
+      setWorkEmail('')
+      setPhone('+234')
+      setNotes('')
+      clearTray()
+      try {
+        localStorage.removeItem(RFQ_DRAFT_STORAGE_KEY)
+      } catch {
+        // Ignore storage errors
+      }
 
       toast.success(`Quote request ${refId} submitted successfully! Our biomedical desk is preparing your proposal.`)
     } catch (err: unknown) {
@@ -398,54 +452,66 @@ const RFQPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Step Progress Bar */}
-        <div className="mb-10 bg-white border border-slate-200 rounded-lg p-4 sm:p-5 shadow-xs">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {/* Step 1 */}
-            <div className="relative">
-              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-blue-600">
-                STEP 1
-              </span>
-              <span className="block text-xs sm:text-sm font-bold text-[#07172B] mt-0.5">
-                Scope
-              </span>
-              <div className="h-1 bg-blue-600 rounded-full mt-2.5 w-full" />
-            </div>
+        {/* Dynamic 4-Step Progress Bar */}
+        {(() => {
+          const step1Done = selectedItems.length > 0
+          const step2Done = Boolean(facilityType)
+          const step3Done = Boolean(stateLocation && timeline)
+          const step4Done = Boolean(
+            fullName.trim() && workEmail.trim() && phone.replace(/[^0-9]/g, '').length >= 8
+          )
+          const steps = [
+            { num: 1, title: 'Scope', done: step1Done },
+            { num: 2, title: 'Facility Profile', done: step2Done },
+            { num: 3, title: 'Location & Timeline', done: step3Done },
+            { num: 4, title: 'Contact & dispatch', done: step4Done },
+          ]
+          const firstIncompleteIdx = steps.findIndex((s) => !s.done)
+          const activeStepNum = firstIncompleteIdx === -1 ? 4 : steps[firstIncompleteIdx].num
 
-            {/* Step 2 */}
-            <div className="relative">
-              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                STEP 2
-              </span>
-              <span className="block text-xs sm:text-sm font-bold text-slate-700 mt-0.5">
-                Facility Profile
-              </span>
-              <div className="h-1 bg-slate-200 rounded-full mt-2.5 w-full" />
+          return (
+            <div className="mb-10 bg-white border border-slate-200 rounded-lg p-4 sm:p-5 shadow-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {steps.map((step) => {
+                  const isCompleted = step.done
+                  const isActive = !isCompleted && step.num === activeStepNum
+                  return (
+                    <div key={step.num} className="relative">
+                      <span
+                        className={`flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider ${
+                          isCompleted
+                            ? 'text-sudabelt-green'
+                            : isActive
+                              ? 'text-blue-600'
+                              : 'text-slate-500'
+                        }`}
+                      >
+                        <span>STEP {step.num}</span>
+                        {isCompleted && <Check className="w-3 h-3 stroke-3" />}
+                      </span>
+                      <span
+                        className={`block text-xs sm:text-sm font-bold mt-0.5 ${
+                          isCompleted || isActive ? 'text-[#07172B]' : 'text-slate-700'
+                        }`}
+                      >
+                        {step.title}
+                      </span>
+                      <div
+                        className={`h-1 rounded-full mt-2.5 w-full transition-colors duration-300 ${
+                          isCompleted
+                            ? 'bg-sudabelt-green'
+                            : isActive
+                              ? 'bg-blue-600'
+                              : 'bg-slate-200'
+                        }`}
+                      />
+                    </div>
+                  )
+                })}
+              </div>
             </div>
-
-            {/* Step 3 */}
-            <div className="relative">
-              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                STEP 3
-              </span>
-              <span className="block text-xs sm:text-sm font-bold text-slate-700 mt-0.5">
-                Location &amp; Timeline
-              </span>
-              <div className="h-1 bg-slate-200 rounded-full mt-2.5 w-full" />
-            </div>
-
-            {/* Step 4 */}
-            <div className="relative">
-              <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                STEP 4
-              </span>
-              <span className="block text-xs sm:text-sm font-bold text-slate-700 mt-0.5">
-                Contact &amp; dispatch
-              </span>
-              <div className="h-1 bg-slate-200 rounded-full mt-2.5 w-full" />
-            </div>
-          </div>
-        </div>
+          )
+        })()}
 
         {/* Main Grid: Form Left (col-span-8), Summary Right (col-span-4) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

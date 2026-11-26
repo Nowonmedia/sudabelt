@@ -6,6 +6,14 @@ import { AppError } from '../middleware/errorHandler';
 
 const router = Router();
 
+// Add short edge/browser caching to read-only public catalog GET endpoints to reduce repeat API latency
+router.use((req: Request, res: Response, next: NextFunction) => {
+  if (req.method === 'GET' && !req.path.endsWith('/datasheet') && !req.path.endsWith('/pdf')) {
+    res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+  }
+  next();
+});
+
 /**
  * GET /api/v1/products
  * Returns all published products with category, brand, consumable type, and search filters.

@@ -78,7 +78,8 @@ const ProductDetailPage: React.FC = () => {
   const { category, slug } = useParams<{ category: string; slug: string }>()
   const { data, isLoading, isError } = useProductDetail(slug || '')
   const { data: catalogData } = useProducts()
-  const { addItem, isInTray } = useQuote()
+  const { selectedItems, addItem, updateQuantity, isInTray } = useQuote()
+  const [consumableQtys, setConsumableQtys] = useState<Record<string, number>>({})
 
   const product = data?.data
 
@@ -1046,19 +1047,67 @@ const ProductDetailPage: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Add to Quote Button */}
-                    <div className="mt-5 pt-2 px-1">
-                      <button
-                        type="button"
-                        onClick={() => handleAddSingleToQuote(item, 1)}
-                        className={`w-full h-10 px-3 rounded-control font-extrabold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center text-center ${
-                          inItemTray
-                            ? 'bg-sudabelt-green text-white'
-                            : 'bg-sudabelt-blue hover:bg-sudabelt-navy text-white'
-                        }`}
-                      >
-                        {inItemTray ? 'IN QUOTE TRAY' : '+ ADD TO QUOTE'}
-                      </button>
+                    {/* Quantity Stepper + Add to Quote Button */}
+                    <div className="mt-5 pt-2 px-1 flex items-center gap-2">
+                      {(() => {
+                        const itemId = item._id || item.slug
+                        const trayEntry = selectedItems.find((i) => i.id === itemId)
+                        const currentQty = trayEntry ? trayEntry.quantity : consumableQtys[itemId] || 1
+                        return (
+                          <>
+                            <div className="inline-flex items-center h-10 rounded-control border border-sudabelt-border bg-white overflow-hidden shrink-0">
+                              <button
+                                type="button"
+                                aria-label="Decrease quantity"
+                                onClick={() => {
+                                  if (trayEntry) {
+                                    updateQuantity(itemId, trayEntry.quantity - 1)
+                                  } else {
+                                    setConsumableQtys((prev) => ({
+                                      ...prev,
+                                      [itemId]: Math.max(1, (prev[itemId] || 1) - 1),
+                                    }))
+                                  }
+                                }}
+                                className="w-8 h-full flex items-center justify-center text-sudabelt-navy hover:bg-sudabelt-surface transition-colors cursor-pointer"
+                              >
+                                <Minus className="w-3.5 h-3.5" />
+                              </button>
+                              <span className="w-7 text-center text-xs font-extrabold text-sudabelt-navy select-none">
+                                {currentQty}
+                              </span>
+                              <button
+                                type="button"
+                                aria-label="Increase quantity"
+                                onClick={() => {
+                                  if (trayEntry) {
+                                    updateQuantity(itemId, trayEntry.quantity + 1)
+                                  } else {
+                                    setConsumableQtys((prev) => ({
+                                      ...prev,
+                                      [itemId]: (prev[itemId] || 1) + 1,
+                                    }))
+                                  }
+                                }}
+                                className="w-8 h-full flex items-center justify-center text-sudabelt-navy hover:bg-sudabelt-surface transition-colors cursor-pointer"
+                              >
+                                <Plus className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleAddSingleToQuote(item, currentQty)}
+                              className={`flex-1 h-10 px-3 rounded-control font-extrabold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center text-center ${
+                                inItemTray
+                                  ? 'bg-sudabelt-green text-white'
+                                  : 'bg-sudabelt-blue hover:bg-sudabelt-green text-white'
+                              }`}
+                            >
+                              {inItemTray ? 'IN TRAY' : '+ ADD'}
+                            </button>
+                          </>
+                        )
+                      })()}
                     </div>
                   </div>
                 )

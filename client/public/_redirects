@@ -1,0 +1,124 @@
+# =============================================================================
+# Sudabelt Medical - Webflow-to-React 301 Permanent Redirect Matrix
+# Preserves 100% of legacy sudabelt.com search equity on cutover
+# =============================================================================
+
+# Core Legacy Pages
+/about-us                               /about                                                                      301
+/contact-us                             /contact                                                                    301
+/career                                 /careers                                                                    301
+/services                               /services/turnkey                                                           301
+/media                                  /projects                                                                   301
+/product                                /products                                                                   301
+/our-products                           /products                                                                   301
+/our-products/*                         /products                                                                   301
+/after-sale-support                     /support/after-sales                                                        301
+/medical-training                       /training-hub                                                               301
+/term-of-use                            /terms-of-use                                                               301
+/site-map                               /sitemap                                                                    301
+
+# Legacy Blog Taxonomies & Removed Template Post
+/categories                             /blog                                                                       301
+/categories/*                           /blog                                                                       301
+/tags/*                                 /blog                                                                       301
+/authors/*                              /blog                                                                       301
+/blog/from-top-down                     /blog                                                                       301
+
+# Exact Legacy Product Pages -> New Product Detail Routes
+/logic-e10                              /products/imaging-and-life-care/ge-logiq-e10-ultrasound-system              301
+/vivid-e95                              /products/imaging-and-life-care/ge-vivid-e95                                301
+/carescape                              /products/imaging-and-life-care/ge-carescape-b650-patient-monitor           301
+/spectra-optia                          /products/blood-management-cell-technologies/terumo-spectra-optia-apheresis-system 301
+/trima                                  /products/blood-management-cell-technologies/terumo-trima-accel-automated-blood-collection 301
+/reveos                                 /products/blood-management-cell-technologies/terumo-reveos-automated-blood-processing 301
+/mirasol                                /products/blood-management-cell-technologies/terumo-mirasol-prt-system      301
+/baxter-ak98                            /products/renal-and-critical-care/baxter-ak98                               301
+/mr850-heated-humidifier                /products/respiratory-and-neonatal-care/fp-mr850-heated-humidifier          301
+/airvo-tm-2-nasal-high-flow-system      /products/respiratory-and-neonatal-care/fp-airvo-2-high-flow-system         301
+
+# Legacy Category & Device Pages -> New Filtered Portfolio Categories
+/ultrasound                             /products?category=imaging-and-life-care                                    301
+/imaging                                /products?category=imaging-and-life-care                                    301
+/monitoring                             /products?category=imaging-and-life-care                                    301
+/maternal                               /products?category=imaging-and-life-care                                    301
+/diagnostic                             /products?category=imaging-and-life-care                                    301
+/cardiology                             /products?category=imaging-and-life-care                                    301
+/anesthesia                             /products?category=imaging-and-life-care                                    301
+/b105                                   /products?category=imaging-and-life-care                                    301
+/g-incubator                            /products?category=imaging-and-life-care                                    301
+/lullaby                                /products?category=imaging-and-life-care                                    301
+/lullaby-led                            /products?category=imaging-and-life-care                                    301
+/mac-600                                /products?category=imaging-and-life-care                                    301
+/mac-800                                /products?category=imaging-and-life-care                                    301
+/mac-2000                               /products?category=imaging-and-life-care                                    301
+/cardioday-seer-1000                    /products?category=imaging-and-life-care                                    301
+/cardiosoft-t2100                       /products?category=imaging-and-life-care                                    301
+/case-t2100                             /products?category=imaging-and-life-care                                    301
+/carestation-30                         /products?category=imaging-and-life-care                                    301
+/carestation-650                        /products?category=imaging-and-life-care                                    301
+/9100cnxt                               /products?category=imaging-and-life-care                                    301
+/carescape-r860                         /products?category=imaging-and-life-care                                    301
+/siaretron-4000-ventilator              /products?category=imaging-and-life-care                                    301
+/versana-premier                        /products?category=imaging-and-life-care                                    301
+/versana-balance                        /products?category=imaging-and-life-care                                    301
+/versana-active                         /products?category=imaging-and-life-care                                    301
+/versana-essential                      /products?category=imaging-and-life-care                                    301
+/logiq-v2                               /products?category=imaging-and-life-care                                    301
+/logiq-f8                               /products?category=imaging-and-life-care                                    301
+/logiq-p7                               /products?category=imaging-and-life-care                                    301
+/logiq-p9                               /products?category=imaging-and-life-care                                    301
+/voluson-e10                            /products?category=imaging-and-life-care                                    301
+/voluson-p8                             /products?category=imaging-and-life-care                                    301
+/voluson-s8                             /products?category=imaging-and-life-care                                    301
+/voluson-s10                            /products?category=imaging-and-life-care                                    301
+/vivid-t8                               /products?category=imaging-and-life-care                                    301
+/vivid-t9                               /products?category=imaging-and-life-care                                    301
+/vivid-s70                              /products?category=imaging-and-life-care                                    301
+/v-scan-air                             /products?category=imaging-and-life-care                                    301
+/optima-tm-igs-330                      /products?category=imaging-and-life-care                                    301
+/optima-tm-igs-530                      /products?category=imaging-and-life-care                                    301
+/optima-tm-igs-730                      /products?category=imaging-and-life-care                                    301
+/signa-tm-creator                       /products?category=imaging-and-life-care                                    301
+/signa-tm-explorer-air                  /products?category=imaging-and-life-care                                    301
+/signa-tm-prime                         /products?category=imaging-and-life-care                                    301
+/revolution-tm-acts                     /products?category=imaging-and-life-care                                    301
+/revolution-act                         /products?category=imaging-and-life-care                                    301
+/revolution-tm-evo-gen-3                /products?category=imaging-and-life-care                                    301
+/revolution-tm-maxima                   /products?category=imaging-and-life-care                                    301
+
+/renal                                  /products?category=renal-and-critical-care                                  301
+/baxter-consumables                     /products?category=renal-and-critical-care                                  301
+
+/blood-separation                       /products?category=blood-management-cell-technologies                       301
+/terumo-consumables                     /products?category=blood-management-cell-technologies                       301
+
+/laboratory                             /products?category=laboratory-and-diagnostics                               301
+/abbott-architect-c4000                 /products?category=laboratory-and-diagnostics                               301
+/abbott-architect-i1000                 /products?category=laboratory-and-diagnostics                               301
+/abbott-emerald-22-open-tube-ot         /products?category=laboratory-and-diagnostics                               301
+/immunoassay-consumables                /products?category=laboratory-and-diagnostics                               301
+/immunoassay-calibrators                /products?category=laboratory-and-diagnostics                               301
+/immunoassay-reagent                    /products?category=laboratory-and-diagnostics                               301
+/clinical-chemistry-reagents            /products?category=laboratory-and-diagnostics                               301
+/clinical-chemistry-consumables         /products?category=laboratory-and-diagnostics                               301
+/clinical-chemistry-calibrators-and-controls /products?category=laboratory-and-diagnostics                          301
+
+/respiratory                            /products?category=respiratory-and-neonatal-care                            301
+/humidifier                             /products?category=respiratory-and-neonatal-care                            301
+/breathing-circuits                     /products?category=respiratory-and-neonatal-care                            301
+/chambers                               /products?category=respiratory-and-neonatal-care                            301
+/bubble-cpap-system                     /products?category=respiratory-and-neonatal-care                            301
+/f-p-850-system-for-optiflow-tm         /products?category=respiratory-and-neonatal-care                            301
+/f-p-850-breathing-circuit-kits         /products?category=respiratory-and-neonatal-care                            301
+/inspiratory-expiratory-breathing       /products?category=respiratory-and-neonatal-care                            301
+/optiflow-tm-junior-breathing-circuit   /products?category=respiratory-and-neonatal-care                            301
+/rt302-kit                              /products?category=respiratory-and-neonatal-care                            301
+/rt332-kit                              /products?category=respiratory-and-neonatal-care                            301
+/f-p-visairo-tm-rt075                   /products?category=respiratory-and-neonatal-care                            301
+/f-p-visairo-tm-rt076                   /products?category=respiratory-and-neonatal-care                            301
+/f-p-visairo-tm-rt077                   /products?category=respiratory-and-neonatal-care                            301
+/freemotion-tm-rt040                    /products?category=respiratory-and-neonatal-care                            301
+/freemotion-tm-rt041                    /products?category=respiratory-and-neonatal-care                            301
+
+# SPA Fallback (Must stay last)
+/*                                      /index.html                                                                 200

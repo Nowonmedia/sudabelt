@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react'
 import { Link, useSearchParams } from 'react-router'
-import { Search, Check, SlidersHorizontal, X, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, Check, SlidersHorizontal, X, ChevronDown, ChevronLeft, ChevronRight, Minus, Plus } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useProducts, type ApiProduct } from '../api/api'
 import { useQuote } from '../context/QuoteContext'
@@ -99,7 +99,8 @@ function getProductImage(product: ApiProduct, width = 480): string {
 
 const ProductsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const { addItem, isInTray } = useQuote()
+  const { selectedItems, addItem, updateQuantity, isInTray } = useQuote()
+  const [consumableQtys, setConsumableQtys] = useState<Record<string, number>>({})
 
   const initialCatParam = searchParams.get('category') || 'all'
   const mappedInitialCat =
@@ -261,7 +262,7 @@ const ProductsPage: React.FC = () => {
     [filteredProducts, visibleCount]
   )
 
-  const handleAddToQuote = (product: ApiProduct) => {
+  const handleAddToQuote = (product: ApiProduct, qty = 1) => {
     addItem({
       id: product._id || product.slug,
       slug: product.slug,
@@ -270,8 +271,9 @@ const ProductsPage: React.FC = () => {
       category: product.categoryLabel || product.category,
       isConsumable: product.isConsumable,
       imageUrl: getProductImage(product),
+      quantity: qty,
     })
-    toast.success(`Added "${product.name}" to your RFQ Tray`, {
+    toast.success(`Added "${product.name}" (Qty: ${qty}) to your RFQ Tray`, {
       position: 'bottom-right',
       autoClose: 2500,
     })
@@ -718,18 +720,66 @@ const ProductsPage: React.FC = () => {
                             </div>
                           </div>
 
-                          <div className="mt-4 pt-2 px-1">
-                            <button
-                              type="button"
-                              onClick={() => handleAddToQuote(product)}
-                              className={`w-full h-10 px-3 rounded-control font-extrabold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center text-center ${
-                                inTray
-                                  ? 'bg-sudabelt-green text-white'
-                                  : 'bg-sudabelt-blue hover:bg-sudabelt-green text-white'
-                              }`}
-                            >
-                              {inTray ? 'IN QUOTE TRAY' : 'ADD TO QUOTE'}
-                            </button>
+                          <div className="mt-4 pt-2 px-1 flex items-center gap-2">
+                            {(() => {
+                              const itemId = product._id || product.slug
+                              const trayEntry = selectedItems.find((i) => i.id === itemId)
+                              const currentQty = trayEntry ? trayEntry.quantity : consumableQtys[itemId] || 1
+                              return (
+                                <>
+                                  <div className="inline-flex items-center h-10 rounded-control border border-sudabelt-border bg-white overflow-hidden shrink-0">
+                                    <button
+                                      type="button"
+                                      aria-label="Decrease quantity"
+                                      onClick={() => {
+                                        if (trayEntry) {
+                                          updateQuantity(itemId, trayEntry.quantity - 1)
+                                        } else {
+                                          setConsumableQtys((prev) => ({
+                                            ...prev,
+                                            [itemId]: Math.max(1, (prev[itemId] || 1) - 1),
+                                          }))
+                                        }
+                                      }}
+                                      className="w-8 h-full flex items-center justify-center text-sudabelt-navy hover:bg-sudabelt-surface transition-colors cursor-pointer"
+                                    >
+                                      <Minus className="w-3.5 h-3.5" />
+                                    </button>
+                                    <span className="w-7 text-center text-xs font-extrabold text-sudabelt-navy select-none">
+                                      {currentQty}
+                                    </span>
+                                    <button
+                                      type="button"
+                                      aria-label="Increase quantity"
+                                      onClick={() => {
+                                        if (trayEntry) {
+                                          updateQuantity(itemId, trayEntry.quantity + 1)
+                                        } else {
+                                          setConsumableQtys((prev) => ({
+                                            ...prev,
+                                            [itemId]: (prev[itemId] || 1) + 1,
+                                          }))
+                                        }
+                                      }}
+                                      className="w-8 h-full flex items-center justify-center text-sudabelt-navy hover:bg-sudabelt-surface transition-colors cursor-pointer"
+                                    >
+                                      <Plus className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleAddToQuote(product, currentQty)}
+                                    className={`flex-1 h-10 px-3 rounded-control font-extrabold text-[11px] uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center text-center ${
+                                      inTray
+                                        ? 'bg-sudabelt-green text-white'
+                                        : 'bg-sudabelt-blue hover:bg-sudabelt-green text-white'
+                                    }`}
+                                  >
+                                    {inTray ? 'IN TRAY' : 'ADD TO QUOTE'}
+                                  </button>
+                                </>
+                              )
+                            })()}
                           </div>
                         </article>
                       )
