@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { ContactHeroSection } from '../components/contact/ContactHeroSection'
 import { ContactFormAndInfoSection } from '../components/contact/ContactFormAndInfoSection'
 import { ContactBranchesSection } from '../components/contact/ContactBranchesSection'
+import CompanyProfileCtaBar from '../components/about/CompanyProfileCtaBar'
 
 const ContactPage: React.FC = () => {
   useEffect(() => {
@@ -19,6 +20,9 @@ const ContactPage: React.FC = () => {
 
       {/* 3. Regional Branches: Lagos, Abuja, Kano */}
       <ContactBranchesSection />
+
+      {/* 4. Company Profile Download Section */}
+      <CompanyProfileCtaBar />
     </div>
   )
 }

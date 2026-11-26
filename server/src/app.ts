@@ -29,8 +29,8 @@ app.use(
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Static uploads serving
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Static uploads serving with 7-day browser cache
+app.use('/uploads', express.static(path.join(__dirname, '../uploads'), { maxAge: '7d' }));
 
 // 3. Health Check Endpoint
 app.get('/api/v1/health', (_req: Request, res: Response) => {

@@ -31,6 +31,27 @@ const getContactEmail = (): string =>
 const getFrontendUrl = (): string =>
   process.env.FRONTEND_URL || 'https://www.sudabelt.com';
 
+const formatSubmissionTimestamp = (): string =>
+  new Date().toLocaleString('en-GB', {
+    timeZone: 'Africa/Lagos',
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }) + ' WAT';
+
+const buildWebsiteOriginNotice = (params: {
+  formName: string;
+  pagePath: string;
+  actionSummary: string;
+}): string => `
+  <div style="background-color:#EFF6FF;border:1px solid #BFDBFE;border-left:4px solid #0A6FC0;padding:12px 16px;border-radius:5.5px;margin-bottom:20px;font-size:13px;line-height:1.5;color:#1E3A8A;">
+    <strong style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:#001142;margin-bottom:4px;">
+      Official Website Submission • ${escapeHtml(params.formName)}
+    </strong>
+    This message was automatically generated from the <strong>Sudabelt Medical website</strong> (<a href="${getFrontendUrl()}${escapeHtml(params.pagePath)}" style="color:#0A6FC0;font-weight:600;text-decoration:none;">${escapeHtml(getFrontendUrl().replace(/^https?:\/\//, ''))}${escapeHtml(params.pagePath)}</a>) on <strong>${escapeHtml(formatSubmissionTimestamp())}</strong>.<br />
+    <span>${escapeHtml(params.actionSummary)} You can reply directly to this email to respond to the sender.</span>
+  </div>
+`;
+
 const escapeHtml = (unsafe: string | undefined | null): string => {
   if (!unsafe) return '';
   return String(unsafe)
@@ -210,7 +231,12 @@ export const sendRFQConfirmation = async (
 
   // B. Sales Desk Alert Email
   const salesBody = `
-    <p style="margin-top:0;">A new institutional RFQ has been submitted via the Sudabelt Medical portal.</p>
+    ${buildWebsiteOriginNotice({
+      formName: 'Institutional Request for Quote (RFQ) Form',
+      pagePath: '/rfq',
+      actionSummary: `A prospective client from ${rfqData.facilityName} (${rfqData.location.city}, ${rfqData.location.state}) submitted an equipment/consumables quotation request covering ${rfqData.selectedItems.length} item(s).`,
+    })}
+    <p style="margin-top:0;">Please review the facility profile, urgency level, and requested specification list below so the Sales &amp; Procurement team can prepare a scoped quotation.</p>
     <table width="100%" cellspacing="0" cellpadding="6" style="background-color:#F8FAFC;border:1px solid #E2E8F0;border-radius:5.5px;margin-bottom:20px;font-size:14px;">
       <tr><td><strong>Reference ID:</strong></td><td style="font-family:monospace;font-weight:700;color:#006837;">${escapeHtml(rfqData.referenceId)}</td></tr>
       <tr><td><strong>Facility:</strong></td><td>${escapeHtml(rfqData.facilityName)} (${escapeHtml(rfqData.facilityType)})</td></tr>
@@ -235,8 +261,8 @@ export const sendRFQConfirmation = async (
   `;
 
   const salesHtml = wrapSudabeltEmailLayout({
-    badgeText: 'New Sales Pipeline Lead',
-    headerTitle: `New RFQ: ${rfqData.facilityName}`,
+    badgeText: 'Sudabelt Website • New RFQ Submission',
+    headerTitle: `New Website RFQ: ${rfqData.facilityName}`,
     headerSubtitle: `Ref: ${rfqData.referenceId} • Urgency: ${rfqData.urgency}`,
     bodyHtml: salesBody,
   });
@@ -249,7 +275,7 @@ export const sendRFQConfirmation = async (
     }),
     dispatchEmail({
       to: getSalesEmail(),
-      subject: `[NEW RFQ ${rfqData.referenceId}] ${rfqData.facilityName} (${rfqData.location.state})`,
+      subject: `[Sudabelt Website • NEW RFQ ${rfqData.referenceId}] ${rfqData.facilityName} (${rfqData.location.state})`,
       html: salesHtml,
       replyTo: rfqData.contact.email,
     }),
@@ -280,6 +306,11 @@ export const sendSupportTicketAlert = async (
   const urgencyBorder = isCritical ? '#E30000' : '#006837';
 
   const bodyHtml = `
+    ${buildWebsiteOriginNotice({
+      formName: 'After-Sales & Biomedical Support Form',
+      pagePath: '/support',
+      actionSummary: `${ticketData.contactName} from ${ticketData.hospitalName} logged a ${ticketData.issueType.replace(/_/g, ' ')} request for ${ticketData.equipmentModel} (S/N: ${ticketData.serialNumber}).`,
+    })}
     <div style="background-color:${urgencyBannerBg};border-left:4px solid ${urgencyBorder};padding:14px 16px;border-radius:5.5px;margin-bottom:20px;">
       <strong style="color:${urgencyBorder};text-transform:uppercase;font-size:12px;letter-spacing:0.06em;">
         Urgency Level: ${escapeHtml(ticketData.urgencyLevel.replace(/_/g, ' '))}
@@ -307,7 +338,7 @@ export const sendSupportTicketAlert = async (
   `;
 
   const html = wrapSudabeltEmailLayout({
-    badgeText: isCritical ? 'CRITICAL BIOMEDICAL ALERT' : 'Biomedical Dispatch Ticket',
+    badgeText: isCritical ? 'Sudabelt Website • CRITICAL BIOMEDICAL ALERT' : 'Sudabelt Website • Biomedical Support Ticket',
     headerTitle: `${ticketData.ticketId}: ${ticketData.equipmentModel}`,
     headerSubtitle: `${ticketData.hospitalName} • S/N: ${ticketData.serialNumber}`,
     isUrgentCritical: isCritical,
@@ -317,7 +348,7 @@ export const sendSupportTicketAlert = async (
   const emailTasks: Promise<unknown>[] = [
     dispatchEmail({
       to: getBiomedicalEmail(),
-      subject: `${isCritical ? '[URGENT CRITICAL] ' : ''}[${ticketData.ticketId}] ${ticketData.hospitalName} — ${ticketData.equipmentModel} (${ticketData.serialNumber})`,
+      subject: `[Sudabelt Website • ${isCritical ? 'URGENT CRITICAL ' : ''}SUPPORT ${ticketData.ticketId}] ${ticketData.hospitalName} - ${ticketData.equipmentModel}`,
       html,
       replyTo: ticketData.email,
     }),
@@ -375,7 +406,12 @@ export const sendTrainingBookingAlert = async (
   >
 ): Promise<void> => {
   const bodyHtml = `
-    <p style="margin-top:0;">A new institutional clinical or biomedical training cohort request has been submitted.</p>
+    ${buildWebsiteOriginNotice({
+      formName: 'Clinical & Biomedical Training Enquiry Form',
+      pagePath: '/training-hub',
+      actionSummary: `${trainingData.contactName} (${trainingData.contactRole}) at ${trainingData.institutionName} submitted a training inquiry for "${trainingData.courseTrack}" (${trainingData.numberOfTrainees} trainee(s), ${trainingData.targetHospitalState}).`,
+    })}
+    <p style="margin-top:0;">Please review the cohort details below and follow up with the institution coordinator regarding training schedule and curriculum availability.</p>
     <table width="100%" cellspacing="0" cellpadding="6" style="background-color:#F8FAFC;border:1px solid #E2E8F0;border-radius:5.5px;margin-bottom:20px;font-size:14px;">
       <tr><td><strong>Registration ID:</strong></td><td style="font-family:monospace;font-weight:700;color:#006837;">${escapeHtml(trainingData.registrationId)}</td></tr>
       <tr><td><strong>Institution:</strong></td><td><strong>${escapeHtml(trainingData.institutionName)}</strong></td></tr>
@@ -398,7 +434,7 @@ export const sendTrainingBookingAlert = async (
   `;
 
   const html = wrapSudabeltEmailLayout({
-    badgeText: 'Clinical Training Hub',
+    badgeText: 'Sudabelt Website • Training Enquiry',
     headerTitle: `Training Cohort Request: ${trainingData.institutionName}`,
     headerSubtitle: `${trainingData.courseTrack} (${trainingData.numberOfTrainees} Trainees)`,
     bodyHtml,
@@ -426,7 +462,7 @@ export const sendTrainingBookingAlert = async (
   await Promise.allSettled([
     dispatchEmail({
       to: getTrainingEmail(),
-      subject: `[TRAINING ${trainingData.registrationId}] ${trainingData.institutionName} — ${trainingData.courseTrack}`,
+      subject: `[Sudabelt Website • TRAINING ${trainingData.registrationId}] ${trainingData.institutionName} - ${trainingData.courseTrack}`,
       html,
       replyTo: trainingData.email,
     }),
@@ -519,7 +555,12 @@ export const sendContactInquiryAlert = async (
   const departmentLabel = inquiryData.department.replace(/_/g, ' ').toUpperCase();
 
   const bodyHtml = `
-    <p style="margin-top:0;">A new contact inquiry has been routed to the <strong>${escapeHtml(departmentLabel)}</strong> desk.</p>
+    ${buildWebsiteOriginNotice({
+      formName: 'Website Contact Us Form',
+      pagePath: '/contact',
+      actionSummary: `${inquiryData.name}${inquiryData.facilityName ? ` (${inquiryData.facilityName})` : ''} submitted a general website inquiry routed to the ${departmentLabel} desk.`,
+    })}
+    <p style="margin-top:0;">Please review the sender details and message below and respond directly to assist the visitor.</p>
     <table width="100%" cellspacing="0" cellpadding="6" style="background-color:#F8FAFC;border:1px solid #E2E8F0;border-radius:5.5px;margin-bottom:20px;font-size:14px;">
       <tr><td><strong>Sender Name:</strong></td><td><strong>${escapeHtml(inquiryData.name)}</strong></td></tr>
       ${
@@ -536,8 +577,8 @@ export const sendContactInquiryAlert = async (
   `;
 
   const html = wrapSudabeltEmailLayout({
-    badgeText: `Contact Desk • ${departmentLabel}`,
-    headerTitle: `New Inquiry from ${inquiryData.name}`,
+    badgeText: `Sudabelt Website • Contact Desk (${departmentLabel})`,
+    headerTitle: `New Website Inquiry from ${inquiryData.name}`,
     headerSubtitle: inquiryData.facilityName || inquiryData.email,
     bodyHtml,
   });
@@ -562,7 +603,7 @@ export const sendContactInquiryAlert = async (
   await Promise.allSettled([
     dispatchEmail({
       to: targetEmail,
-      subject: `[INQUIRY - ${departmentLabel}] ${inquiryData.name}${inquiryData.facilityName ? ` (${inquiryData.facilityName})` : ''}`,
+      subject: `[Sudabelt Website • INQUIRY - ${departmentLabel}] ${inquiryData.name}${inquiryData.facilityName ? ` (${inquiryData.facilityName})` : ''}`,
       html,
       replyTo: inquiryData.email,
     }),

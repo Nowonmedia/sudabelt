@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { Link, useLocation } from 'react-router'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { Mail, Calendar, Download, CheckCircle2, Award } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { HeaderTextReveal, SectionReveal } from '../components/common/Reveal'
@@ -48,13 +48,22 @@ const ScrollClosingBookMockup: React.FC<{ newsletter: ApiArticle }> = ({ newslet
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start 85%', 'center 42%'],
+    // Start opening slightly before the book enters the viewport completely,
+    // and finish opening while the book is still centered in view.
+    offset: ['start 110%', 'center 55%'],
   })
 
-  // Book starts open (-160deg) and smoothly closes (0deg) as user scrolls down
-  const coverRotateY = useTransform(scrollYProgress, [0, 0.85], [-160, 0])
-  const spreadShiftX = useTransform(scrollYProgress, [0, 0.85], [36, 0])
-  const coverImageOpacity = useTransform(scrollYProgress, [0.35, 0.65], [0, 1])
+  // Spring smoothing removes mouse-wheel step jitter for a fluid physical book turn
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 70,
+    damping: 22,
+    mass: 0.45,
+  })
+
+  // Book starts closed (0deg) and smoothly opens (-162deg) to reveal the Table of Contents page
+  const coverRotateY = useTransform(smoothProgress, [0.05, 0.92], [0, -162])
+  const spreadShiftX = useTransform(smoothProgress, [0.05, 0.92], [0, 34])
+  const coverImageOpacity = useTransform(smoothProgress, [0, 0.5], [1, 1])
 
   return (
     <div ref={containerRef} className="lg:col-span-5 flex items-center justify-center py-4">
@@ -66,26 +75,67 @@ const ScrollClosingBookMockup: React.FC<{ newsletter: ApiArticle }> = ({ newslet
           style={{ x: spreadShiftX, transformStyle: 'preserve-3d' }}
           className="relative w-full h-full"
         >
-          {/* Right Inner Page (Visible while book is open) */}
-          <div className="absolute inset-0 rounded-r-md rounded-l-xs bg-[#fdfcf8] text-sudabelt-navy shadow-2xl p-5 flex flex-col justify-between overflow-hidden">
+          {/* Right Inner Page (Table of Contents Page visible while book is open) */}
+          <div className="absolute inset-0 rounded-r-md rounded-l-xs bg-[#fdfcf8] text-sudabelt-navy shadow-2xl overflow-hidden flex flex-col justify-between">
             {/* Subtle page-edge stack */}
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-4 bg-linear-to-r from-slate-300/60 to-transparent" />
-            <div className="pl-2">
-              <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-sudabelt-green mb-1.5">
-                Issue #{newsletter.issueNumber || 1} • {newsletter.quarter || 'Clinical Brief'}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-4 bg-linear-to-r from-slate-300/60 to-transparent z-10" />
+            {newsletter.galleryImages && newsletter.galleryImages[0] ? (
+              <img
+                src={newsletter.galleryImages[0]}
+                alt={`${newsletter.title} Table of Contents`}
+                className="w-full h-full object-contain bg-white"
+              />
+            ) : (
+              <div className="p-4 sm:p-5 pl-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between border-b border-sudabelt-navy/15 pb-2 mb-3">
+                    <div>
+                      <div className="text-[9px] font-mono font-bold uppercase tracking-[0.16em] text-sudabelt-green">
+                        Table of Contents
+                      </div>
+                      <h4 className="text-xs font-extrabold text-sudabelt-navy leading-tight line-clamp-1 mt-0.5">
+                        {newsletter.title}
+                      </h4>
+                    </div>
+                    <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-sudabelt-navy text-white shrink-0">
+                      #{newsletter.issueNumber || 13}
+                    </span>
+                  </div>
+
+                  <ol className="space-y-2 text-[10.5px]">
+                    {[
+                      { num: '01', label: 'Editorial & Leadership Note', page: '02' },
+                      { num: '02', label: 'Clinical Feature & Spotlight', page: '04' },
+                      { num: '03', label: 'OEM Technology & Diagnostics', page: '07' },
+                      { num: '04', label: 'Turnkey Installations Update', page: '10' },
+                      { num: '05', label: 'Biomedical & Training Hub', page: '13' },
+                    ].map((row) => (
+                      <li
+                        key={row.num}
+                        className="flex items-baseline justify-between gap-1.5 border-b border-dotted border-slate-300 pb-1"
+                      >
+                        <div className="flex items-baseline gap-1.5 min-w-0">
+                          <span className="font-mono font-bold text-sudabelt-green text-[9.5px]">
+                            {row.num}
+                          </span>
+                          <span className="font-semibold text-sudabelt-navy truncate">
+                            {row.label}
+                          </span>
+                        </div>
+                        <span className="font-mono text-[9.5px] text-sudabelt-muted shrink-0">
+                          {row.page}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[9.5px] font-mono text-sudabelt-muted">
+                  <span>{newsletter.summary || 'The Inner Circle'}</span>
+                  <span>{newsletter.year || new Date().getFullYear()}</span>
+                </div>
               </div>
-              <h4 className="text-sm font-extrabold text-sudabelt-navy leading-snug line-clamp-3">
-                {newsletter.title}
-              </h4>
-              <div className="w-8 h-0.5 bg-sudabelt-red my-3" />
-              <p className="text-[11px] text-sudabelt-body leading-relaxed line-clamp-6">
-                {newsletter.summary}
-              </p>
-            </div>
-            <div className="pl-2 pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] font-mono text-sudabelt-muted">
-              <span>Sudabelt Medical</span>
-              <span>{newsletter.year || new Date().getFullYear()}</span>
-            </div>
+            )}
           </div>
 
           {/* Hinged Front Cover (Rotates from open -160deg to closed 0deg on scroll) */}

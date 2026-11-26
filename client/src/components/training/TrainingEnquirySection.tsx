@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Stethoscope, Wrench, CheckCircle2, Loader2, Building2 } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { api } from '../../api/api'
@@ -25,21 +25,70 @@ const TRAINING_TYPES = [
   'Both',
 ] as const
 
+const TRAINING_DRAFT_KEY = 'sudabelt_training_enquiry_draft_v1'
+
+const loadTrainingDraft = () => {
+  try {
+    const raw = localStorage.getItem(TRAINING_DRAFT_KEY)
+    return raw ? JSON.parse(raw) : {}
+  } catch {
+    return {}
+  }
+}
+
 const TrainingEnquirySection: React.FC = () => {
-  const [fullName, setFullName] = useState('')
-  const [organization, setOrganization] = useState('')
-  const [jobTitle, setJobTitle] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [trainingType, setTrainingType] = useState<string>(TRAINING_TYPES[0])
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
-  const [participants, setParticipants] = useState('')
-  const [location, setLocation] = useState('')
-  const [timeframe, setTimeframe] = useState('')
-  const [notes, setNotes] = useState('')
+  const draft = React.useMemo(loadTrainingDraft, [])
+  const [fullName, setFullName] = useState<string>(draft.fullName ?? '')
+  const [organization, setOrganization] = useState<string>(draft.organization ?? '')
+  const [jobTitle, setJobTitle] = useState<string>(draft.jobTitle ?? '')
+  const [email, setEmail] = useState<string>(draft.email ?? '')
+  const [phone, setPhone] = useState<string>(draft.phone ?? '')
+  const [trainingType, setTrainingType] = useState<string>(draft.trainingType ?? TRAINING_TYPES[0])
+  const [selectedBrands, setSelectedBrands] = useState<string[]>(
+    Array.isArray(draft.selectedBrands) ? draft.selectedBrands : []
+  )
+  const [participants, setParticipants] = useState<string>(draft.participants ?? '')
+  const [location, setLocation] = useState<string>(draft.location ?? '')
+  const [timeframe, setTimeframe] = useState<string>(draft.timeframe ?? '')
+  const [notes, setNotes] = useState<string>(draft.notes ?? '')
   const [captchaVerified, setCaptchaVerified] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submittedRef, setSubmittedRef] = useState<string | null>(null)
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        TRAINING_DRAFT_KEY,
+        JSON.stringify({
+          fullName,
+          organization,
+          jobTitle,
+          email,
+          phone,
+          trainingType,
+          selectedBrands,
+          participants,
+          location,
+          timeframe,
+          notes,
+        })
+      )
+    } catch {
+      // Ignore storage errors
+    }
+  }, [
+    fullName,
+    organization,
+    jobTitle,
+    email,
+    phone,
+    trainingType,
+    selectedBrands,
+    participants,
+    location,
+    timeframe,
+    notes,
+  ])
 
   const toggleBrand = (brand: string) => {
     setSelectedBrands((prev) =>
@@ -107,8 +156,27 @@ const TrainingEnquirySection: React.FC = () => {
           .join('\n'),
       })
 
+      const submittedContactName = fullName.trim()
       setSubmittedRef(res.registrationId || 'TRN-RECEIVED')
-      toast.success('Training enquiry submitted successfully! Our team will contact you shortly.')
+      setFullName('')
+      setOrganization('')
+      setJobTitle('')
+      setEmail('')
+      setPhone('')
+      setTrainingType(TRAINING_TYPES[0])
+      setSelectedBrands([])
+      setParticipants('')
+      setLocation('')
+      setTimeframe('')
+      setNotes('')
+      try {
+        localStorage.removeItem(TRAINING_DRAFT_KEY)
+      } catch {
+        // Ignore
+      }
+      toast.success(
+        `Thank you, ${submittedContactName}! Training enquiry submitted successfully.`
+      )
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Unable to submit enquiry. Please try again.'
       toast.error(msg)

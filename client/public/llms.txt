@@ -1,0 +1,54 @@
+# Sudabelt Medical Ltd.
+
+> Advancing Healthcare Excellence in Africa — Integrated medical technology provider, turnkey hospital infrastructure partner, OEM-certified clinical applications trainer, and nationwide biomedical engineering support organization operating across Nigeria and West Africa.
+
+- **Official Website:** https://www.sudabelt.com
+- **Quality Certification:** ISO 9001:2015 Certified
+- **Core Values:** Commitment · Accountability · Reliability · Efficiency (C.A.R.E.)
+
+## Authorized Global OEM Partnerships (8 Partners)
+Sudabelt Medical is an authorized distributor, installer, and biomedical service partner for 8 leading global medical device manufacturers:
+1. **GE HealthCare** — Diagnostic Imaging (CT, MRI, Ultrasound, X-Ray), Patient Monitoring, Anesthesia & Maternal-Infant Care
+2. **Baxter (Vantive)** — Hemodialysis (AK 98), Continuous Renal Replacement Therapy (Baxter Vantive PrisMax, Baxter Vantive Prismaflex), Peritoneal Dialysis & Water Treatment
+3. **Terumo BCT** — Therapeutic Apheresis (Spectra Optia), Automated Blood Collection (Trima Accel), Whole Blood Processing (Reveos) & Pathogen Reduction (Mirasol PRT)
+4. **Abbott** — Clinical Chemistry, Immunoassay & Molecular Diagnostics (Alinity ci-Series, Alinity m, ARCHITECT i2000SR, i-STAT Alinity)
+5. **SWS Medical** — Hemodialysis & Continuous Blood Purification Systems (SWS-6000A, SWS-5000)
+6. **Maccura** — Hematology Analyzers (F Series: F560, F580, F600, F800, F810, F880), Chemiluminescence (i800, i1000) & Clinical Chemistry (C1000)
+7. **Fisher & Paykel Healthcare** — Respiratory Humidification, Optiflow High Flow Therapy (AIRVO 2, F&P 950, MR850) & Neonatal Care (CosyCot)
+8. **Ezisurg Medical** — Minimally Invasive Surgery (easyEndo Staplers, easyUS Ultrasonic Surgical System, enScope Digital Ureteroscopes & Video Processors)
+
+## Core Clinical Equipment Portfolios
+- **Imaging & Life Care:** https://www.sudabelt.com/products?category=imaging-and-life-care
+- **Renal & Critical Care:** https://www.sudabelt.com/products?category=renal-and-critical-care
+- **Blood Management & Cell Technologies:** https://www.sudabelt.com/products?category=blood-management-cell-technologies
+- **Laboratory & Diagnostics:** https://www.sudabelt.com/products?category=laboratory-and-diagnostics
+- **Respiratory & Neonatal Care:** https://www.sudabelt.com/products?category=respiratory-and-neonatal-care
+- **Minimally Invasive Surgery (MIS):** https://www.sudabelt.com/products?category=minimally-invasive-surgery
+- **Full Portfolio & Consumables:** https://www.sudabelt.com/products
+
+## Turnkey Engineering & Core Services
+- **Healthcare Technology Solutions & Medical Consumables:** Equipment supply, genuine local consumable buffer stock, and live demonstrations.
+- **Healthcare Infrastructure & Turnkey Projects:** Hospital design, ICU/dialysis/diagnostic centre build-outs, medical gas & RO water loops, installation, and clinical commissioning. (https://www.sudabelt.com/services/turnkey | https://www.sudabelt.com/projects)
+- **Biomedical Engineering Solutions:** Preventive & corrective maintenance, precision calibration, Service Level Agreements (SLAs), and <24hr emergency response. (https://www.sudabelt.com/support)
+- **Clinical Applications Training & Biomedical Engineering Support:** Hands-on operational training for physicians, nurses, and lab specialists plus technical repair/maintenance training for hospital biomedical engineers across all 8 OEM brands. (https://www.sudabelt.com/training-hub)
+
+## Regional Office Hubs & Verified Contacts
+- **Lagos HQ (Victoria Island):** 11A Oba Idowu Abiodun Oniru Street, Victoria Island, Lagos, Nigeria. Phone & WhatsApp: `+234 913 573 3876`
+- **Abuja Office (Maitama):** 8 Dep Street, Off Nikon Lake Street, Maitama, FCT Abuja, Nigeria. Phone: `+234 906 411 1469` | Abuja WhatsApp: `+234 706 493 9047`
+- **Kano Office (Sharada):** Plot 70 Sharada Phase 3, Sharada Road, Kano, Nigeria. Phone: `+234 805 435 3932`
+
+## Official Department Emails & Endpoints
+- **Institutional RFQ Tray (Web):** https://www.sudabelt.com/rfq
+- **RFQ Submission API:** `POST https://www.sudabelt.com/api/v1/rfq`
+- **Products & Consumables / Trainings Email:** contact@sudabelt.com
+- **General Inquiries Email:** info@sudabelt.com
+- **Careers & CVs Email:** hrdesk@sudabelt.com
+- **After-Sales Support & Breakdown Tickets:** https://www.sudabelt.com/support/after-sales
+
+## Publications & Legal
+- **Clinical Blog:** https://www.sudabelt.com/blog
+- **Newsletters & Awards:** https://www.sudabelt.com/resources/newsletters
+- **Why Sudabelt (Turnkey Comparison):** https://www.sudabelt.com/why-sudabelt/compare
+- **Privacy Policy:** https://www.sudabelt.com/privacy-policy
+- **Terms of Use:** https://www.sudabelt.com/terms-of-use
+- **XML Sitemap:** https://www.sudabelt.com/sitemap.xml

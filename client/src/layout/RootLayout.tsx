@@ -15,8 +15,14 @@ const RootLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-sudabelt-navy">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-sudabelt-navy focus:text-white focus:text-xs focus:font-bold focus:shadow-lg"
+      >
+        Skip to main content
+      </a>
       <Header />
-      <main className="flex-1">
+      <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
         <Outlet />
       </main>
       <Footer />
